@@ -16,22 +16,8 @@
     <span class="text-xs bg-emerald-600 px-3 py-1 rounded-full font-semibold">VORN Challenge 2026</span>
   </header>
 
-  <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-80px)]">
+  <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-80px)]">
     
-    <!-- チャットエリア -->
-    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col h-full border border-slate-200">
-      <h2 class="font-bold border-b pb-2 mb-3 text-slate-700">💬 対話エージェント</h2>
-      <div id="chat-box" class="flex-1 overflow-y-auto space-y-3 mb-3 p-2 bg-slate-50 rounded-lg text-sm">
-        <div class="bg-emerald-100 p-3 rounded-lg text-emerald-900 max-w-[85%]">
-          こんにちは！どんなエリアや用途で空き家をお探しですか？（例：長野県でカフェを開きたい）
-        </div>
-      </div>
-      <div class="flex gap-2">
-        <input type="text" id="user-input" placeholder="メッセージを入力..." class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        <button onclick="sendMessage()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 font-bold">送信</button>
-      </div>
-    </section>
-
     <!-- 地図 ＆ 物件 -->
     <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-4 overflow-y-auto border border-slate-200">
       <div>
@@ -151,20 +137,7 @@
       });
     }
 
-    // 3. チャット処理
-    function sendMessage() {
-      const input = document.getElementById('user-input');
-      if(!input.value.trim()) return;
-      const box = document.getElementById('chat-box');
-      box.innerHTML += `<div class="bg-slate-200 p-2.5 rounded-lg text-slate-800 self-end text-right ml-8 mb-2">${input.value}</div>`;
-      input.value = '';
-      setTimeout(() => {
-        box.innerHTML += `<div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-900 max-w-[85%] mb-2">条件に合わせてマップとシミュレーションを更新しました！</div>`;
-        box.scrollTop = box.scrollHeight;
-      }, 500);
-    }
-
-    // 4. バックエンドAPI経由でPDFを出力・取得
+    // バックエンドAPI経由でPDFを出力・取得
     function downloadPDF() {
       const url = `http://localhost:8080/api/generate-pdf?id=${selectedHouseId}`;
       window.open(url, '_blank');
@@ -174,4 +147,4 @@
     loadProperties();
   </script>
 </body>
-</html>s
+</html>

@@ -40,7 +40,8 @@ def generate_pdf_api():
         if request.method == 'GET':
             house_id = request.args.get('id', default=1, type=int)
         else:
-            data = request.get_json() or {}
+            # POST の場合は force=True で JSON パースエラーを回避
+            data = request.get_json(force=True, silent=True) or {}
             house_id = data.get('id', 1)
 
         input_json = os.path.join(BASE_DIR, "houses.json")
