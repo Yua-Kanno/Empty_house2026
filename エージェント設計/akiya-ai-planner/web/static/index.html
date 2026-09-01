@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>空き家AIプランナー</title>
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --panel: #ffffff;
+    --text: #2b2b28;
+    --muted: #7a756a;
+    --accent: #3c6e52;
+    --accent-soft: #e5efe8;
+    --border: #e3ded2;
+    --user-bubble: #3c6e52;
+    --user-bubble-text: #ffffff;
+    --agent-bubble: #f0ede4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 16px 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 18px;
+  }
+  header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .msg-row {
+    display: flex;
+  }
+  .msg-row.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 78%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-wrap;
+  }
+  .msg-row.user .bubble {
+    background: var(--user-bubble);
+    color: var(--user-bubble-text);
+    border-bottom-right-radius: 4px;
+  }
+  .msg-row.agent .bubble {
+    background: var(--agent-bubble);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+  }
+  .tool-tag {
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .card-title { font-weight: 600; margin-bottom: 4px; }
+  .card-row { color: var(--muted); font-size: 12px; }
+  .card.subsidy { border-left: 3px solid var(--accent); }
+  .card.cost, .card.income { border-left: 3px solid #a06b3c; }
+  .card.expandable { cursor: pointer; transition: border-color 0.15s ease; }
+  .card.expandable:hover { border-color: var(--accent); }
+  .card-toggle { font-size: 11px; color: var(--accent); margin-top: 6px; }
+  .card-detail { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 2px; }
+  .card-detail[hidden] { display: none; }
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+    padding: 14px 20px;
+  }
+  .input-row {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    gap: 8px;
+  }
+  textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    height: 44px;
+  }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 20px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; }
+  .loading .bubble { color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<header>
+  <h1>空き家AIプランナー</h1>
+  <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(現在はサンプルデータ)</p>
+</header>
+
+<main id="chat-log"></main>
+
+<footer>
+  <div class="input-row">
+    <textarea id="input" placeholder="例: 長野県千曲市でカフェを開きたい。予算は300万円くらい。" onkeydown="handleKeydown(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()"></textarea>
+    <button id="send-btn" onclick="sendMessage()">送信</button>
+  </div>
+  <div class="hint">Enterで送信 / Shift+Enterで改行</div>
+</footer>
+
+<script>
+  // このセッションだけの一時的なID(ページを再読み込みすると新しい会話になります)
+  const sessionState = { id: null };
+
+  function el(tag, className, text) {
+    const e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function appendMessage(role, text) {
+    const log = document.getElementById("chat-log");
+    const row = el("div", `msg-row ${role}`);
+    const bubble = el("div", "bubble", text);
+    row.appendChild(bubble);
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+    return bubble;
+  }
+
+  function renderToolResults(container, toolCalls) {
+    if (!toolCalls || toolCalls.length === 0) return;
+    const wrap = el("div", "cards");
+
+    for (const tc of toolCalls) {
+      if (tc.name === "search_akiya" && tc.result && tc.result.results) {
+        for (const p of tc.result.results) {
+          const card = el("div", "card akiya expandable");
+          card.appendChild(el("div", "card-title", `${p.area}(${p.price_man_yen}万円)`));
+          card.appendChild(el("div", "card-row",
+            `延床${p.building_area_sqm}㎡ / 築${p.built_year}年 / ${p.structure} / ${p.layout} / 駅徒歩${p.walk_min_station}分`));
+          if (p.note) card.appendChild(el("div", "card-row", p.note));
+
+          const toggle = el("div", "card-toggle", "▶ 詳細を見る");
+          card.appendChild(toggle);
+
+          const detail = el("div", "card-detail");
+          detail.hidden = true;
+          const detailLines = [
+            p.land_area_sqm ? `土地面積: ${p.land_area_sqm}㎡` : null,
+            p.station_name ? `最寄駅: ${p.station_name}(徒歩${p.walk_min_station}分)` : null,
+            p.renovation_status ? `改修状況: ${p.renovation_status}` : null,
+            (p.recommended_use && p.recommended_use.length) ? `想定用途: ${p.recommended_use.join(" / ")}` : null,
+            p.source ? `情報源: ${p.source}` : null,
+            p.id ? `物件ID: ${p.id}` : null,
+          ].filter(Boolean);
+          for (const line of detailLines) {
+            detail.appendChild(el("div", "card-row", line));
+          }
+          card.appendChild(detail);
+
+          card.addEventListener("click", () => {
+            const wasHidden = detail.hidden;
+            detail.hidden = !wasHidden;
+            toggle.textContent = wasHidden ? "▼ 閉じる" : "▶ 詳細を見る";
+          });
+
+          wrap.appendChild(card);
+        }
+      }
+      if (tc.name === "estimate_renovation_cost" && tc.result) {
+        const r = tc.result;
+        const card = el("div", "card cost");
+        card.appendChild(el("div", "card-title", `改修コスト概算: 約${r.estimated_cost_man_yen}万円`));
+        if (r.cost_range_man_yen) {
+          card.appendChild(el("div", "card-row", `想定レンジ: ${r.cost_range_man_yen.min}〜${r.cost_range_man_yen.max}万円`));
+        }
+        wrap.appendChild(card);
+      }
+      if (tc.name === "simulate_income" && tc.result) {
+        const r = tc.result;
+        const card = el("div", "card income");
+        card.appendChild(el("div", "card-title", `月次収支概算: 利益 約${r.monthly_profit_man_yen}万円/月`));
+        card.appendChild(el("div", "card-row",
+          `売上 約${r.monthly_revenue_man_yen}万円 / コスト 約${r.monthly_cost_man_yen}万円`
+          + (r.payback_period_years ? ` / 投資回収 約${r.payback_period_years}年` : "")));
+        wrap.appendChild(card);
+      }
+      if (tc.name === "search_subsidies" && tc.result && tc.result.results) {
+        for (const s of tc.result.results) {
+          const card = el("div", "card subsidy");
+          card.appendChild(el("div", "card-title", s.title));
+          card.appendChild(el("div", "card-row", `${s.provider} / 上限${s.max_amount_man_yen}万円 / ${s.subsidy_rate}`));
+          wrap.appendChild(card);
+        }
+      }
+    }
+
+    if (wrap.children.length > 0) container.appendChild(wrap);
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("input");
+    const btn = document.getElementById("send-btn");
+    const text = input.value.trim();
+    if (!text) return;
+
+    appendMessage("user", text);
+    input.value = "";
+    btn.disabled = true;
+
+    const log = document.getElementById("chat-log");
+    const loadingRow = el("div", "msg-row agent loading");
+    loadingRow.appendChild(el("div", "bubble", "考え中..."));
+    log.appendChild(loadingRow);
+    log.scrollTop = log.scrollHeight;
+
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionState.id, message: text }),
+      });
+      loadingRow.remove();
+
+      if (!resp.ok) {
+        const errBody = await resp.json().catch(() => ({}));
+        appendMessage("agent", `エラーが発生しました: ${errBody.detail || resp.statusText}`);
+        return;
+      }
+
+      const data = await resp.json();
+      sessionState.id = data.session_id;
+      const bubbleContainer = appendMessage("agent", data.reply).parentElement;
+      renderToolResults(bubbleContainer, data.tool_calls);
+    } catch (err) {
+      loadingRow.remove();
+      appendMessage("agent", `通信エラーが発生しました: ${err}`);
+    } finally {
+      btn.disabled = false;
+      input.focus();
+    }
+  }
+
+  // 日本語入力(IME)変換中に確定のEnterで誤送信しないようにするためのフラグ。
+  // compositionstart〜compositionendの間は変換中とみなし、Enterでは送信しない。
+  let isComposing = false;
+
+  function handleCompositionStart() {
+    isComposing = true;
+  }
+
+  function handleCompositionEnd() {
+    isComposing = false;
+  }
+
+  function handleKeydown(e) {
+    // isComposing: 変換中かどうかの標準的な判定。
+    // keyCode === 229: 一部ブラウザでcompositionendの発火タイミングがずれるための保険。
+    if (e.key === "Enter" && !e.shiftKey && !isComposing && e.keyCode !== 229) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  appendMessage("agent", "こんにちは。移住や空き家活用について、気になっていることを教えてください。");
+</script>
+</body>
+</html>
