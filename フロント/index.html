@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>空き家AIプランナー</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style> #map { height: 280px; width: 100%; } </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans">
+
+  <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
+    <h1 class="text-xl font-bold flex items-center gap-2">🏠 空き家AIプランナー</h1>
+    <span class="text-xs bg-emerald-600 px-3 py-1 rounded-full font-semibold">VORN Challenge 2026</span>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-80px)]">
+    
+    <!-- チャットエリア -->
+    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col h-full border border-slate-200">
+      <h2 class="font-bold border-b pb-2 mb-3 text-slate-700">💬 対話エージェント</h2>
+      <div id="chat-box" class="flex-1 overflow-y-auto space-y-3 mb-3 p-2 bg-slate-50 rounded-lg text-sm">
+        <div class="bg-emerald-100 p-3 rounded-lg text-emerald-900 max-w-[85%]">
+          こんにちは！どんなエリアや用途で空き家をお探しですか？（例：長野県でカフェを開きたい）
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <input type="text" id="user-input" placeholder="メッセージを入力..." class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <button onclick="sendMessage()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 font-bold">送信</button>
+      </div>
+    </section>
+
+    <!-- 地図 ＆ 物件 -->
+    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-4 overflow-y-auto border border-slate-200">
+      <div>
+        <h2 class="font-bold border-b pb-2 mb-2 text-slate-700">📍 候補物件マップ</h2>
+        <div id="map" class="rounded-lg border"></div>
+      </div>
+      <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <label class="text-xs font-bold text-emerald-700 block mb-2">物件を選択</label>
+        <select id="house-select" onchange="updateHouseInfo()" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-3">
+          <option value="">読込中...</option>
+        </select>
+        <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">選択中</span>
+        <p id="house-title" class="text-sm font-bold mt-1 text-slate-800">物件を選択してください</p>
+        <div class="mt-2 text-xs text-slate-600 space-y-1">
+          <p>改修コスト概算: <b id="house-cost" class="text-slate-800">-</b></p>
+          <p>想定用途: <b id="house-features">-</b></p>
+          <p>所在地: <b id="house-address" class="text-slate-800">-</b></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 収支グラフ ＆ PDFボタン -->
+    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col justify-between border border-slate-200">
+      <div>
+        <h2 class="font-bold border-b pb-2 mb-3 text-slate-700">📊 収支シミュレーション</h2>
+        <canvas id="financeChart" class="mb-4"></canvas>
+      </div>
+      <div class="border-t pt-3">
+        <button onclick="downloadPDF()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+          📄 提案書(PDF)を出力・ダウンロード
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let selectedHouseId = 1;
+    let allProperties = [];
+
+    // 0. 物件リストを読み込み
+    async function loadProperties() {
+      try {
+        const res = await fetch('http://localhost:8080/api/properties');
+        allProperties = await res.json();
+        
+        const select = document.getElementById('house-select');
+        select.innerHTML = '';
+        
+        allProperties.forEach((prop, idx) => {
+          const option = document.createElement('option');
+          option.value = idx + 1;
+          option.textContent = `${prop.municipality} - ${prop.title} (¥${prop.price.toLocaleString()})`;
+          select.appendChild(option);
+        });
+        
+        if (allProperties.length > 0) {
+          select.value = 1;
+          updateHouseInfo();
+        }
+      } catch (e) {
+        console.error('物件リスト読み込みエラー:', e);
+      }
+    }
+
+    // 物件情報更新
+    function updateHouseInfo() {
+      const select = document.getElementById('house-select');
+      const globalId = parseInt(select.value);
+      selectedHouseId = globalId;
+      
+      const house = allProperties[globalId - 1];
+      
+      if (!house) return;
+      
+      document.getElementById('house-title').textContent = house.title;
+      document.getElementById('house-cost').textContent = `約 ${(house.renovation_cost_est / 10000).toFixed(0)} 万円`;
+      document.getElementById('house-features').textContent = house.features;
+      document.getElementById('house-address').textContent = house.address;
+      
+      // 地図更新
+      if (house.latitude && house.longitude) {
+        map.setView([house.latitude, house.longitude], 12);
+        if (currentMarker) map.removeLayer(currentMarker);
+        currentMarker = L.marker([house.latitude, house.longitude]).addTo(map)
+          .bindPopup(`<b>${house.title}</b><br>${house.address}`).openPopup();
+      }
+      
+      // チャートを更新（簡易版）
+      updateChart(house);
+    }
+
+    let currentMarker = null;
+
+    // 1. 地図初期化
+    const map = L.map('map').setView([36.2048, 138.2529], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+
+    // 2. 収支グラフ初期化
+    let chartInstance = null;
+    function updateChart(house) {
+      const baseRevenue = Math.max(100, house.price / 100000);
+      const ctx = document.getElementById('financeChart').getContext('2d');
+      
+      if (chartInstance) chartInstance.destroy();
+      
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1年目', '2年目', '3年目', '4年目', '5年目'],
+          datasets: [
+            { label: '売上 (万円)', data: [baseRevenue, baseRevenue*1.2, baseRevenue*1.4, baseRevenue*1.5, baseRevenue*1.6], backgroundColor: '#10b981' },
+            { label: 'コスト (万円)', data: [baseRevenue*0.6, baseRevenue*0.65, baseRevenue*0.7, baseRevenue*0.7, baseRevenue*0.72], backgroundColor: '#f43f5e' }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    // 3. チャット処理
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      if(!input.value.trim()) return;
+      const box = document.getElementById('chat-box');
+      box.innerHTML += `<div class="bg-slate-200 p-2.5 rounded-lg text-slate-800 self-end text-right ml-8 mb-2">${input.value}</div>`;
+      input.value = '';
+      setTimeout(() => {
+        box.innerHTML += `<div class="bg-emerald-100 p-2.5 rounded-lg text-emerald-900 max-w-[85%] mb-2">条件に合わせてマップとシミュレーションを更新しました！</div>`;
+        box.scrollTop = box.scrollHeight;
+      }, 500);
+    }
+
+    // 4. バックエンドAPI経由でPDFを出力・取得
+    function downloadPDF() {
+      const url = `http://localhost:8080/api/generate-pdf?id=${selectedHouseId}`;
+      window.open(url, '_blank');
+    }
+
+    // 初期化
+    loadProperties();
+  </script>
+</body>
+</html>s
