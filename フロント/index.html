@@ -98,9 +98,9 @@
         let map, chartInstance;
         let propertyData = [];
         let selectedMarker = null;
-        const API_BASE_URL = window.location.port === '8080'
-            ? ''
-            : 'http://localhost:8080';
+        // フロント(このファイル)は常にAPIと同じFlaskサーバーから配信されるため、
+        // ローカルでも公開後(Render等)でも、常に相対パス(同じオリジン)でAPIを呼べばよい。
+        const API_BASE_URL = '';
 
         // AIチャット(A担当作成)へのリンク先。すでに公開済みのURLをデフォルトにしています。
         // ローカルでチャット側を動かして試す場合は 'http://localhost:8000/chat' に書き換えてください。
