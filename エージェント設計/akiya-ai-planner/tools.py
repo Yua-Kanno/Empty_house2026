@@ -3,8 +3,8 @@ tools.py
 ========
 エージェントが function calling で呼び出す4つのツール(関数)の実装。
 
-- search_akiya          : 空き家DB検索 (現状はdata/akiya_sample.jsonのモックデータ)
-- estimate_renovation_cost : 改修コスト概算 (現状は簡易式。将来はscikit-learn回帰モデルに置換予定)
+- search_akiya          : 空き家DB検索 (data/akiya_sample.json。B担当収集の実データ)
+- estimate_renovation_cost : 改修コスト概算 (物件が実測値を持っていればそれを優先し、無ければ簡易式で概算)
 - simulate_income       : 用途別の収支シミュレーション (簡易モデル)
 - search_subsidies      : 補助金・支援制度の検索 (Gemini Embeddingsによる簡易RAG。APIキー無しの場合はキーワード検索にフォールバック)
 
@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -45,69 +46,86 @@ def _subsidy_records() -> list[dict]:
 # 1. 空き家DB検索
 # ---------------------------------------------------------------------------
 
+_ROOM_COUNT_RE = re.compile(r"(\d+)\s*(?:S?LDK|DK|K)")
+
+
+def _estimated_room_count(layout: str | None) -> int | None:
+    """layout文字列("4LDK"や"3K"など)から部屋数の目安を抽出する。取れなければNone。"""
+    if not layout:
+        return None
+    m = _ROOM_COUNT_RE.search(layout)
+    return int(m.group(1)) if m else None
+
+
 def search_akiya(
     area: str | None = None,
     max_budget_man_yen: float | None = None,
     min_budget_man_yen: float | None = None,
     use_type: str | None = None,
     family_size: int | None = None,
-    max_walk_min_station: int | None = None,
     limit: int = 5,
 ) -> dict:
     """条件に合う空き家候補を検索する。
 
     Args:
-        area: エリア名の一部(例: "千曲市", "尾道市", "戸倉"など)。部分一致。
-        max_budget_man_yen: 予算上限(万円)。
+        area: エリア名・住所の一部(例: "千葉県", "奥多摩町", "羽生市"など)。部分一致。
+        max_budget_man_yen: 予算上限(万円)。価格未掲載(応相談)の物件は上限フィルタでは除外しない。
         min_budget_man_yen: 予算下限(万円)。
-        use_type: 想定用途(例: "カフェ", "民泊", "シェアハウス", "移住(family)", "移住(単身)", "ゲストハウス"など)。
-        family_size: 想定居住人数。2人以上ならfamily向け物件を優先。
-        max_walk_min_station: 最寄駅からの徒歩分数の上限。
+        use_type: 想定用途(例: "カフェ", "民泊", "ゲストハウス", "店舗", "移住"など)。物件の特徴文(features)から
+            それらしいキーワードを含む物件を優先的に上位表示する(タグではなく自由文からのスコアリング)。
+        family_size: 想定居住人数。2人以上ならLDK数が多め(3部屋以上)の物件を優先。
         limit: 返す件数の上限(デフォルト5件)。
 
     Returns:
         {"count": int, "results": [物件dict, ...]} 形式。
-        各物件dictには id, area, lat, lng, price_man_yen, building_area_sqm, built_year,
-        structure, layout, walk_min_station, recommended_use, note, match_score を含む。
+        各物件dictには id, title, municipality, area(住所), lat, lng, price_man_yen(nullの場合あり),
+        layout, floors, land_area_sqm, building_area_sqm, structure, built_year,
+        renovation_cost_est_man_yen(物件データに基づく改修費目安。nullの場合あり), features, match_score を含む。
     """
     records = _akiya_records()
     matched: list[tuple[float, dict]] = []
 
     for rec in records:
         # ハード条件(満たさなければ除外)
-        if area and area not in rec["area"]:
+        if area and area not in rec["area"] and area not in rec.get("municipality", ""):
             continue
-        if max_budget_man_yen is not None and rec["price_man_yen"] > max_budget_man_yen:
-            continue
-        if min_budget_man_yen is not None and rec["price_man_yen"] < min_budget_man_yen:
-            continue
-        if max_walk_min_station is not None:
-            walk = rec.get("walk_min_station")
-            if isinstance(walk, int) and walk > max_walk_min_station:
+        price = rec.get("price_man_yen")
+        if price is not None:
+            if max_budget_man_yen is not None and price > max_budget_man_yen:
+                continue
+            if min_budget_man_yen is not None and price < min_budget_man_yen:
                 continue
 
         # ソフトスコア(並び替え用)
         score = 0.0
-        recommended = rec.get("recommended_use", [])
+        features = rec.get("features", "") or ""
         if use_type:
-            for ru in recommended:
-                if use_type in ru or ru in use_type:
-                    score += 3
+            if use_type in features:
+                score += 3
+            # 用途に関連しがちなキーワードでの緩い一致もボーナス
+            for kw in ("カフェ", "民泊", "ゲストハウス", "店舗", "移住", "シェア"):
+                if kw in use_type and kw in features:
+                    score += 1
         if family_size is not None:
-            wants_family = family_size >= 2
-            has_family_tag = any("family" in ru for ru in recommended)
-            has_single_tag = any("単身" in ru for ru in recommended)
-            if wants_family and has_family_tag:
-                score += 2
-            if not wants_family and has_single_tag:
-                score += 2
-        # 予算に近い(安すぎず高すぎない)ものを少し優遇
-        if max_budget_man_yen:
-            score += max(0.0, 1 - abs(rec["price_man_yen"] - max_budget_man_yen) / max_budget_man_yen)
+            rooms = _estimated_room_count(rec.get("layout"))
+            if rooms is not None:
+                wants_family = family_size >= 2
+                if wants_family and rooms >= 3:
+                    score += 2
+                if not wants_family and rooms <= 2:
+                    score += 2
+        # 予算に近い(安すぎず高すぎない)ものを少し優遇。価格未掲載は中立(0)扱い。
+        if max_budget_man_yen and price is not None:
+            score += max(0.0, 1 - abs(price - max_budget_man_yen) / max_budget_man_yen)
 
         matched.append((score, rec))
 
-    matched.sort(key=lambda x: (-x[0], x[1]["price_man_yen"]))
+    def _sort_key(item: tuple[float, dict]) -> tuple[float, float]:
+        score, rec = item
+        price = rec.get("price_man_yen")
+        return (-score, price if price is not None else float("inf"))
+
+    matched.sort(key=_sort_key)
     results = []
     for score, rec in matched[:limit]:
         item = dict(rec)
@@ -115,6 +133,14 @@ def search_akiya(
         results.append(item)
 
     return {"count": len(results), "results": results}
+
+
+def get_akiya_by_id(property_id: int) -> dict | None:
+    """物件IDから1件取得する(内部ヘルパー。estimate_renovation_costから利用)。"""
+    for rec in _akiya_records():
+        if rec.get("id") == property_id:
+            return rec
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -141,30 +167,57 @@ _USE_TYPE_ADDON_MAN_YEN = {
 
 
 def estimate_renovation_cost(
-    building_area_sqm: float,
-    built_year: int,
+    property_id: int | None = None,
+    building_area_sqm: float | None = None,
+    built_year: int | None = None,
     structure: str = "木造",
     condition: str = "普通",
     use_type: str | None = None,
 ) -> dict:
-    """改修コストを概算する(簡易ヒューリスティック式)。
+    """改修コストを概算する。
 
-    現段階では築年数・広さ・構造から簡易式で概算しています。
-    将来的にはB担当のデータをもとにscikit-learnの回帰モデルに差し替える予定で、
-    返り値の形は変えない設計です。
+    property_id を指定した場合、その物件についてB担当が収集した実測ベースの改修費目安
+    (renovation_cost_est_man_yen)があればそれを優先して返す。無ければ、築年数(不明な場合は
+    築年数不明として簡易式で仮定)・広さ・構造から概算する。
 
     Args:
-        building_area_sqm: 建物の延床面積(平米)。
-        built_year: 築年(西暦)。
-        structure: 構造("木造"/"鉄骨造"/"RC造")。
+        property_id: search_akiyaで得た物件のid。指定すると物件データの実測値を優先利用する。
+        building_area_sqm: 建物の延床面積(平米)。property_id未指定時は必須。
+        built_year: 築年(西暦)。空き家バンクの多くは築年不詳のため省略可(不明として概算)。
+        structure: 構造("木造"/"鉄骨造"/"RC造")。property_id指定時は物件データの値を優先。
         condition: 現況("良好"/"普通"/"要修繕"/"老朽化")。
         use_type: 想定用途。店舗・宿泊系は水回り等の追加工事費を加算する。
 
     Returns:
         estimated_cost_man_yen, cost_range_man_yen(min/max), breakdown, note を含むdict。
     """
+    if property_id is not None:
+        rec = get_akiya_by_id(property_id)
+        if rec is not None:
+            if building_area_sqm is None:
+                building_area_sqm = rec.get("building_area_sqm")
+            if rec.get("structure") and rec["structure"] != "-":
+                structure = rec["structure"]
+            real_est = rec.get("renovation_cost_est_man_yen")
+            if real_est:
+                return {
+                    "estimated_cost_man_yen": real_est,
+                    "cost_range_man_yen": {"min": round(real_est * 0.85), "max": round(real_est * 1.15)},
+                    "breakdown": {"source": "物件データ提供の実測ベース概算(B担当収集)"},
+                    "note": f"物件ID {property_id} のデータに基づく改修費目安です(空き家バンク等の公開情報ベース)。",
+                }
+
+    if building_area_sqm is None:
+        return {"error": "building_area_sqm が必要です(property_idで実測値が見つからない場合)。"}
+
     base_per_sqm = _BASE_COST_PER_SQM_MAN_YEN.get(structure, 15.0)
-    age = max(0, date.today().year - built_year)
+    if built_year is not None:
+        age = max(0, date.today().year - built_year)
+        age_note = ""
+    else:
+        # 空き家バンク物件は築年不詳が多い。中古の空き家として築35年程度を仮定する。
+        age = 35
+        age_note = "(築年不明のため築35年と仮定)"
     age_factor = 1 + min(age, 60) / 60 * 0.8
     condition_factor = _CONDITION_FACTOR.get(condition, 1.0)
 
@@ -189,7 +242,7 @@ def estimate_renovation_cost(
             "condition_factor": condition_factor,
             "base_cost_per_sqm_man_yen": base_per_sqm,
         },
-        "note": "簡易ヒューリスティック式による概算です。実際の見積りとは異なる場合があります(回帰モデル未実装)。",
+        "note": f"簡易ヒューリスティック式による概算です{age_note}。実際の見積りとは異なる場合があります。",
     }
 
 
@@ -387,13 +440,19 @@ def search_subsidies(query: str, area: str | None = None, top_k: int = 3) -> dic
 if __name__ == "__main__":
     # 簡易動作確認(APIキーなしでも実行可能)
     print("=== search_akiya ===")
-    print(json.dumps(search_akiya(area="千曲市", max_budget_man_yen=300, use_type="カフェ"), ensure_ascii=False, indent=2))
+    result = search_akiya(area="千葉県", max_budget_man_yen=500, use_type="カフェ")
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    first_id = result["results"][0]["id"] if result["results"] else None
 
-    print("\n=== estimate_renovation_cost ===")
-    print(json.dumps(estimate_renovation_cost(building_area_sqm=100, built_year=1978, structure="木造", use_type="カフェ"), ensure_ascii=False, indent=2))
+    print("\n=== estimate_renovation_cost (property_id指定・実測値優先) ===")
+    if first_id is not None:
+        print(json.dumps(estimate_renovation_cost(property_id=first_id, use_type="カフェ"), ensure_ascii=False, indent=2))
+
+    print("\n=== estimate_renovation_cost (property_id無し・簡易式) ===")
+    print(json.dumps(estimate_renovation_cost(building_area_sqm=100, use_type="カフェ"), ensure_ascii=False, indent=2))
 
     print("\n=== simulate_income ===")
     print(json.dumps(simulate_income(use_type="カフェ", building_area_sqm=100, renovation_cost_man_yen=500), ensure_ascii=False, indent=2))
 
     print("\n=== search_subsidies ===")
-    print(json.dumps(search_subsidies(query="カフェ 改修 千曲市", area="千曲市"), ensure_ascii=False, indent=2))
+    print(json.dumps(search_subsidies(query="カフェ 改修 千葉県", area="千葉県"), ensure_ascii=False, indent=2))

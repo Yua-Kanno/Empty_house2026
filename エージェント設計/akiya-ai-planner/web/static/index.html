@@ -139,14 +139,14 @@
 <body>
 <header>
   <h1>空き家AIプランナー</h1>
-  <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(現在はサンプルデータ)</p>
+  <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(対応エリア: 千葉県・東京都西多摩地域・埼玉県羽生市)</p>
 </header>
 
 <main id="chat-log"></main>
 
 <footer>
   <div class="input-row">
-    <textarea id="input" placeholder="例: 長野県千曲市でカフェを開きたい。予算は300万円くらい。" onkeydown="handleKeydown(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()"></textarea>
+    <textarea id="input" placeholder="例: 千葉県でカフェを開きたい。予算は300万円くらい。" onkeydown="handleKeydown(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()"></textarea>
     <button id="send-btn" onclick="sendMessage()">送信</button>
   </div>
   <div class="hint">Enterで送信 / Shift+Enterで改行</div>
@@ -181,10 +181,11 @@
       if (tc.name === "search_akiya" && tc.result && tc.result.results) {
         for (const p of tc.result.results) {
           const card = el("div", "card akiya expandable");
-          card.appendChild(el("div", "card-title", `${p.area}(${p.price_man_yen}万円)`));
+          const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
+          card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
           card.appendChild(el("div", "card-row",
-            `延床${p.building_area_sqm}㎡ / 築${p.built_year}年 / ${p.structure} / ${p.layout} / 駅徒歩${p.walk_min_station}分`));
-          if (p.note) card.appendChild(el("div", "card-row", p.note));
+            `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
+          if (p.features) card.appendChild(el("div", "card-row", p.features));
 
           const toggle = el("div", "card-toggle", "▶ 詳細を見る");
           card.appendChild(toggle);
@@ -192,11 +193,10 @@
           const detail = el("div", "card-detail");
           detail.hidden = true;
           const detailLines = [
+            p.area ? `住所: ${p.area}` : null,
             p.land_area_sqm ? `土地面積: ${p.land_area_sqm}㎡` : null,
-            p.station_name ? `最寄駅: ${p.station_name}(徒歩${p.walk_min_station}分)` : null,
-            p.renovation_status ? `改修状況: ${p.renovation_status}` : null,
-            (p.recommended_use && p.recommended_use.length) ? `想定用途: ${p.recommended_use.join(" / ")}` : null,
-            p.source ? `情報源: ${p.source}` : null,
+            p.built_year ? `築年: ${p.built_year}` : null,
+            p.renovation_cost_est_man_yen ? `改修費目安(データ提供): 約${p.renovation_cost_est_man_yen}万円` : null,
             p.id ? `物件ID: ${p.id}` : null,
           ].filter(Boolean);
           for (const line of detailLines) {
