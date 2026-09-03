@@ -14,9 +14,15 @@
 
     <!-- ヘッダー -->
     <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="text-xl font-bold flex items-center gap-2">
-            <span>🏠</span> 空き家AIプランナー
-        </h1>
+        <div class="flex items-center gap-4">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span>🏠</span> 空き家AIプランナー
+            </h1>
+            <a id="chat-link" href="#" target="_blank" rel="noopener"
+               class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-full font-semibold transition-colors">
+                💬 AIに相談する
+            </a>
+        </div>
         <span class="bg-emerald-600 text-xs px-3 py-1 rounded-full font-semibold">VORN Challenge 2026</span>
     </header>
 
@@ -96,6 +102,11 @@
             ? ''
             : 'http://localhost:8080';
 
+        // AIチャット(A担当作成)へのリンク先。すでに公開済みのURLをデフォルトにしています。
+        // ローカルでチャット側を動かして試す場合は 'http://localhost:8000/chat' に書き換えてください。
+        const CHAT_URL = "https://empty-house2026.onrender.com/chat";
+        document.getElementById("chat-link").href = CHAT_URL;
+
         document.addEventListener("DOMContentLoaded", () => {
             initMap();
             fetchProperties();
@@ -131,6 +142,15 @@
 
                 const select = document.getElementById('houseSelect');
                 select.addEventListener('change', (e) => updateSelection(e.target.value));
+
+                // チャット(A担当)の「マップ・PDF出力で見る」から特定の物件IDを指定して
+                // 遷移してきた場合は、その物件を自動で選択する。
+                const params = new URLSearchParams(window.location.search);
+                const requestedId = params.get('property_id');
+                if (requestedId) {
+                    select.value = requestedId;
+                    updateSelection(requestedId);
+                }
 
             } catch (err) {
                 console.error("物件データの読み込み失敗:", err);

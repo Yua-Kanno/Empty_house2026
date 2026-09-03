@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>空き家AIプランナー</title>
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --panel: #ffffff;
+    --text: #2b2b28;
+    --muted: #7a756a;
+    --accent: #3c6e52;
+    --accent-soft: #e5efe8;
+    --border: #e3ded2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    background: var(--accent);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    text-align: center;
+  }
+  .lead {
+    margin: 0 0 32px;
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+    max-width: 480px;
+  }
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 640px;
+  }
+  .choice-card {
+    flex: 1 1 260px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: var(--text);
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .choice-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .choice-icon { font-size: 40px; margin-bottom: 12px; }
+  .choice-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .choice-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  footer {
+    margin-top: 36px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+  <span class="badge">VORN Challenge 2026</span>
+  <h1>🏠 空き家AIプランナー</h1>
+  <p class="lead">空き家の活用プランを、チャットで相談するか、マップから直接探すか選べます。</p>
+
+  <div class="choices">
+    <a class="choice-card" href="/chat">
+      <div class="choice-icon">💬</div>
+      <div class="choice-title">チャットで調べる</div>
+      <div class="choice-desc">AIとの対話で、エリア・予算・用途に合った空き家を提案してもらう。改修コストや収支、補助金もまとめて確認できます。</div>
+    </a>
+    <a class="choice-card" id="map-card" href="#">
+      <div class="choice-icon">🗺️</div>
+      <div class="choice-title">地図で調べる</div>
+      <div class="choice-desc">マップ上で物件を選びながら、収支グラフや補助金情報を確認し、提案書(PDF)を出力できます。</div>
+    </a>
+  </div>
+
+  <footer>チャットと地図画面は行き来できます</footer>
+
+<script>
+  // 地図(フロント、C担当作成)へのリンク先。
+  // ローカルでフロント側のサーバー(PDF出力/app.py)も立ち上げている間は http://localhost:8080/ でOK。
+  // フロントを別途デプロイしたら、そのURLに書き換えてください。
+  const FRONTEND_URL = "http://localhost:8080/";
+  document.getElementById("map-card").href = FRONTEND_URL;
+</script>
+</body>
+</html>
