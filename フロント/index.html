@@ -58,6 +58,7 @@
                     <p id="detailUsage">想定用途: -</p>
                     <p id="detailAddress">所在地: -</p>
                 </div>
+
             </div>
         </section>
 
@@ -69,6 +70,15 @@
                 </h2>
                 <div class="relative w-full h-64">
                     <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2 text-slate-700">
+                    <span>💰</span> 利用できる補助金
+                </h2>
+                <div id="subsidyList" class="space-y-2 text-sm">
+                    <p class="text-slate-500">物件を選択してください</p>
                 </div>
             </div>
 
@@ -171,13 +181,14 @@
 
             document.getElementById('detailName').textContent = house.name || house.title || '-';
             
-            const cost = house.renovation_cost || house.renovationCost || house.cost || 0;
+            const cost = house.renovation_cost_est || house.renovation_cost || house.cost || 0;
             document.getElementById('detailCost').textContent = cost > 0 
                 ? `改修コスト概算: ¥${cost.toLocaleString()}` 
                 : '改修コスト概算: ¥3,000,000（想定）';
 
             document.getElementById('detailUsage').textContent = `想定用途: ${house.usage || house.purpose || '地域交流拠点'}`;
             document.getElementById('detailAddress').textContent = `所在地: ${house.address || house.location || '-'}`;
+            fetchSubsidies(house.municipality);
 
             // 座標を取得してピンを配置
             const coords = getCoordinates(house);
@@ -196,11 +207,40 @@
             updateChart(house);
         }
 
+        async function fetchSubsidies(municipality) {
+            const subsidyList = document.getElementById('subsidyList');
+            subsidyList.innerHTML = '<p class="text-slate-500">補助金情報を読み込み中...</p>';
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/subsidies?municipality=${encodeURIComponent(municipality)}`);
+                if (!res.ok) throw new Error('補助金情報の取得に失敗しました');
+                const subsidies = await res.json();
+
+                if (subsidies.length === 0) {
+                    subsidyList.innerHTML = '<p class="text-slate-500">該当する補助金情報はありません</p>';
+                    return;
+                }
+
+                subsidyList.innerHTML = subsidies.map(subsidy => `
+                    <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3">
+                        <p class="font-bold text-emerald-900">${subsidy.subsidy_name}</p>
+                        <p class="text-slate-700 mt-1">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
+                        <p class="text-slate-600">補助率: ${subsidy.rate}</p>
+                        <p class="text-slate-600 mt-1">${subsidy.conditions}</p>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('補助金情報の読み込み失敗:', err);
+                subsidyList.innerHTML = '<p class="text-red-600">補助金情報を読み込めませんでした</p>';
+            }
+        }
+
         function clearDetail() {
             document.getElementById('detailName').textContent = '物件を選択してください';
             document.getElementById('detailCost').textContent = '改修コスト概算: -';
             document.getElementById('detailUsage').textContent = '想定用途: -';
             document.getElementById('detailAddress').textContent = '所在地: -';
+            document.getElementById('subsidyList').innerHTML = '<p class="text-slate-500">物件を選択してください</p>';
             if (selectedMarker) map.removeLayer(selectedMarker);
             if (chartInstance) chartInstance.destroy();
         }

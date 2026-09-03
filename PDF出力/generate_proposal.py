@@ -185,6 +185,38 @@ def build_facilities_line(house: dict) -> str:
     available = [FACILITY_LABEL[k] for k, v in facilities.items() if v and k in FACILITY_LABEL]
     return "、".join(available) if available else "情報なし"
 
+def build_subsidy_table(house: dict, styles: dict):
+    subsidies = house.get("subsidies") or []
+    if not subsidies:
+        return Paragraph("該当する補助金情報はありません。", styles["note"])
+
+    rows = [[
+        Paragraph("制度名", styles["note"]),
+        Paragraph("上限・補助率", styles["note"]),
+        Paragraph("主な条件", styles["note"]),
+    ]]
+    for subsidy in subsidies:
+        rows.append([
+            Paragraph(subsidy.get("subsidy_name") or "-", styles["body"]),
+            Paragraph(
+                f'{yen(subsidy.get("max_amount"))}<br/>{subsidy.get("rate") or "-"}',
+                styles["body"],
+            ),
+            Paragraph(subsidy.get("conditions") or "-", styles["body"]),
+        ])
+
+    table = Table(rows, colWidths=[65 * mm, 38 * mm, 65 * mm], repeatRows=1)
+    table.setStyle(TableStyle([
+        ("FONTNAME", (0, 0), (-1, -1), "NotoSansJP"),
+        ("BACKGROUND", (0, 0), (-1, 0), PANEL),
+        ("BOX", (0, 0), (-1, -1), 0.5, LINE),
+        ("INNERGRID", (0, 0), (-1, -1), 0.5, LINE),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+    ]))
+    return table
+
 def build_proposal(house: dict, output_path: str = None):
     """
     提案書PDFを生成する。
@@ -222,7 +254,7 @@ def build_proposal(house: dict, output_path: str = None):
         Paragraph("費用シミュレーション", styles["section"]),
         build_cost_summary(house),
         Paragraph("該当する補助金・支援制度", styles["section"]),
-        Paragraph("※選択された地域・用途に応じた補助金制度（最大200万円）を適用可能なプランです。", styles["note"])
+        build_subsidy_table(house, styles)
     ]
 
     doc.build(story)
