@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: empty-house-planner
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --chdir "PDF出力" app:app
+    healthCheckPath: /

@@ -14,6 +14,7 @@ import argparse
 import json
 import os
 from io import BytesIO
+from typing import Optional
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -174,7 +175,7 @@ def build_subsidy_section(styles: dict, house: dict) -> list:
     return section
 
 
-def build_proposal(house: dict, output_path: str | None):
+def build_proposal(house: dict, output_path: Optional[str] = None):
     """提案書PDFを作る。
     - output_path が文字列(パス)の場合: そのパスにPDFを保存し、Noneを返す(CLI用)。
     - output_path が None の場合: ファイルに保存せず、メモリ上のBytesIOを返す(Flask等から呼ぶ用)。
