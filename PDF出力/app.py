@@ -11,13 +11,22 @@ BASE_DIR = os.path.dirname(CURRENT_DIR)
 FRONTEND_DIR = os.path.join(BASE_DIR, "フロント")
 DATABASE_PATH = os.path.join(BASE_DIR, "empty_house.db")
 SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
+PREFECTURES = (
+    "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+    "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+    "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+    "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+    "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県",
+    "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+    "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県",
+)
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 CORS(app)
 
 
 def init_database():
-    if os.path.exists(DATABASE_PATH):
+    if os.path.exists(DATABASE_PATH) and os.path.getmtime(DATABASE_PATH) >= os.path.getmtime(SCHEMA_PATH):
         return
 
     with sqlite3.connect(DATABASE_PATH) as connection:
@@ -42,6 +51,12 @@ def load_properties_from_database():
     return properties
 
 
+def load_prefectures_from_database():
+    properties = load_properties_from_database()
+    addresses = [property_data.get("address") or "" for property_data in properties]
+    return [prefecture for prefecture in PREFECTURES if any(address.startswith(prefecture) for address in addresses)]
+
+
 def load_subsidies_from_database(municipality):
     init_database()
     with sqlite3.connect(DATABASE_PATH) as connection:
@@ -62,6 +77,15 @@ def index():
 def get_properties():
     try:
         return jsonify(load_properties_from_database())
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/prefectures', methods=['GET'])
+def get_prefectures():
+    try:
+        return jsonify(load_prefectures_from_database())
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
@@ -119,4 +143,4 @@ if __name__ == '__main__':
     init_database()
     print(f"📁 フロントエンド参照元: {FRONTEND_DIR}")
     print("🚀 サーバー起動中: http://localhost:8080")
-    app.run(debug=True, port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
