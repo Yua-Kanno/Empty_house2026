@@ -10,7 +10,7 @@ tools.py の4関数(空き家検索・改修コスト概算・収支シミュレ
 使い方:
     from agent import AkiyaAgent
     agent = AkiyaAgent()
-    result = agent.send("長野県千曲市でカフェを開きたい。予算は300万円くらい。")
+    result = agent.send("千葉県でカフェを開きたい。予算は300万円くらい。")
     print(result.reply)
     print(result.tool_calls)  # 呼び出されたツールと結果のログ(地図・グラフ表示用にも使える)
 """
@@ -50,15 +50,25 @@ SYSTEM_PROMPT = """\
    simulate_income で収支シミュレーションを行い、結果を分かりやすく説明します。
 4. search_subsidies でエリアや用途に関連する補助金・支援制度を検索し、使えそうな制度を
    提示します。
-5. 「もっと駅近がいい」「予算をもう少し下げたい」など追加の要望があれば、条件を更新して
+5. 「予算をもう少し下げたい」「もっと広い家がいい」など追加の要望があれば、条件を更新して
    search_akiya を再実行してください。
 6. 候補が1つに絞られてきたら、物件情報・改修コスト・収支・補助金をまとめた提案サマリーを
    提示してください(最終的なPDF出力は別モジュールが行います)。
 
+# 対応可能エリアについて
+現在データベースに登録されている空き家は、千葉県内の各市町村・東京都西多摩地域(奥多摩町・
+青梅市・あきる野市など)・埼玉県羽生市が中心です。これら以外のエリアを希望された場合は、
+正直に「現在このエリアのデータは未登録です」と伝えた上で、対応可能なエリアを案内してください。
+
 # 注意事項
-- 数値(コスト・収支)はすべて概算であることを必ず明示してください。
-- 物件データ・補助金データは現時点ではサンプル(ダミー)データです。会話の早い段階で一度、
-  「現在はサンプルデータでご案内しています」という旨を自然に伝えてください。
+- 数値(改修コスト・収支)はすべて概算であることを必ず明示してください。特に改修コストは、
+  物件データに実測ベースの目安がある場合(estimate_renovation_costにproperty_idを渡した場合)は
+  そのことも伝え、無い場合は簡易式による概算であることを伝えてください。
+- 空き家データ・補助金データは実際の空き家バンク公開情報等をもとにしたものですが、価格・
+  補助金の金額や条件は変更されている可能性があるため、最終判断の前に自治体等への確認を
+  勧めてください。
+- 物件によっては価格が「応相談」(price_man_yenがnull)の場合があります。その場合はその旨を
+  伝え、断定的な金額を答えないでください。
 - ツールの引数は、ユーザーが実際に話した内容から具体的に埋めてください。話していない情報を
   勝手に断定しないでください(不明な場合は質問するか、ツールの該当引数を省略してください)。
 - 常に丁寧で簡潔な日本語で応答してください。箇条書きは使いすぎず、会話らしい文章を心がけて
@@ -79,29 +89,30 @@ FUNCTION_DECLARATIONS = [
         parameters_json_schema={
             "type": "object",
             "properties": {
-                "area": {"type": "string", "description": "エリア名の一部(例: 千曲市, 尾道市, 戸倉)"},
+                "area": {"type": "string", "description": "エリア名・住所の一部(例: 千葉県, 奥多摩町, 羽生市)"},
                 "max_budget_man_yen": {"type": "number", "description": "予算上限(万円)"},
                 "min_budget_man_yen": {"type": "number", "description": "予算下限(万円)"},
-                "use_type": {"type": "string", "description": "想定用途(例: カフェ, 民泊, シェアハウス, 移住(family), 移住(単身), ゲストハウス)"},
+                "use_type": {"type": "string", "description": "想定用途(例: カフェ, 民泊, ゲストハウス, 店舗, 移住)。物件の特徴文からそれらしい記述がある物件を優先表示する。"},
                 "family_size": {"type": "integer", "description": "想定居住人数"},
-                "max_walk_min_station": {"type": "integer", "description": "最寄駅からの徒歩分数の上限"},
                 "limit": {"type": "integer", "description": "返す件数の上限。指定なければ5件。"},
             },
         },
     ),
     types.FunctionDeclaration(
         name="estimate_renovation_cost",
-        description="築年数・広さ・構造などから改修コストを概算する。",
+        description="改修コストを概算する。物件ID(search_akiyaで得たid)を渡すと、その物件の実測"
+                    "ベースの改修費目安があればそれを優先して返す。物件IDが無い場合や実測値が無い"
+                    "場合は、広さ・構造・築年数(不明なら省略可)から簡易式で概算する。",
         parameters_json_schema={
             "type": "object",
             "properties": {
-                "building_area_sqm": {"type": "number", "description": "建物の延床面積(平米)"},
-                "built_year": {"type": "integer", "description": "築年(西暦)"},
+                "property_id": {"type": "integer", "description": "search_akiyaで得た物件のid。指定すると実測データを優先利用する。"},
+                "building_area_sqm": {"type": "number", "description": "建物の延床面積(平米)。property_id未指定時は必須。"},
+                "built_year": {"type": "integer", "description": "築年(西暦)。空き家バンク物件は築年不詳が多いので分からなければ省略してよい。"},
                 "structure": {"type": "string", "enum": ["木造", "鉄骨造", "RC造"], "description": "構造"},
                 "condition": {"type": "string", "enum": ["良好", "普通", "要修繕", "老朽化"], "description": "現況"},
                 "use_type": {"type": "string", "description": "想定用途。店舗・宿泊系は追加工事費を加味する。"},
             },
-            "required": ["building_area_sqm", "built_year"],
         },
     ),
     types.FunctionDeclaration(
@@ -125,8 +136,8 @@ FUNCTION_DECLARATIONS = [
         parameters_json_schema={
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "検索クエリ。スペース区切りのキーワードを複数渡すと精度が上がる(例: 'カフェ 改修 千曲市')"},
-                "area": {"type": "string", "description": "エリア名(例: 千曲市)"},
+                "query": {"type": "string", "description": "検索クエリ。スペース区切りのキーワードを複数渡すと精度が上がる(例: 'カフェ 改修 千葉県')"},
+                "area": {"type": "string", "description": "エリア名(例: 千葉県, 奥多摩町)"},
                 "top_k": {"type": "integer", "description": "返す件数。指定なければ3件。"},
             },
             "required": ["query"],
@@ -172,7 +183,7 @@ class AkiyaAgent:
                 "GEMINI_API_KEY が設定されていません。.env ファイルまたは環境変数で設定してください。"
             )
         self.client = genai.Client(api_key=api_key)
-        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
 
         config = types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT,
@@ -217,7 +228,7 @@ class AkiyaAgent:
 if __name__ == "__main__":
     # 簡易動作確認。GEMINI_API_KEY が必要。
     agent = AkiyaAgent()
-    result = agent.send("長野県千曲市でカフェを開きたいです。予算は300万円くらいです。")
+    result = agent.send("千葉県でカフェを開きたいです。予算は300万円くらいです。")
     print(result.reply)
     for tc in result.tool_calls:
         print(f"[tool] {tc.name}({tc.args}) -> {tc.result}")
