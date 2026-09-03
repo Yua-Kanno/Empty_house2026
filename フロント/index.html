@@ -1,150 +1,243 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>空き家AIプランナー</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style> #map { height: 280px; width: 100%; } </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空き家AIプランナー</title>
+    <!-- Tailwind CSS & Leaflet CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans">
 
-  <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg">
-    <h1 class="text-xl font-bold flex items-center gap-2">🏠 空き家AIプランナー</h1>
-    <span class="text-xs bg-emerald-600 px-3 py-1 rounded-full font-semibold">VORN Challenge 2026</span>
-  </header>
+    <!-- ヘッダー -->
+    <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            <span>🏠</span> 空き家AIプランナー
+        </h1>
+        <span class="bg-emerald-600 text-xs px-3 py-1 rounded-full font-semibold">VORN Challenge 2026</span>
+    </header>
 
-  <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4 h-[calc(100vh-80px)]">
-    
-    <!-- 地図 ＆ 物件 -->
-    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-4 overflow-y-auto border border-slate-200">
-      <div>
-        <h2 class="font-bold border-b pb-2 mb-2 text-slate-700">📍 候補物件マップ</h2>
-        <div id="map" class="rounded-lg border"></div>
-      </div>
-      <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-        <label class="text-xs font-bold text-emerald-700 block mb-2">物件を選択</label>
-        <select id="house-select" onchange="updateHouseInfo()" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-3">
-          <option value="">読込中...</option>
-        </select>
-        <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">選択中</span>
-        <p id="house-title" class="text-sm font-bold mt-1 text-slate-800">物件を選択してください</p>
-        <div class="mt-2 text-xs text-slate-600 space-y-1">
-          <p>改修コスト概算: <b id="house-cost" class="text-slate-800">-</b></p>
-          <p>想定用途: <b id="house-features">-</b></p>
-          <p>所在地: <b id="house-address" class="text-slate-800">-</b></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 収支グラフ ＆ PDFボタン -->
-    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col justify-between border border-slate-200">
-      <div>
-        <h2 class="font-bold border-b pb-2 mb-3 text-slate-700">📊 収支シミュレーション</h2>
-        <canvas id="financeChart" class="mb-4"></canvas>
-      </div>
-      <div class="border-t pt-3">
-        <button onclick="downloadPDF()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
-          📄 提案書(PDF)を出力・ダウンロード
-        </button>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    let selectedHouseId = 1;
-    let allProperties = [];
-
-    // 0. 物件リストを読み込み
-    async function loadProperties() {
-      try {
-        const res = await fetch('http://localhost:8080/api/properties');
-        allProperties = await res.json();
+    <!-- メインコンテンツ -->
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        const select = document.getElementById('house-select');
-        select.innerHTML = '';
-        
-        allProperties.forEach((prop, idx) => {
-          const option = document.createElement('option');
-          option.value = idx + 1;
-          option.textContent = `${prop.municipality} - ${prop.title} (¥${prop.price.toLocaleString()})`;
-          select.appendChild(option);
+        <!-- 左カラム：マップと物件選択 -->
+        <section class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2 text-slate-700">
+                    <span>📍</span> 候補物件マップ
+                </h2>
+                <div id="map" class="h-64 rounded-lg border border-slate-200 z-0"></div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <!-- 都道府県フィルター -->
+                <div>
+                    <label for="prefSelect" class="block text-sm font-bold text-slate-700 mb-1">エリアを選択</label>
+                    <select id="prefSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="all">すべてのエリア（東京都・埼玉県など）</option>
+                        <option value="東京都">東京都</option>
+                        <option value="埼玉県">埼玉県</option>
+                    </select>
+                </div>
+
+                <!-- 物件選択プルダウン -->
+                <div>
+                    <label for="houseSelect" class="block text-sm font-bold text-slate-700 mb-1">物件を選択</label>
+                    <select id="houseSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="">読込中...</option>
+                    </select>
+                </div>
+
+                <!-- 詳細表示エリア -->
+                <div id="houseDetail" class="text-sm space-y-1.5 pt-2 border-t border-slate-100 text-slate-600">
+                    <p class="font-bold text-slate-800 text-base" id="detailName">物件を選択してください</p>
+                    <p id="detailCost">改修コスト概算: -</p>
+                    <p id="detailUsage">想定用途: -</p>
+                    <p id="detailAddress">所在地: -</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右カラム：収支シミュレーション & PDF出力 -->
+        <section class="space-y-4 flex flex-col">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2 text-slate-700">
+                    <span>📊</span> 収支シミュレーション
+                </h2>
+                <div class="relative w-full h-64">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <button onclick="downloadPDF()" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 mt-auto">
+                <span>📄</span> 提案書(PDF)を出力・ダウンロード
+            </button>
+        </section>
+
+    </main>
+
+    <!-- JS ロジック -->
+    <script>
+        let map, chartInstance;
+        let propertyData = [];
+        let selectedMarker = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initMap();
+            fetchProperties();
+
+            document.getElementById('prefSelect').addEventListener('change', (e) => {
+                filterProperties(e.target.value);
+            });
         });
-        
-        if (allProperties.length > 0) {
-          select.value = 1;
-          updateHouseInfo();
+
+        function initMap() {
+            map = L.map('map').setView([35.809, 139.096], 9);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
         }
-      } catch (e) {
-        console.error('物件リスト読み込みエラー:', e);
-      }
-    }
 
-    // 物件情報更新
-    function updateHouseInfo() {
-      const select = document.getElementById('house-select');
-      const globalId = parseInt(select.value);
-      selectedHouseId = globalId;
-      
-      const house = allProperties[globalId - 1];
-      
-      if (!house) return;
-      
-      document.getElementById('house-title').textContent = house.title;
-      document.getElementById('house-cost').textContent = `約 ${(house.renovation_cost_est / 10000).toFixed(0)} 万円`;
-      document.getElementById('house-features').textContent = house.features;
-      document.getElementById('house-address').textContent = house.address;
-      
-      // 地図更新
-      if (house.latitude && house.longitude) {
-        map.setView([house.latitude, house.longitude], 12);
-        if (currentMarker) map.removeLayer(currentMarker);
-        currentMarker = L.marker([house.latitude, house.longitude]).addTo(map)
-          .bindPopup(`<b>${house.title}</b><br>${house.address}`).openPopup();
-      }
-      
-      // チャートを更新（簡易版）
-      updateChart(house);
-    }
+        async function fetchProperties() {
+            try {
+                const res = await fetch('http://localhost:8080/api/properties');
+                propertyData = await res.json();
+                
+                filterProperties('all');
 
-    let currentMarker = null;
+                const select = document.getElementById('houseSelect');
+                select.addEventListener('change', (e) => updateSelection(e.target.value));
 
-    // 1. 地図初期化
-    const map = L.map('map').setView([36.2048, 138.2529], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+            } catch (err) {
+                console.error("物件データの読み込み失敗:", err);
+                document.getElementById('houseSelect').innerHTML = '<option value="">データ読み込みエラー</option>';
+            }
+        }
 
-    // 2. 収支グラフ初期化
-    let chartInstance = null;
-    function updateChart(house) {
-      const baseRevenue = Math.max(100, house.price / 100000);
-      const ctx = document.getElementById('financeChart').getContext('2d');
-      
-      if (chartInstance) chartInstance.destroy();
-      
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['1年目', '2年目', '3年目', '4年目', '5年目'],
-          datasets: [
-            { label: '売上 (万円)', data: [baseRevenue, baseRevenue*1.2, baseRevenue*1.4, baseRevenue*1.5, baseRevenue*1.6], backgroundColor: '#10b981' },
-            { label: 'コスト (万円)', data: [baseRevenue*0.6, baseRevenue*0.65, baseRevenue*0.7, baseRevenue*0.7, baseRevenue*0.72], backgroundColor: '#f43f5e' }
-          ]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-      });
-    }
+        function filterProperties(pref) {
+            const select = document.getElementById('houseSelect');
+            select.innerHTML = '';
 
-    // バックエンドAPI経由でPDFを出力・取得
-    function downloadPDF() {
-      const url = `http://localhost:8080/api/generate-pdf?id=${selectedHouseId}`;
-      window.open(url, '_blank');
-    }
+            const filtered = propertyData.filter(house => {
+                if (pref === 'all') return true;
+                const addr = house.address || house.location || '';
+                return addr.includes(pref);
+            });
 
-    // 初期化
-    loadProperties();
-  </script>
+            if (filtered.length === 0) {
+                select.innerHTML = '<option value="">該当する物件がありません</option>';
+                clearDetail();
+                return;
+            }
+
+            filtered.forEach((house, idx) => {
+                const option = document.createElement('option');
+                option.value = house.global_id || (idx + 1);
+                
+                const loc = house.address || house.location || '';
+                const name = house.name || house.title || `物件 #${idx + 1}`;
+                option.textContent = loc ? `${loc} - ${name}` : name;
+                
+                select.appendChild(option);
+            });
+
+            updateSelection(filtered[0].global_id || 1);
+        }
+
+        // 座標補正用関数（データにlat/lngがない場合、住所から近似値を自動割り振る）
+        function getCoordinates(house) {
+            let lat = parseFloat(house.lat || house.latitude);
+            let lng = parseFloat(house.lng || house.longitude);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                return [lat, lng];
+            }
+
+            const address = house.address || house.location || '';
+            // 奥多摩周辺のデフォルト座標（少しずつズラして重なりを防止）
+            const offset = ((house.global_id || 1) % 10) * 0.005;
+            if (address.includes('奥多摩')) return [35.809 + offset, 139.096 + offset];
+            if (address.includes('埼玉')) return [35.856 + offset, 139.648 + offset];
+            
+            return [35.689 + offset, 139.691 + offset]; // デフォルト東京
+        }
+
+        function updateSelection(selectedId) {
+            const house = propertyData.find(h => String(h.global_id) === String(selectedId) || String(propertyData.indexOf(h) + 1) === String(selectedId));
+            if (!house) return;
+
+            document.getElementById('detailName').textContent = house.name || house.title || '-';
+            
+            const cost = house.renovation_cost || house.renovationCost || house.cost || 0;
+            document.getElementById('detailCost').textContent = cost > 0 
+                ? `改修コスト概算: ¥${cost.toLocaleString()}` 
+                : '改修コスト概算: ¥3,000,000（想定）';
+
+            document.getElementById('detailUsage').textContent = `想定用途: ${house.usage || house.purpose || '地域交流拠点'}`;
+            document.getElementById('detailAddress').textContent = `所在地: ${house.address || house.location || '-'}`;
+
+            // 座標を取得してピンを配置
+            const coords = getCoordinates(house);
+
+            if (selectedMarker) {
+                map.removeLayer(selectedMarker);
+            }
+
+            selectedMarker = L.marker(coords)
+                .addTo(map)
+                .bindPopup(`<b>📍 ${house.name || '選択中の物件'}</b>`)
+                .openPopup();
+
+            map.flyTo(coords, 13);
+
+            updateChart(house);
+        }
+
+        function clearDetail() {
+            document.getElementById('detailName').textContent = '物件を選択してください';
+            document.getElementById('detailCost').textContent = '改修コスト概算: -';
+            document.getElementById('detailUsage').textContent = '想定用途: -';
+            document.getElementById('detailAddress').textContent = '所在地: -';
+            if (selectedMarker) map.removeLayer(selectedMarker);
+            if (chartInstance) chartInstance.destroy();
+        }
+
+        function updateChart(house) {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            const baseRevenue = 120;
+            
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1年目', '2年目', '3年目', '4年目', '5年目'],
+                    datasets: [
+                        { label: '売上 (万円)', data: [baseRevenue, 140, 160, 175, 190], backgroundColor: '#10b981' },
+                        { label: 'コスト (万円)', data: [80, 60, 55, 50, 50], backgroundColor: '#ef4444' }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function downloadPDF() {
+            const selectedId = document.getElementById('houseSelect').value;
+            if (!selectedId) {
+                alert("物件を選択してください");
+                return;
+            }
+            window.location.href = `http://localhost:8080/api/generate-pdf?id=${selectedId}`;
+        }
+    </script>
 </body>
 </html>
