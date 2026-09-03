@@ -7,7 +7,8 @@ web/app.py
     export GEMINI_API_KEY=xxxxx   # または プロジェクトルートの .env に記載
     uvicorn web.app:app --reload --port 8000
 
-    ブラウザで http://localhost:8000 を開く。
+    ブラウザで http://localhost:8000 を開く(「チャットで調べる/地図で調べる」の選択画面)。
+    チャット画面は http://localhost:8000/chat 。
 
 設計メモ(B・C担当向け):
 - セッションはインメモリの dict で管理しているだけのプロトタイプ実装です。
@@ -69,6 +70,11 @@ def _get_or_create_agent(session_id: str | None) -> tuple[str, AkiyaAgent]:
 
 
 @app.get("/")
+def landing():
+    return FileResponse(STATIC_DIR / "landing.html")
+
+
+@app.get("/chat")
 def index():
     return FileResponse(STATIC_DIR / "index.html")
 

@@ -41,6 +41,24 @@
     font-size: 12px;
     color: var(--muted);
   }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-link {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-link:hover { border-color: var(--accent); }
   main {
     flex: 1;
     overflow-y: auto;
@@ -56,6 +74,7 @@
     display: flex;
   }
   .msg-row.user { justify-content: flex-end; }
+  .msg-row.agent { flex-direction: column; }
   .bubble {
     max-width: 78%;
     padding: 10px 14px;
@@ -138,8 +157,16 @@
 </head>
 <body>
 <header>
-  <h1>空き家AIプランナー</h1>
-  <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(対応エリア: 千葉県・東京都西多摩地域・埼玉県羽生市)</p>
+  <div class="header-row">
+    <div>
+      <h1>空き家AIプランナー</h1>
+      <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(対応エリア: 千葉県・東京都西多摩地域・埼玉県羽生市)</p>
+    </div>
+    <div style="display:flex; gap:8px; flex-shrink:0;">
+      <a class="nav-link" href="/">🏠 トップへ</a>
+      <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
+    </div>
+  </div>
 </header>
 
 <main id="chat-log"></main>
@@ -155,6 +182,12 @@
 <script>
   // このセッションだけの一時的なID(ページを再読み込みすると新しい会話になります)
   const sessionState = { id: null };
+
+  // フロント(マップ・グラフ・PDF出力画面、C担当作成)へのリンク先。
+  // ローカルで両方のサーバーを立ち上げている間は http://localhost:8080/ でOK。
+  // フロントを別途デプロイしたら、そのURLに書き換えてください。
+  const FRONTEND_URL = "http://localhost:8080/";
+  document.getElementById("frontend-link").href = FRONTEND_URL;
 
   function el(tag, className, text) {
     const e = document.createElement(tag);
@@ -187,28 +220,15 @@
             `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
           if (p.features) card.appendChild(el("div", "card-row", p.features));
 
-          const toggle = el("div", "card-toggle", "▶ 詳細を見る");
+          // クリックすると、この物件を選択した状態でフロント(マップ・グラフ・PDF出力画面)を新しいタブで開く。
+          const toggle = el("div", "card-toggle", "🗺️ マップ・PDF出力で見る");
           card.appendChild(toggle);
 
-          const detail = el("div", "card-detail");
-          detail.hidden = true;
-          const detailLines = [
-            p.area ? `住所: ${p.area}` : null,
-            p.land_area_sqm ? `土地面積: ${p.land_area_sqm}㎡` : null,
-            p.built_year ? `築年: ${p.built_year}` : null,
-            p.renovation_cost_est_man_yen ? `改修費目安(データ提供): 約${p.renovation_cost_est_man_yen}万円` : null,
-            p.id ? `物件ID: ${p.id}` : null,
-          ].filter(Boolean);
-          for (const line of detailLines) {
-            detail.appendChild(el("div", "card-row", line));
+          if (p.id) {
+            card.addEventListener("click", () => {
+              window.open(`${FRONTEND_URL}?property_id=${p.id}`, "_blank");
+            });
           }
-          card.appendChild(detail);
-
-          card.addEventListener("click", () => {
-            const wasHidden = detail.hidden;
-            detail.hidden = !wasHidden;
-            toggle.textContent = wasHidden ? "▼ 閉じる" : "▶ 詳細を見る";
-          });
 
           wrap.appendChild(card);
         }
