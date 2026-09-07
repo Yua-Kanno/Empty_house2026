@@ -26,11 +26,21 @@
     padding: 32px 16px 80px;
   }
   .wrap { width: 100%; max-width: 560px; }
-  .top-nav { margin-bottom: 16px; }
+  .top-nav {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .top-nav a {
     font-size: 12px;
     color: var(--accent);
     text-decoration: none;
+  }
+  .top-nav .skip-link-top {
+    color: var(--muted);
   }
   .badge {
     display: inline-block;
@@ -99,20 +109,15 @@
     cursor: pointer;
   }
   button:disabled { opacity: 0.5; cursor: default; }
-  .skip-link {
-    display: block;
-    text-align: center;
-    margin-top: 14px;
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-  }
   .required { color: #b5533b; font-weight: 400; font-size: 11px; margin-left: 4px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top-nav"><a href="/">← トップへ戻る</a></div>
+  <div class="top-nav">
+    <a href="/">← トップへ戻る</a>
+    <a class="skip-link-top" href="/chat">診断をスキップして自由にチャットする →</a>
+  </div>
   <span class="badge">STEP 1 / 診断</span>
   <h1>🧭 あなたに合った空き家を診断</h1>
   <p class="lead">かんたんな質問に答えると、その内容をもとにAIとのチャットが始まり、あなたに合った空き家や活用プランを提案します。答えられる範囲でOKです。</p>
@@ -178,7 +183,6 @@
     <div class="submit-row">
       <button type="submit">診断してAIに相談する</button>
     </div>
-    <a class="skip-link" href="/chat">診断をスキップして自由にチャットする →</a>
   </form>
 </div>
 
