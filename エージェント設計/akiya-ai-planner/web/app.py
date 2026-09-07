@@ -15,14 +15,20 @@ web/app.py
   複数人での同時利用やプロセス再起動をまたぐ永続化が必要になったら、
   SESSIONS を Redis 等に差し替えてください。
 - POST /api/chat のレスポンスに含まれる tool_calls には、そのターンで実行された
-  search_akiya / estimate_renovation_cost / simulate_income / search_subsidies の
-  生の結果(候補一覧・座標・コスト・収支・補助金など)がそのまま入っています。
-  C担当の地図(Leaflet.js)・グラフ(Chart.js)表示は、この tool_calls を
-  そのまま入力として使う想定です。
+  search_akiya / estimate_renovation_cost / simulate_income / search_subsidies /
+  generate_shop_image の生の結果(候補一覧・座標・コスト・収支・補助金・画像など)が
+  そのまま入っています。C担当の地図(Leaflet.js)・グラフ(Chart.js)表示は、この
+  tool_calls をそのまま入力として使う想定です。
+- POST /api/quick-match は、診断フォーム(/diagnosis)の回答からGeminiとの会話を挟まずに
+  直接 search_akiya を呼び出す「1段目のマッチング」です。エリア指定があり、かつ直接
+  マッチする物件が見つかった場合は matched=true を返し、diagnosis.html側はそのままフロント
+  (マップ・PDF出力画面)へ物件IDつきで遷移します。マッチしなかった場合は matched=false を
+  返し、diagnosis.html側は /chat?diagnosis=... へフォールバックしてGeminiとの会話に入ります。
 """
 
 from __future__ import annotations
 
+import re
 import sys
 import uuid
 from pathlib import Path
@@ -36,6 +42,7 @@ from pydantic import BaseModel
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+import tools  # noqa: E402
 from agent import AkiyaAgent  # noqa: E402
 
 app = FastAPI(title="空き家AIプランナー")
@@ -56,6 +63,37 @@ class ChatResponse(BaseModel):
     session_id: str
     reply: str
     tool_calls: list[dict]
+
+
+class QuickMatchRequest(BaseModel):
+    """診断フォーム(/diagnosis)の回答。1段目の直接マッチング判定に使う。"""
+
+    job: str | None = None
+    personality: list[str] | None = None
+    environment: str | None = None
+    hobby: str | None = None
+    lifestyle: str | None = None
+    dream: str | None = None
+    area: str | None = None
+    budget: str | None = None
+
+
+class QuickMatchResponse(BaseModel):
+    matched: bool
+    property_id: int | None = None
+    count: int
+    results: list[dict]
+
+
+_BUDGET_RE = re.compile(r"(\d+(?:\.\d+)?)\s*万")
+
+
+def _parse_budget_man_yen(text: str | None) -> float | None:
+    """「300万円くらいまで」のような自由入力から予算上限(万円)を抜き出す。取れなければNone。"""
+    if not text:
+        return None
+    m = _BUDGET_RE.search(text)
+    return float(m.group(1)) if m else None
 
 
 def _get_or_create_agent(session_id: str | None) -> tuple[str, AkiyaAgent]:
@@ -87,6 +125,32 @@ def index():
 @app.get("/api/health")
 def health():
     return {"ok": True}
+
+
+@app.post("/api/quick-match", response_model=QuickMatchResponse)
+def quick_match(req: QuickMatchRequest):
+    """診断フォームの回答から、Geminiとの会話を挟まずに直接マッチングを試みる(①診断の1段目)。
+
+    エリアが未入力の場合はそもそも絞り込みができない(=ほぼ全件がヒットしてしまい「マッチング
+    した」とは言えない)ため、常にマッチ無し扱いとし、フロント側でチャット(Geminiとの会話)に
+    フォールバックさせる。
+    """
+    if not req.area or not req.area.strip():
+        return QuickMatchResponse(matched=False, property_id=None, count=0, results=[])
+
+    use_type = (req.dream or req.job or "").strip() or None
+    max_budget = _parse_budget_man_yen(req.budget)
+
+    result = tools.search_akiya(
+        area=req.area.strip(),
+        max_budget_man_yen=max_budget,
+        use_type=use_type,
+        limit=3,
+    )
+    results = result.get("results", [])
+    if results:
+        return QuickMatchResponse(matched=True, property_id=results[0]["id"], count=len(results), results=results)
+    return QuickMatchResponse(matched=False, property_id=None, count=0, results=[])
 
 
 @app.post("/api/chat", response_model=ChatResponse)

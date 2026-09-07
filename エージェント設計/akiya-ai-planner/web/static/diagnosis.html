@@ -203,9 +203,13 @@
     return Array.from(group.querySelectorAll('.chip.selected')).map((c) => c.dataset.value);
   }
 
-  document.getElementById('diagnosis-form').addEventListener('submit', (e) => {
+  // フロント(マップ・PDF出力画面、C担当作成)へのリンク先。
+  const FRONTEND_URL = "https://empty-house2026-1.onrender.com/";
+
+  document.getElementById('diagnosis-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
     const job = form.job.value.trim();
     const hobby = form.hobby.value.trim();
     const lifestyle = form.lifestyle.value.trim();
@@ -215,7 +219,7 @@
     const personality = selectedValues('personality');
     const environment = selectedValues('environment');
 
-    // 診断結果を、チャットの最初のメッセージとして自然文にまとめる。
+    // 診断結果を、チャットの最初のメッセージとして自然文にまとめる(フォールバック用)。
     const lines = [];
     if (dream) lines.push(dream);
     if (job) lines.push(`やってみたい仕事は${job}です。`);
@@ -230,7 +234,35 @@
       ? lines.join(' ')
       : '移住や空き家の活用について相談したいです。';
 
-    window.location.href = `/chat?diagnosis=${encodeURIComponent(summary)}`;
+    const goToChat = () => {
+      window.location.href = `/chat?diagnosis=${encodeURIComponent(summary)}`;
+    };
+
+    // 1段目: エリア等の回答から、Geminiとの会話を挟まずに直接マッチングを試みる。
+    // マッチした場合はそのままフロント(マップ・PDF出力画面)へ。マッチしなければ
+    // Geminiとの会話(チャット画面)にフォールバックする。
+    submitBtn.disabled = true;
+    submitBtn.textContent = '診断中...';
+    try {
+      const resp = await fetch('/api/quick-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job, personality, environment, hobby, lifestyle, dream, area, budget }),
+      });
+      if (!resp.ok) {
+        goToChat();
+        return;
+      }
+      const data = await resp.json();
+      if (data.matched && data.property_id) {
+        window.location.href = `${FRONTEND_URL}?property_id=${data.property_id}`;
+      } else {
+        goToChat();
+      }
+    } catch (err) {
+      // 通信エラー等が起きても、チャットでの相談は続けられるようにする。
+      goToChat();
+    }
   });
 </script>
 </body>
