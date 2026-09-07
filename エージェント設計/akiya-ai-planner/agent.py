@@ -21,13 +21,38 @@ import os
 from dataclasses import dataclass, field
 from typing import Any
 
+import time
+
 from dotenv import load_dotenv
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 
 import tools
 
 load_dotenv()
+
+# Gemini側が混雑している時(503)やレート制限(429)は、一時的なものであることが多いため、
+# 少し待って自動的にリトライする。ユーザーには「考え中」のまま見えるだけで、失敗を意識させない。
+_RETRYABLE_CODES = {429, 503}
+_MAX_RETRIES = 3
+_RETRY_BASE_DELAY_SEC = 2.0
+
+
+def _send_with_retry(chat, content):
+    """chat.send_message を、一時的なエラー(429/503)であれば待機して再試行しながら呼び出す。"""
+    last_error: Exception | None = None
+    for attempt in range(_MAX_RETRIES + 1):
+        try:
+            return chat.send_message(content)
+        except genai_errors.APIError as e:
+            code = getattr(e, "code", None)
+            if code in _RETRYABLE_CODES and attempt < _MAX_RETRIES:
+                last_error = e
+                time.sleep(_RETRY_BASE_DELAY_SEC * (2 ** attempt))
+                continue
+            raise
+    raise last_error  # pragma: no cover (ここには到達しない想定)
 
 
 # ---------------------------------------------------------------------------
@@ -272,8 +297,12 @@ class AkiyaAgent:
             return {"error": f"ツール実行中にエラーが発生しました: {e}"}
 
     def send(self, user_message: str, max_tool_iterations: int = 6) -> AgentTurnResult:
-        """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。"""
-        response = self.chat.send_message(user_message)
+        """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。
+
+        Gemini側が一時的に混雑している(503)場合やレート制限(429)の場合は、
+        _send_with_retry が自動的に少し待って再試行する。
+        """
+        response = _send_with_retry(self.chat, user_message)
         tool_calls_log: list[ToolCallLog] = []
 
         iterations = 0
@@ -287,7 +316,7 @@ class AkiyaAgent:
                 function_response_parts.append(
                     types.Part.from_function_response(name=fc.name, response={"result": result})
                 )
-            response = self.chat.send_message(function_response_parts)
+            response = _send_with_retry(self.chat, function_response_parts)
 
         reply = response.text or "(応答を生成できませんでした。もう一度お試しください)"
         return AgentTurnResult(reply=reply, tool_calls=tool_calls_log)
