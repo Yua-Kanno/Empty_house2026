@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>診断 | 空き家AIプランナー</title>
+<style>
+  :root {
+    --bg: #f5f3ee;
+    --panel: #ffffff;
+    --text: #2b2b28;
+    --muted: #7a756a;
+    --accent: #3c6e52;
+    --accent-soft: #e5efe8;
+    --border: #e3ded2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 80px;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+  .top-nav { margin-bottom: 16px; }
+  .top-nav a {
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    background: var(--accent);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  h1 { margin: 0 0 6px; font-size: 22px; }
+  .lead { margin: 0 0 28px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+  label.q {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .hint-text { font-size: 11px; color: var(--muted); margin: -4px 0 8px; }
+  input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--bg);
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .chip.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .radio-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .radio-row .chip.selected { background: var(--accent); }
+  .submit-row { margin-top: 24px; text-align: center; }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 36px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .skip-link {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .required { color: #b5533b; font-weight: 400; font-size: 11px; margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-nav"><a href="/">← トップへ戻る</a></div>
+  <span class="badge">STEP 1 / 診断</span>
+  <h1>🧭 あなたに合った空き家を診断</h1>
+  <p class="lead">かんたんな質問に答えると、その内容をもとにAIとのチャットが始まり、あなたに合った空き家や活用プランを提案します。答えられる範囲でOKです。</p>
+
+  <form id="diagnosis-form">
+    <div class="card">
+      <div class="field">
+        <label class="q">やってみたい仕事・興味のある働き方は?</label>
+        <input type="text" name="job" placeholder="例: カフェ経営, 農業, リモートワーク, 民泊運営 など" />
+      </div>
+
+      <div class="field">
+        <label class="q">あなたの性格に近いものを選んでください(複数可)</label>
+        <div class="chips" data-group="personality">
+          <div class="chip" data-value="のんびり派">のんびり派</div>
+          <div class="chip" data-value="アクティブ派">アクティブ派</div>
+          <div class="chip" data-value="人と話すのが好き">人と話すのが好き</div>
+          <div class="chip" data-value="一人の時間が好き">一人の時間が好き</div>
+          <div class="chip" data-value="こだわり派">こだわり派</div>
+          <div class="chip" data-value="自由きままな性格">自由きままな性格</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q">住みたい環境は?</label>
+        <div class="radio-row" data-group="environment" data-mode="single">
+          <div class="chip" data-value="都会寄り">都会寄り</div>
+          <div class="chip" data-value="田舎・自然が多い場所">田舎・自然が多い場所</div>
+          <div class="chip" data-value="海の近く">海の近く</div>
+          <div class="chip" data-value="山の近く">山の近く</div>
+          <div class="chip" data-value="こだわらない">こだわらない</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="q">趣味・好きなことは?</label>
+        <input type="text" name="hobby" placeholder="例: 料理, DIY, 読書, 写真 など" />
+      </div>
+
+      <div class="field">
+        <label class="q">理想の暮らし方は?</label>
+        <input type="text" name="lifestyle" placeholder="例: 自然に囲まれてゆったり暮らしたい, 人が集まる場所を作りたい など" />
+      </div>
+
+      <div class="field">
+        <label class="q">やりたいこと・夢は?<span class="required">できれば入力してください</span></label>
+        <input type="text" name="dream" placeholder="例: カフェを開きたい, 農業をしたい, 移住してのんびり暮らしたい" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="q">気になっているエリアはありますか?(任意)</label>
+        <div class="hint-text">対応エリア: 千葉県内・東京都西多摩地域(奥多摩町・青梅市・あきる野市など)・埼玉県羽生市</div>
+        <input type="text" name="area" placeholder="例: 千葉県, 奥多摩町, 羽生市" />
+      </div>
+      <div class="field">
+        <label class="q">予算のイメージはありますか?(任意・万円)</label>
+        <input type="text" name="budget" placeholder="例: 300万円くらいまで" />
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit">診断してAIに相談する</button>
+    </div>
+    <a class="skip-link" href="/chat">診断をスキップして自由にチャットする →</a>
+  </form>
+</div>
+
+<script>
+  // チップ(複数選択・単一選択)のトグル処理
+  document.querySelectorAll('[data-group]').forEach((group) => {
+    const mode = group.dataset.mode === 'single' ? 'single' : 'multi';
+    group.querySelectorAll('.chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        if (mode === 'single') {
+          group.querySelectorAll('.chip').forEach((c) => c.classList.remove('selected'));
+          chip.classList.add('selected');
+        } else {
+          chip.classList.toggle('selected');
+        }
+      });
+    });
+  });
+
+  function selectedValues(groupName) {
+    const group = document.querySelector(`[data-group="${groupName}"]`);
+    return Array.from(group.querySelectorAll('.chip.selected')).map((c) => c.dataset.value);
+  }
+
+  document.getElementById('diagnosis-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const job = form.job.value.trim();
+    const hobby = form.hobby.value.trim();
+    const lifestyle = form.lifestyle.value.trim();
+    const dream = form.dream.value.trim();
+    const area = form.area.value.trim();
+    const budget = form.budget.value.trim();
+    const personality = selectedValues('personality');
+    const environment = selectedValues('environment');
+
+    // 診断結果を、チャットの最初のメッセージとして自然文にまとめる。
+    const lines = [];
+    if (dream) lines.push(dream);
+    if (job) lines.push(`やってみたい仕事は${job}です。`);
+    if (personality.length) lines.push(`性格は${personality.join('・')}なタイプだと思います。`);
+    if (environment.length) lines.push(`住みたい環境は${environment.join('・')}です。`);
+    if (hobby) lines.push(`趣味・好きなことは${hobby}です。`);
+    if (lifestyle) lines.push(`理想の暮らし方は「${lifestyle}」です。`);
+    if (area) lines.push(`気になっているエリアは${area}です。`);
+    if (budget) lines.push(`予算は${budget}くらいを考えています。`);
+
+    const summary = lines.length > 0
+      ? lines.join(' ')
+      : '移住や空き家の活用について相談したいです。';
+
+    window.location.href = `/chat?diagnosis=${encodeURIComponent(summary)}`;
+  });
+</script>
+</body>
+</html>

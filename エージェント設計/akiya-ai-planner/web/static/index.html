@@ -120,6 +120,14 @@
   .card-toggle { font-size: 11px; color: var(--accent); margin-top: 6px; }
   .card-detail { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 2px; }
   .card-detail[hidden] { display: none; }
+  .card.shop-image { border-left: 3px solid #6b5ca0; }
+  .card.shop-image img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 6px;
+    display: block;
+  }
+  .card.shop-image .card-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
   footer {
     border-top: 1px solid var(--border);
     background: var(--panel);
@@ -259,15 +267,31 @@
           wrap.appendChild(card);
         }
       }
+      if (tc.name === "generate_shop_image" && tc.result) {
+        const r = tc.result;
+        const card = el("div", "card shop-image");
+        if (r.image_base64) {
+          card.appendChild(el("div", "card-title", "🎨 AIが生成したイメージ"));
+          const img = document.createElement("img");
+          img.src = `data:${r.mime_type || "image/png"};base64,${r.image_base64}`;
+          img.alt = "AIが生成した店舗・ロゴのイメージ画像";
+          card.appendChild(img);
+          card.appendChild(el("div", "card-note", "※AIによるイメージ案です。実際のデザインを保証するものではありません。"));
+        } else {
+          card.appendChild(el("div", "card-title", "🎨 画像を生成できませんでした"));
+          if (r.error) card.appendChild(el("div", "card-row", r.error));
+        }
+        wrap.appendChild(card);
+      }
     }
 
     if (wrap.children.length > 0) container.appendChild(wrap);
   }
 
-  async function sendMessage() {
+  async function sendMessage(presetText) {
     const input = document.getElementById("input");
     const btn = document.getElementById("send-btn");
-    const text = input.value.trim();
+    const text = (presetText !== undefined ? presetText : input.value).trim();
     if (!text) return;
 
     appendMessage("user", text);
@@ -328,7 +352,16 @@
     }
   }
 
-  appendMessage("agent", "こんにちは。移住や空き家活用について、気になっていることを教えてください。");
+  // 診断フォーム(/diagnosis)から遷移してきた場合は、その回答をもとにした文章を
+  // 最初のユーザー発言として自動送信し、チャットをスタートする。
+  const params = new URLSearchParams(window.location.search);
+  const diagnosisText = params.get("diagnosis");
+  if (diagnosisText) {
+    appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");
+    sendMessage(diagnosisText);
+  } else {
+    appendMessage("agent", "こんにちは。移住や空き家活用について、気になっていることを教えてください。");
+  }
 </script>
 </body>
 </html>

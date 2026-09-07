@@ -7,6 +7,7 @@ tools.py
 - estimate_renovation_cost : 改修コスト概算 (物件が実測値を持っていればそれを優先し、無ければ簡易式で概算)
 - simulate_income       : 用途別の収支シミュレーション (簡易モデル)
 - search_subsidies      : 補助金・支援制度の検索 (Gemini Embeddingsによる簡易RAG。APIキー無しの場合はキーワード検索にフォールバック)
+- generate_shop_image   : 店舗イメージ・ロゴ画像の生成 (Geminiの画像生成モデル。APIキー無し・生成失敗時はエラーを返すのみ)
 
 B担当がDB(PostgreSQL)実装に移行する際は、この4関数のシグネチャ(引数名・返り値の形)を
 変えずに中身だけ差し替えれば、agent.py側は無改修で動く設計にしています。
@@ -435,6 +436,57 @@ def search_subsidies(query: str, area: str | None = None, top_k: int = 3) -> dic
         results.append(item)
 
     return {"count": len(results), "method": method, "results": results}
+
+
+# ---------------------------------------------------------------------------
+# 5. 店舗イメージ・ロゴ画像生成
+# ---------------------------------------------------------------------------
+
+_DEFAULT_IMAGE_MODEL = "gemini-3.1-flash-image"
+
+
+def generate_shop_image(prompt: str, image_type: str = "店舗イメージ") -> dict:
+    """お店のイメージ画像やロゴ案をGeminiの画像生成モデルで生成する。
+
+    Args:
+        prompt: 生成したい画像の内容(コンセプト・雰囲気・色味・モチーフなど、具体的であるほど良い)。
+        image_type: 何の画像かを表すラベル(例: "店舗イメージ", "ロゴ", "外観イメージ")。
+            プロンプトの前置きとして使う。
+
+    Returns:
+        成功時は {"image_base64": str, "mime_type": str, "prompt_used": str} を、
+        失敗時は {"error": str} を返す。画像は必ず生成できるとは限らないため、
+        呼び出し側(agent.py)はerrorキーの有無を見て、失敗時はテキストのみで代替説明する。
+    """
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return {"error": "GEMINI_API_KEY が設定されていないため、画像を生成できません。"}
+
+    full_prompt = (
+        f"{image_type}の画像を1枚生成してください。イメージ: {prompt}。"
+        "写真的、もしくは親しみやすいイラスト風で、明るい雰囲気にしてください。"
+    )
+
+    try:
+        from google import genai  # 遅延import(APIキー無し環境でも本モジュール自体は読み込めるように)
+
+        client = genai.Client(api_key=api_key)
+        model = os.environ.get("GEMINI_IMAGE_MODEL", _DEFAULT_IMAGE_MODEL)
+        interaction = client.interactions.create(model=model, input=full_prompt)
+
+        image = getattr(interaction, "output_image", None)
+        if image is not None and getattr(image, "data", None):
+            return {
+                "image_base64": image.data,
+                "mime_type": getattr(image, "mime_type", None) or "image/png",
+                "prompt_used": full_prompt,
+            }
+        return {
+            "error": "画像を生成できませんでした(モデルから画像が返されませんでした)。",
+            "prompt_used": full_prompt,
+        }
+    except Exception as e:
+        return {"error": f"画像生成中にエラーが発生しました: {e}", "prompt_used": full_prompt}
 
 
 if __name__ == "__main__":
