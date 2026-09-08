@@ -25,6 +25,14 @@ app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 CORS(app)
 
 
+@app.after_request
+def no_cache(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+
 def init_database():
     if os.path.exists(DATABASE_PATH) and os.path.getmtime(DATABASE_PATH) >= os.path.getmtime(SCHEMA_PATH):
         return

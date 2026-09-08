@@ -245,22 +245,33 @@ class AkiyaAgent:
     """
 
     def __init__(self, api_key: str | None = None, model: str | None = None):
-        api_key = api_key or os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            raise RuntimeError(
-                "GEMINI_API_KEY が設定されていません。.env ファイルまたは環境変数で設定してください。"
-            )
-        self.client = genai.Client(api_key=api_key)
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
+        self.client = None
+        self.chat = None
+        self.error_message = None
 
-        config = types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            tools=[types.Tool(function_declarations=FUNCTION_DECLARATIONS)],
-            # ツール実行はこちらで制御する(結果をログとして拾いたいため自動実行はしない)
-            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-            temperature=0.4,
-        )
-        self.chat = self.client.chats.create(model=self.model, config=config)
+        if not self.api_key:
+            self.error_message = (
+                "GEMINI_API_KEY が未設定です。AI相談機能を使うには、.env ファイルまたは環境変数に "
+                "GEMINI_API_KEY を設定してください。"
+            )
+            return
+
+        try:
+            self.client = genai.Client(api_key=self.api_key)
+            config = types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                tools=[types.Tool(function_declarations=FUNCTION_DECLARATIONS)],
+                # ツール実行はこちらで制御する(結果をログとして拾いたいため自動実行はしない)
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+                temperature=0.4,
+            )
+            self.chat = self.client.chats.create(model=self.model, config=config)
+        except Exception as e:
+            self.error_message = f"Gemini API の初期化に失敗しました: {e}"
+            self.client = None
+            self.chat = None
 
     def _execute_tool(self, name: str, args: dict[str, Any]) -> dict[str, Any]:
         fn = TOOL_REGISTRY.get(name)
@@ -273,6 +284,17 @@ class AkiyaAgent:
 
     def send(self, user_message: str, max_tool_iterations: int = 6) -> AgentTurnResult:
         """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。"""
+        if self.chat is None:
+            fallback = self.error_message or "Gemini API が利用できないため、AI相談を開始できません。"
+            return AgentTurnResult(
+                reply=(
+                    f"{fallback}\n\n"
+                    "設定例: export GEMINI_API_KEY=your_api_key\n"
+                    "または .env に GEMINI_API_KEY=your_api_key を追加してください。"
+                ),
+                tool_calls=[],
+            )
+
         response = self.chat.send_message(user_message)
         tool_calls_log: list[ToolCallLog] = []
 
@@ -294,9 +316,12 @@ class AkiyaAgent:
 
 
 if __name__ == "__main__":
-    # 簡易動作確認。GEMINI_API_KEY が必要。
+    # 簡易動作確認。GEMINI_API_KEY がなければ案内メッセージを表示する。
     agent = AkiyaAgent()
-    result = agent.send("千葉県でカフェを開きたいです。予算は300万円くらいです。")
-    print(result.reply)
-    for tc in result.tool_calls:
-        print(f"[tool] {tc.name}({tc.args}) -> {tc.result}")
+    if agent.chat is None:
+        print(agent.error_message)
+    else:
+        result = agent.send("千葉県でカフェを開きたいです。予算は300万円くらいです。")
+        print(result.reply)
+        for tc in result.tool_calls:
+            print(f"[tool] {tc.name}({tc.args}) -> {tc.result}")
