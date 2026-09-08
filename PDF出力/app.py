@@ -37,9 +37,18 @@ def init_database():
     if os.path.exists(DATABASE_PATH) and os.path.getmtime(DATABASE_PATH) >= os.path.getmtime(SCHEMA_PATH):
         return
 
-    with sqlite3.connect(DATABASE_PATH) as connection:
-        with open(SCHEMA_PATH, encoding="utf-8") as schema_file:
-            connection.executescript(schema_file.read())
+    # Gunicornなど複数ワーカー/同時リクエスト環境で、構築中のDBファイルを他のリクエストが
+    # 読みに行ってしまう(または複数ワーカーが同じファイルに同時書き込みしてしまう)のを防ぐため、
+    # 一時ファイルに構築してから完成後にアトミックにリネームする。
+    tmp_path = f"{DATABASE_PATH}.tmp.{os.getpid()}"
+    try:
+        with sqlite3.connect(tmp_path) as connection:
+            with open(SCHEMA_PATH, encoding="utf-8") as schema_file:
+                connection.executescript(schema_file.read())
+        os.replace(tmp_path, DATABASE_PATH)
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 def load_properties_from_database():
@@ -74,6 +83,15 @@ def load_subsidies_from_database(municipality):
             (municipality,)
         ).fetchall()
     return [dict(row) for row in rows]
+
+# Gunicorn等での起動時に一度だけDBを構築しておく(初回リクエストが複数同時に来て
+# 競合するのを防ぐ)。失敗してもアプリ自体は起動させ、後続のリクエスト側の
+# init_database() 呼び出しでリトライされるようにする。
+try:
+    init_database()
+except Exception as e:  # noqa: BLE001
+    print(f"起動時のDB初期化に失敗しました(リクエスト時に再試行されます): {e}")
+
 
 # http://localhost:5000/ で index.html を配信
 @app.route('/')
