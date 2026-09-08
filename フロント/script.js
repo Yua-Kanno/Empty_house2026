@@ -310,16 +310,49 @@ function fitMapToVisibleProperties(filteredProperties) {
     }
 }
 
+// 都道府県ごとの代表座標(県庁所在地付近)。実際の緯度経度データが無い物件のフォールバック用。
+const PREF_COORDS = {
+    '北海道': [43.0642, 141.3469], '青森県': [40.8244, 140.7400], '岩手県': [39.7036, 141.1527],
+    '宮城県': [38.2688, 140.8721], '秋田県': [39.7186, 140.1024], '山形県': [38.2404, 140.3633],
+    '福島県': [37.7503, 140.4676], '茨城県': [36.3418, 140.4468], '栃木県': [36.5658, 139.8836],
+    '群馬県': [36.3911, 139.0608], '埼玉県': [35.8569, 139.6489], '千葉県': [35.6047, 140.1233],
+    '東京都': [35.6895, 139.6917], '神奈川県': [35.4478, 139.6425], '新潟県': [37.9026, 139.0232],
+    '富山県': [36.6953, 137.2113], '石川県': [36.5947, 136.6256], '福井県': [36.0652, 136.2216],
+    '山梨県': [35.6642, 138.5685], '長野県': [36.6513, 138.1810], '岐阜県': [35.3912, 136.7223],
+    '静岡県': [34.9769, 138.3831], '愛知県': [35.1802, 136.9066], '三重県': [34.7303, 136.5086],
+    '滋賀県': [35.0045, 135.8686], '京都府': [35.0212, 135.7556], '大阪府': [34.6863, 135.5200],
+    '兵庫県': [34.6913, 135.1830], '奈良県': [34.6851, 135.8049], '和歌山県': [34.2260, 135.1675],
+    '鳥取県': [35.5036, 134.2381], '島根県': [35.4723, 133.0505], '岡山県': [34.6617, 133.9350],
+    '広島県': [34.3966, 132.4596], '山口県': [34.1859, 131.4714], '徳島県': [34.0658, 134.5593],
+    '香川県': [34.3401, 134.0434], '愛媛県': [33.8416, 132.7657], '高知県': [33.5597, 133.5311],
+    '福岡県': [33.6064, 130.4181], '佐賀県': [33.2494, 130.2988], '長崎県': [32.7448, 129.8737],
+    '熊本県': [32.7898, 130.7417], '大分県': [33.2382, 131.6126], '宮崎県': [31.9111, 131.4239],
+    '鹿児島県': [31.5602, 130.5581], '沖縄県': [26.2124, 127.6809],
+};
+const PREF_NAMES = Object.keys(PREF_COORDS);
+
+function guessPrefecture(house) {
+    if (house.prefecture && PREF_COORDS[house.prefecture]) return house.prefecture;
+    const address = house.address || house.location || '';
+    return PREF_NAMES.find(name => address.startsWith(name)) || null;
+}
+
 function getCoordinates(house) {
     let lat = parseFloat(house.lat || house.latitude);
     let lng = parseFloat(house.lng || house.longitude);
     if (!isNaN(lat) && !isNaN(lng)) return [lat, lng];
 
+    // 同じ都道府県内の物件が完全に重ならないよう、id基準で少しずつ位置をずらす。
+    const latOffset = ((house.global_id || 1) % 10) * 0.03 - 0.15;
+    const lngOffset = ((house.global_id || 1) % 7) * 0.03 - 0.09;
+
     const address = house.address || house.location || '';
-    const offset = ((house.global_id || 1) % 10) * 0.005;
-    if (address.includes('奥多摩')) return [35.809 + offset, 139.096 + offset];
-    if (address.includes('埼玉')) return [35.856 + offset, 139.648 + offset];
-    return [35.689 + offset, 139.691 + offset];
+    if (address.includes('奥多摩')) return [35.809 + latOffset, 139.096 + lngOffset];
+    if (address.includes('羽生')) return [36.174 + latOffset, 139.551 + lngOffset];
+
+    const prefecture = guessPrefecture(house);
+    const base = (prefecture && PREF_COORDS[prefecture]) || PREF_COORDS['東京都'];
+    return [base[0] + latOffset, base[1] + lngOffset];
 }
 
 async function fetchSubsidies(municipality) {
