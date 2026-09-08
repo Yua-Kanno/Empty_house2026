@@ -70,7 +70,7 @@ class QuickMatchRequest(BaseModel):
 
     job: str | None = None
     personality: list[str] | None = None
-    environment: str | None = None
+    environment: list[str] | None = None
     hobby: str | None = None
     lifestyle: str | None = None
     dream: str | None = None
