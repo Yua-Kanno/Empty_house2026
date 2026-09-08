@@ -290,6 +290,38 @@
     return bubble;
   }
 
+  // 空き家カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
+  function buildAkiyaCard(p) {
+    const card = el("div", "card akiya expandable");
+    const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
+    card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
+    card.appendChild(el("div", "card-row",
+      `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
+    if (p.features) card.appendChild(el("div", "card-row", p.features));
+
+    // クリックすると、この物件を選択した状態でフロント(マップ・グラフ・PDF出力画面)を新しいタブで開く。
+    const toggle = el("div", "card-toggle", "🗺️ マップ・PDF出力で見る");
+    card.appendChild(toggle);
+
+    if (p.id) {
+      card.addEventListener("click", () => {
+        window.open(`${FRONTEND_URL}?property_id=${p.id}`, "_blank");
+      });
+    }
+
+    return card;
+  }
+
+  // 診断フォームの一発マッチ結果(Geminiを介さない)をチャットのカードとして表示する。
+  function renderAkiyaCards(container, results) {
+    if (!results || results.length === 0) return;
+    const wrap = el("div", "cards");
+    for (const p of results) {
+      wrap.appendChild(buildAkiyaCard(p));
+    }
+    if (wrap.children.length > 0) container.appendChild(wrap);
+  }
+
   function renderToolResults(container, toolCalls) {
     if (!toolCalls || toolCalls.length === 0) return;
     const wrap = el("div", "cards");
@@ -297,24 +329,7 @@
     for (const tc of toolCalls) {
       if (tc.name === "search_akiya" && tc.result && tc.result.results) {
         for (const p of tc.result.results) {
-          const card = el("div", "card akiya expandable");
-          const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
-          card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
-          card.appendChild(el("div", "card-row",
-            `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
-          if (p.features) card.appendChild(el("div", "card-row", p.features));
-
-          // クリックすると、この物件を選択した状態でフロント(マップ・グラフ・PDF出力画面)を新しいタブで開く。
-          const toggle = el("div", "card-toggle", "🗺️ マップ・PDF出力で見る");
-          card.appendChild(toggle);
-
-          if (p.id) {
-            card.addEventListener("click", () => {
-              window.open(`${FRONTEND_URL}?property_id=${p.id}`, "_blank");
-            });
-          }
-
-          wrap.appendChild(card);
+          wrap.appendChild(buildAkiyaCard(p));
         }
       }
       if (tc.name === "estimate_renovation_cost" && tc.result) {
@@ -428,11 +443,33 @@
     }
   }
 
-  // 診断フォーム(/diagnosis)から遷移してきた場合は、その回答をもとにした文章を
-  // 最初のユーザー発言として自動送信し、チャットをスタートする。
+  // 診断フォーム(/diagnosis)から遷移してきた場合の処理。
+  // 1) 一発マッチできた場合(quickmatch=1): Geminiには問い合わせず、
+  //    診断フォーム側からsessionStorage経由で受け取った検索結果をそのままカード表示する。
+  //    (Gemini APIの呼び出し回数を消費しないため。)
+  // 2) マッチしなかった場合: 従来通り、回答内容を最初のユーザー発言として自動送信し、
+  //    Geminiとの会話をスタートする。
   const params = new URLSearchParams(window.location.search);
   const diagnosisText = params.get("diagnosis");
-  if (diagnosisText) {
+  const isQuickMatch = params.get("quickmatch") === "1";
+
+  let quickMatchResults = [];
+  if (isQuickMatch) {
+    try {
+      quickMatchResults = JSON.parse(sessionStorage.getItem("quickMatchResults") || "[]");
+    } catch (err) {
+      quickMatchResults = [];
+    }
+    sessionStorage.removeItem("quickMatchResults");
+  }
+
+  if (isQuickMatch && quickMatchResults.length > 0) {
+    const bubbleContainer = appendMessage(
+      "agent",
+      "診断結果をもとに、こんな空き家が見つかりました!気になる物件をクリックすると、マップ・PDF出力画面で詳しく見られます。"
+    ).parentElement;
+    renderAkiyaCards(bubbleContainer, quickMatchResults);
+  } else if (diagnosisText) {
     appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");
     sendMessage(diagnosisText);
   } else {

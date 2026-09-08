@@ -301,9 +301,10 @@
       }
       const data = await resp.json();
       if (data.matched && data.results && data.results.length > 0) {
-        // マッチした候補(最大3件)のIDをまとめて渡し、地図側で一覧表示できるようにする。
-        const ids = data.results.map((r) => r.id).join(',');
-        window.location.href = `${FRONTEND_URL}?property_ids=${ids}`;
+        // マッチした候補(最大3件)をチャット画面に渡し、Geminiには問い合わせずに
+        // そのままチャット上でカード表示する(Gemini APIの呼び出し回数を消費しない)。
+        sessionStorage.setItem('quickMatchResults', JSON.stringify(data.results));
+        window.location.href = '/chat?quickmatch=1';
       } else {
         goToChat();
       }
