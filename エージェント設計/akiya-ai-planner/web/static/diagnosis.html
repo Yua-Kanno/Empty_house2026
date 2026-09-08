@@ -26,11 +26,21 @@
     padding: 32px 16px 80px;
   }
   .wrap { width: 100%; max-width: 560px; }
-  .top-nav { margin-bottom: 16px; }
+  .top-nav {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .top-nav a {
     font-size: 12px;
     color: var(--accent);
     text-decoration: none;
+  }
+  .top-nav .skip-link-top {
+    color: var(--muted);
   }
   .badge {
     display: inline-block;
@@ -99,20 +109,15 @@
     cursor: pointer;
   }
   button:disabled { opacity: 0.5; cursor: default; }
-  .skip-link {
-    display: block;
-    text-align: center;
-    margin-top: 14px;
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-  }
   .required { color: #b5533b; font-weight: 400; font-size: 11px; margin-left: 4px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top-nav"><a href="/">← トップへ戻る</a></div>
+  <div class="top-nav">
+    <a href="/">← トップへ戻る</a>
+    <a class="skip-link-top" href="/chat">診断をスキップして自由にチャットする →</a>
+  </div>
   <span class="badge">STEP 1 / 診断</span>
   <h1>🧭 あなたに合った空き家を診断</h1>
   <p class="lead">かんたんな質問に答えると、その内容をもとにAIとのチャットが始まり、あなたに合った空き家や活用プランを提案します。答えられる範囲でOKです。</p>
@@ -178,7 +183,6 @@
     <div class="submit-row">
       <button type="submit">診断してAIに相談する</button>
     </div>
-    <a class="skip-link" href="/chat">診断をスキップして自由にチャットする →</a>
   </form>
 </div>
 
@@ -203,9 +207,13 @@
     return Array.from(group.querySelectorAll('.chip.selected')).map((c) => c.dataset.value);
   }
 
-  document.getElementById('diagnosis-form').addEventListener('submit', (e) => {
+  // フロント(マップ・PDF出力画面、C担当作成)へのリンク先。
+  const FRONTEND_URL = "https://empty-house2026-1.onrender.com/";
+
+  document.getElementById('diagnosis-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
     const job = form.job.value.trim();
     const hobby = form.hobby.value.trim();
     const lifestyle = form.lifestyle.value.trim();
@@ -215,7 +223,7 @@
     const personality = selectedValues('personality');
     const environment = selectedValues('environment');
 
-    // 診断結果を、チャットの最初のメッセージとして自然文にまとめる。
+    // 診断結果を、チャットの最初のメッセージとして自然文にまとめる(フォールバック用)。
     const lines = [];
     if (dream) lines.push(dream);
     if (job) lines.push(`やってみたい仕事は${job}です。`);
@@ -230,7 +238,35 @@
       ? lines.join(' ')
       : '移住や空き家の活用について相談したいです。';
 
-    window.location.href = `/chat?diagnosis=${encodeURIComponent(summary)}`;
+    const goToChat = () => {
+      window.location.href = `/chat?diagnosis=${encodeURIComponent(summary)}`;
+    };
+
+    // 1段目: エリア等の回答から、Geminiとの会話を挟まずに直接マッチングを試みる。
+    // マッチした場合はそのままフロント(マップ・PDF出力画面)へ。マッチしなければ
+    // Geminiとの会話(チャット画面)にフォールバックする。
+    submitBtn.disabled = true;
+    submitBtn.textContent = '診断中...';
+    try {
+      const resp = await fetch('/api/quick-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job, personality, environment, hobby, lifestyle, dream, area, budget }),
+      });
+      if (!resp.ok) {
+        goToChat();
+        return;
+      }
+      const data = await resp.json();
+      if (data.matched && data.property_id) {
+        window.location.href = `${FRONTEND_URL}?property_id=${data.property_id}`;
+      } else {
+        goToChat();
+      }
+    } catch (err) {
+      // 通信エラー等が起きても、チャットでの相談は続けられるようにする。
+      goToChat();
+    }
   });
 </script>
 </body>
