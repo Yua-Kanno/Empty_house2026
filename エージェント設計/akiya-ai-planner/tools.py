@@ -36,7 +36,20 @@ def _load_json(filename: str) -> dict:
 
 
 def _akiya_records() -> list[dict]:
-    return _load_json("akiya_sample.json")["properties"]
+    """物件データを返す。
+
+    B担当収集の元データ(千葉県・東京都西多摩地域・埼玉県羽生市、108件)に加えて、
+    後から追加された全国47都道府県分のデータ(akiya_nationwide.json、schema.sqlから
+    生成したもの)があればそれもマージして返す。診断フォームの直接マッチング
+    (/api/quick-match)やチャット中の検索が、対応3エリア以外でもGeminiを介さずに
+    ヒットできるようにするため。
+    """
+    records = list(_load_json("akiya_sample.json")["properties"])
+    try:
+        records += _load_json("akiya_nationwide.json")["properties"]
+    except FileNotFoundError:
+        pass
+    return records
 
 
 def _subsidy_records() -> list[dict]:
