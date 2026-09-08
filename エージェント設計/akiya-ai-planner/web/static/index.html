@@ -4,68 +4,114 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>空き家AIプランナー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f3ee;
-    --panel: #ffffff;
-    --text: #2b2b28;
-    --muted: #7a756a;
+    --bg: #f6f1e6;
+    --panel: #fffdf7;
+    --text: #302a20;
+    --muted: #8a7f68;
     --accent: #3c6e52;
-    --accent-soft: #e5efe8;
-    --border: #e3ded2;
+    --accent-deep: #294c39;
+    --accent-soft: #e6efe1;
+    --clay: #b0603d;
+    --clay-soft: #f3e3d8;
+    --border: #e6dcc6;
     --user-bubble: #3c6e52;
-    --user-bubble-text: #ffffff;
-    --agent-bubble: #f0ede4;
+    --user-bubble-text: #fdfbf5;
+    --agent-bubble: #fffaf0;
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0;
-    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
-    background: var(--bg);
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
     color: var(--text);
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    background:
+      radial-gradient(ellipse 620px 420px at 8% -8%, rgba(60,110,82,0.10), transparent 60%),
+      radial-gradient(ellipse 520px 420px at 108% 12%, rgba(176,96,61,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 520px at 50% 118%, rgba(60,110,82,0.08), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
   }
+  h1, .brand-mark, button, .nav-link { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
+
   header {
-    padding: 16px 24px;
+    padding: 16px 24px 26px;
     background: var(--panel);
     border-bottom: 1px solid var(--border);
-  }
-  header h1 {
-    margin: 0;
-    font-size: 18px;
-  }
-  header p {
-    margin: 4px 0 0;
-    font-size: 12px;
-    color: var(--muted);
+    position: relative;
+    box-shadow: 0 1px 0 rgba(48,42,32,0.03);
   }
   .header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    color: var(--accent);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--muted);
   }
   .nav-link {
     flex-shrink: 0;
     font-size: 12px;
-    color: var(--accent);
+    font-weight: 500;
+    color: var(--accent-deep);
     background: var(--accent-soft);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 12px;
+    border-radius: 14px 4px 14px 4px;
+    padding: 6px 13px;
     text-decoration: none;
     white-space: nowrap;
+    display: inline-block;
+    transition: transform 0.15s ease, border-color 0.15s ease;
   }
-  .nav-link:hover { border-color: var(--accent); }
+  .nav-link:hover { border-color: var(--accent); transform: translateY(-1px) rotate(-0.6deg); }
+  .nav-link:nth-of-type(2) {
+    background: var(--clay-soft);
+    color: #7a4128;
+    border-radius: 4px 14px 4px 14px;
+  }
+
+  .torn-divider {
+    display: block;
+    width: 100%;
+    height: 14px;
+    margin-top: -1px;
+  }
+
   main {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: 22px 20px 28px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
     max-width: 760px;
     width: 100%;
     margin: 0 auto;
@@ -77,21 +123,22 @@
   .msg-row.agent { flex-direction: column; }
   .bubble {
     max-width: 78%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    line-height: 1.6;
+    padding: 11px 15px;
+    line-height: 1.7;
     font-size: 14px;
     white-space: pre-wrap;
+    box-shadow: 0 1px 2px rgba(48,42,32,0.06);
   }
   .msg-row.user .bubble {
     background: var(--user-bubble);
     color: var(--user-bubble-text);
-    border-bottom-right-radius: 4px;
+    border-radius: 20px 20px 4px 20px;
   }
   .msg-row.agent .bubble {
     background: var(--agent-bubble);
     color: var(--text);
-    border-bottom-left-radius: 4px;
+    border: 1px solid var(--border);
+    border-radius: 4px 20px 20px 20px;
   }
   .tool-tag {
     font-size: 11px;
@@ -101,80 +148,109 @@
   .cards {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
+    gap: 9px;
+    margin-top: 9px;
   }
   .card {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 4px 14px 14px 14px;
+    padding: 11px 13px;
     font-size: 13px;
+    box-shadow: 0 1px 2px rgba(48,42,32,0.05);
   }
-  .card-title { font-weight: 600; margin-bottom: 4px; }
+  .card-title { font-weight: 700; margin-bottom: 4px; }
   .card-row { color: var(--muted); font-size: 12px; }
   .card.subsidy { border-left: 3px solid var(--accent); }
-  .card.cost, .card.income { border-left: 3px solid #a06b3c; }
-  .card.expandable { cursor: pointer; transition: border-color 0.15s ease; }
-  .card.expandable:hover { border-color: var(--accent); }
+  .card.cost, .card.income { border-left: 3px solid var(--clay); }
+  .card.expandable { cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .card.expandable:hover { border-color: var(--accent); transform: translateY(-1px); }
   .card-toggle { font-size: 11px; color: var(--accent); margin-top: 6px; }
   .card-detail { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 2px; }
   .card-detail[hidden] { display: none; }
   .card.shop-image { border-left: 3px solid #6b5ca0; }
   .card.shop-image img {
     width: 100%;
-    border-radius: 8px;
+    border-radius: 4px 12px 12px 12px;
     margin-top: 6px;
     display: block;
   }
   .card.shop-image .card-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
   footer {
     border-top: 1px solid var(--border);
     background: var(--panel);
-    padding: 14px 20px;
+    padding: 16px 20px 18px;
   }
   .input-row {
     max-width: 760px;
     margin: 0 auto;
     display: flex;
-    gap: 8px;
+    gap: 9px;
+    align-items: flex-end;
   }
   textarea {
     flex: 1;
     resize: none;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 16px 16px 4px 16px;
+    padding: 11px 14px;
     font-size: 14px;
     font-family: inherit;
-    height: 44px;
+    height: 46px;
+    background: var(--bg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
   button {
     background: var(--accent);
-    color: white;
+    color: var(--user-bubble-text);
     border: none;
-    border-radius: 10px;
-    padding: 0 20px;
+    border-radius: 16px 16px 16px 4px;
+    padding: 0 22px;
+    height: 46px;
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
   }
+  button:hover:not(:disabled) { background: var(--accent-deep); transform: translateY(-1px); }
   button:disabled { opacity: 0.5; cursor: default; }
-  .hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 6px; }
+  .hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
   .loading .bubble { color: var(--muted); font-style: italic; }
+
+  main::-webkit-scrollbar { width: 8px; }
+  main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 </style>
 </head>
 <body>
 <header>
   <div class="header-row">
-    <div>
-      <h1>空き家AIプランナー</h1>
-      <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します</p>
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 40 V29.5 C20 28.7 20.7 28 21.5 28 H26 C26.8 28 27.5 28.7 27.5 29.5 V40" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M31 15 C33 12.5 33 10 31.5 6.5" stroke="var(--clay)" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="31.5" cy="6" r="1.6" fill="var(--clay)"/>
+      </svg>
+      <div>
+        <h1>空き家AIプランナー</h1>
+        <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します</p>
+      </div>
     </div>
     <div style="display:flex; gap:8px; flex-shrink:0;">
       <a class="nav-link" href="/">🏠 トップへ</a>
       <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
     </div>
   </div>
+  <svg class="torn-divider" viewBox="0 0 760 14" preserveAspectRatio="none">
+    <path d="M0,4 Q19,0 38,5 T76,4 T114,6 T152,3 T190,5 T228,4 T266,6 T304,3 T342,5 T380,4 T418,6 T456,3 T494,5 T532,4 T570,6 T608,3 T646,5 T684,4 T722,6 T760,4 V14 H0 Z" fill="var(--bg)"/>
+  </svg>
 </header>
 
 <main id="chat-log"></main>
