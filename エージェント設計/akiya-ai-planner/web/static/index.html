@@ -475,11 +475,22 @@
   }
 
   if (isQuickMatch && quickMatchResults.length > 0) {
-    const bubbleContainer = appendMessage(
-      "agent",
-      "診断結果をもとに、こんな空き家が見つかりました!気になる物件をクリックすると、マップ・PDF出力画面で詳しく見られます。"
-    ).parentElement;
-    renderAkiyaCards(bubbleContainer, quickMatchResults);
+    // 実際にはGeminiを呼ばず一瞬で結果が出せてしまうが、あえて「考え中...」を挟んで
+    // チャットらしい間を作ってから結果を表示する。
+    const log = document.getElementById("chat-log");
+    const loadingRow = el("div", "msg-row agent loading");
+    loadingRow.appendChild(el("div", "bubble", "考え中..."));
+    log.appendChild(loadingRow);
+    log.scrollTop = log.scrollHeight;
+
+    setTimeout(() => {
+      loadingRow.remove();
+      const bubbleContainer = appendMessage(
+        "agent",
+        "診断結果をもとに、こんな空き家が見つかりました!気になる物件をクリックすると、マップ・PDF出力画面で詳しく見られます。"
+      ).parentElement;
+      renderAkiyaCards(bubbleContainer, quickMatchResults);
+    }, 900);
   } else if (diagnosisText) {
     appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");
     sendMessage(diagnosisText);
