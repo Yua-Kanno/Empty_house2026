@@ -4,21 +4,26 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>空き家AIプランナー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f3ee;
-    --panel: #ffffff;
-    --text: #2b2b28;
-    --muted: #7a756a;
+    --bg: #f6f1e6;
+    --panel: #fffdf7;
+    --text: #302a20;
+    --muted: #8a7f68;
     --accent: #3c6e52;
-    --accent-soft: #e5efe8;
-    --border: #e3ded2;
+    --accent-deep: #294c39;
+    --accent-soft: #e6efe1;
+    --clay: #b0603d;
+    --clay-soft: #f3e3d8;
+    --border: #e6dcc6;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
-    background: var(--bg);
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
     color: var(--text);
     min-height: 100vh;
     display: flex;
@@ -26,19 +31,35 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
+    background:
+      radial-gradient(ellipse 620px 420px at 8% -8%, rgba(60,110,82,0.10), transparent 60%),
+      radial-gradient(ellipse 520px 420px at 108% 12%, rgba(176,96,61,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 520px at 50% 118%, rgba(60,110,82,0.08), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  h1, .badge, .choice-title, footer { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
+  .brand-mark {
+    width: 56px;
+    height: 56px;
+    color: var(--accent);
+    margin-bottom: 6px;
   }
   .badge {
     display: inline-block;
     font-size: 12px;
-    background: var(--accent);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 999px;
-    margin-bottom: 12px;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 14px 4px 14px 4px;
+    margin-bottom: 14px;
   }
   h1 {
     margin: 0 0 8px;
     font-size: 26px;
+    font-weight: 700;
     text-align: center;
   }
   .lead {
@@ -47,11 +68,12 @@
     font-size: 14px;
     text-align: center;
     max-width: 480px;
+    line-height: 1.7;
   }
   .choices {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 22px;
     justify-content: center;
     width: 100%;
     max-width: 640px;
@@ -60,31 +82,45 @@
     flex: 1 1 260px;
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 24px;
+    border-radius: 4px 26px 26px 26px;
+    padding: 30px 24px;
     text-decoration: none;
     color: var(--text);
     text-align: center;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    box-shadow: 0 1px 3px rgba(48,42,32,0.06);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    border-left: 3px solid var(--accent);
   }
   .choice-card:hover {
     border-color: var(--accent);
-    transform: translateY(-2px);
+    transform: translateY(-3px) rotate(-0.4deg);
+    box-shadow: 0 6px 14px rgba(48,42,32,0.08);
   }
-  .choice-icon { font-size: 40px; margin-bottom: 12px; }
+  .choice-card#map-card {
+    border-radius: 26px 4px 26px 26px;
+    border-left-color: var(--clay);
+  }
+  .choice-card#map-card:hover { transform: translateY(-3px) rotate(0.4deg); }
+  .choice-icon { font-size: 38px; margin-bottom: 12px; }
   .choice-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-  .choice-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .choice-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
   footer {
-    margin-top: 36px;
+    margin-top: 40px;
     font-size: 11px;
     color: var(--muted);
   }
 </style>
 </head>
 <body>
+  <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 40 V29.5 C20 28.7 20.7 28 21.5 28 H26 C26.8 28 27.5 28.7 27.5 29.5 V40" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31 15 C33 12.5 33 10 31.5 6.5" stroke="var(--clay)" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="31.5" cy="6" r="1.6" fill="var(--clay)"/>
+  </svg>
   <span class="badge">VORN Challenge 2026</span>
-  <h1>🏠 空き家AIプランナー</h1>
+  <h1>空き家AIプランナー</h1>
   <p class="lead">空き家の活用プランを、チャットで相談するか、マップから直接探すか選べます。</p>
 
   <div class="choices">

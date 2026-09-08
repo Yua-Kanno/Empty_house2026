@@ -4,28 +4,43 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>診断 | 空き家AIプランナー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f3ee;
-    --panel: #ffffff;
-    --text: #2b2b28;
-    --muted: #7a756a;
+    --bg: #f6f1e6;
+    --panel: #fffdf7;
+    --text: #302a20;
+    --muted: #8a7f68;
     --accent: #3c6e52;
-    --accent-soft: #e5efe8;
-    --border: #e3ded2;
+    --accent-deep: #294c39;
+    --accent-soft: #e6efe1;
+    --clay: #b0603d;
+    --clay-soft: #f3e3d8;
+    --border: #e6dcc6;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Segoe UI", sans-serif;
-    background: var(--bg);
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
     color: var(--text);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     padding: 32px 16px 80px;
+    background:
+      radial-gradient(ellipse 620px 420px at 8% -8%, rgba(60,110,82,0.10), transparent 60%),
+      radial-gradient(ellipse 520px 420px at 108% 12%, rgba(176,96,61,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 520px at 50% 118%, rgba(60,110,82,0.08), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
   }
+  h1, .badge, button, .brand-title { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
   .wrap { width: 100%; max-width: 560px; }
+  .brand-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .brand-mark { width: 26px; height: 26px; color: var(--accent); flex-shrink: 0; }
+  .brand-title { font-size: 12px; color: var(--muted); font-weight: 500; }
   .top-nav {
     margin-bottom: 16px;
     display: flex;
@@ -36,29 +51,39 @@
   }
   .top-nav a {
     font-size: 12px;
-    color: var(--accent);
+    font-weight: 500;
     text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px 4px 12px 4px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
   }
   .top-nav .skip-link-top {
-    color: var(--muted);
+    background: var(--clay-soft);
+    color: #7a4128;
+    border-radius: 4px 12px 4px 12px;
   }
   .badge {
     display: inline-block;
     font-size: 12px;
-    background: var(--accent);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 999px;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border: 1px solid var(--border);
+    padding: 4px 13px;
+    border-radius: 14px 4px 14px 4px;
     margin-bottom: 12px;
   }
-  h1 { margin: 0 0 6px; font-size: 22px; }
-  .lead { margin: 0 0 28px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  h1 { margin: 0 0 6px; font-size: 22px; font-weight: 700; }
+  .lead { margin: 0 0 28px; color: var(--muted); font-size: 13px; line-height: 1.7; }
   .card {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 4px 22px 22px 22px;
     padding: 24px;
     margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(48,42,32,0.05);
   }
   .field { margin-bottom: 20px; }
   .field:last-child { margin-bottom: 0; }
@@ -72,13 +97,18 @@
   input[type="text"] {
     width: 100%;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px 12px 4px 12px;
     padding: 10px 12px;
     font-size: 14px;
     font-family: inherit;
     background: var(--bg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     border: 1px solid var(--border);
@@ -102,18 +132,30 @@
     background: var(--accent);
     color: white;
     border: none;
-    border-radius: 999px;
+    border-radius: 20px 20px 20px 4px;
     padding: 12px 36px;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
   }
+  button:hover:not(:disabled) { background: var(--accent-deep); transform: translateY(-1px); }
   button:disabled { opacity: 0.5; cursor: default; }
-  .required { color: #b5533b; font-weight: 400; font-size: 11px; margin-left: 4px; }
+  .required { color: var(--clay); font-weight: 400; font-size: 11px; margin-left: 4px; }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="brand-row">
+    <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M20 40 V29.5 C20 28.7 20.7 28 21.5 28 H26 C26.8 28 27.5 28.7 27.5 29.5 V40" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M31 15 C33 12.5 33 10 31.5 6.5" stroke="var(--clay)" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="31.5" cy="6" r="1.6" fill="var(--clay)"/>
+    </svg>
+    <span class="brand-title">空き家AIプランナー</span>
+  </div>
   <div class="top-nav">
     <a href="/">← トップへ戻る</a>
     <a class="skip-link-top" href="/chat">診断をスキップして自由にチャットする →</a>
