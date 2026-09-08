@@ -39,6 +39,23 @@ _MAX_RETRIES = 3
 _RETRY_BASE_DELAY_SEC = 2.0
 
 
+class DailyQuotaExceededError(RuntimeError):
+    """Gemini APIの「1日あたりの無料利用回数」の上限に達した場合に送出する。
+
+    この上限は数秒〜数十秒待っても解消しない(翌日まで回復しない)ため、
+    _send_with_retry では他の429/503と違いリトライせず、即座にこの例外を送出する。
+    """
+
+
+def _is_daily_quota_error(e: genai_errors.APIError) -> bool:
+    """429エラーのうち、「1日あたりの上限」による拒否かどうかを判定する。
+
+    (短時間のレート制限による429は、待てば回復するのでリトライ対象のまま扱う。)
+    """
+    text = str(e)
+    return "PerDay" in text or "per day" in text.lower()
+
+
 def _send_with_retry(chat, content):
     """chat.send_message を、一時的なエラー(429/503)であれば待機して再試行しながら呼び出す。"""
     for attempt in range(_MAX_RETRIES + 1):
@@ -46,6 +63,12 @@ def _send_with_retry(chat, content):
             return chat.send_message(content)
         except genai_errors.APIError as e:
             code = getattr(e, "code", None)
+            if code == 429 and _is_daily_quota_error(e):
+                raise DailyQuotaExceededError(
+                    "Gemini APIの1日あたりの無料利用回数の上限に達しました。"
+                    "時間が経てば回復しますが(通常は翌日リセット)、頻繁に発生する場合は "
+                    "Google Cloud/AI Studio側で課金を有効にすると上限が大きく緩和されます。"
+                ) from e
             if code in _RETRYABLE_CODES and attempt < _MAX_RETRIES:
                 time.sleep(_RETRY_BASE_DELAY_SEC * (2 ** attempt))
                 continue

@@ -43,7 +43,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 import tools  # noqa: E402
-from agent import AkiyaAgent  # noqa: E402
+from agent import AkiyaAgent, DailyQuotaExceededError  # noqa: E402
 
 app = FastAPI(title="空き家AIプランナー")
 
@@ -161,6 +161,10 @@ def chat(req: ChatRequest):
     session_id, agent = _get_or_create_agent(req.session_id)
     try:
         result = agent.send(req.message)
+    except DailyQuotaExceededError as e:
+        # 1日あたりの無料枠を使い切った場合は、生の例外メッセージではなく
+        # そのまま分かりやすい案内文を返す(すぐリトライしても解消しないため)。
+        raise HTTPException(status_code=429, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"エージェントの応答生成に失敗しました: {e}") from e
 
