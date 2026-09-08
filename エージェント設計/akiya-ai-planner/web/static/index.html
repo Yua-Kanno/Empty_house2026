@@ -295,8 +295,19 @@
     const card = el("div", "card akiya expandable");
     const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
     card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
+    if (p.area) card.appendChild(el("div", "card-row", `📍 ${p.area}`));
     card.appendChild(el("div", "card-row",
       `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
+
+    // 築年数・土地面積・改修費目安など、わかる範囲で補足情報を1行にまとめる。
+    const extraBits = [];
+    if (p.built_year && p.built_year !== "-" && p.built_year !== "不詳") extraBits.push(`築${p.built_year}`);
+    if (p.land_area_sqm) extraBits.push(`土地${p.land_area_sqm}㎡`);
+    if (p.renovation_cost_est_man_yen !== null && p.renovation_cost_est_man_yen !== undefined) {
+      extraBits.push(`改修費目安 約${p.renovation_cost_est_man_yen}万円`);
+    }
+    if (extraBits.length > 0) card.appendChild(el("div", "card-row", extraBits.join(" / ")));
+
     if (p.features) card.appendChild(el("div", "card-row", p.features));
 
     // クリックすると、この物件を選択した状態でフロント(マップ・グラフ・PDF出力画面)を新しいタブで開く。
