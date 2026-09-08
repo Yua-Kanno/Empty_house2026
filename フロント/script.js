@@ -4,7 +4,7 @@ let selectedMarker = null;
 let defaultMarkersGroup = null;
 
 const API_BASE_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:8080' : '';
-const CHAT_URL = "https://empty-house2026.onrender.com/chat";
+const CHAT_URL = "https://empty-house2026.onrender.com/diagnosis";
 const chatLink = document.getElementById("chat-link");
 if (chatLink) chatLink.href = CHAT_URL;
 
@@ -127,8 +127,21 @@ async function fetchProperties() {
                 prefSelect.appendChild(option);
             });
         }
-        
-        filterProperties('none');
+
+        // 診断フォーム(/diagnosis)からの遷移(?property_id=123)の場合は、
+        // その物件のエリアを自動選択したうえで、詳細パネルを開いた状態で表示する。
+        const params = new URLSearchParams(window.location.search);
+        const targetId = params.get('property_id');
+        const targetHouse = targetId ? propertyData.find(h => String(h.global_id) === String(targetId)) : null;
+
+        if (targetHouse) {
+            const pref = guessPrefecture(targetHouse);
+            if (pref && prefSelect) prefSelect.value = pref;
+            filterProperties(pref || 'none');
+            updateSelection(targetHouse.global_id);
+        } else {
+            filterProperties('none');
+        }
 
     } catch (err) {
         console.error("物件データの読み込み失敗:", err);
