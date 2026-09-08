@@ -41,18 +41,15 @@ _RETRY_BASE_DELAY_SEC = 2.0
 
 def _send_with_retry(chat, content):
     """chat.send_message を、一時的なエラー(429/503)であれば待機して再試行しながら呼び出す。"""
-    last_error: Exception | None = None
     for attempt in range(_MAX_RETRIES + 1):
         try:
             return chat.send_message(content)
         except genai_errors.APIError as e:
             code = getattr(e, "code", None)
             if code in _RETRYABLE_CODES and attempt < _MAX_RETRIES:
-                last_error = e
                 time.sleep(_RETRY_BASE_DELAY_SEC * (2 ** attempt))
                 continue
-            raise
-    raise last_error  # pragma: no cover (ここには到達しない想定)
+            raise  # リトライ対象外、または上限到達 → 直前の例外をそのまま呼び出し元に伝える
 
 
 # ---------------------------------------------------------------------------
@@ -308,8 +305,11 @@ class AkiyaAgent:
             return {"error": f"ツール実行中にエラーが発生しました: {e}"}
 
     def send(self, user_message: str, max_tool_iterations: int = 6) -> AgentTurnResult:
-<<<<<<< HEAD
-        """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。"""
+        """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。
+
+        Gemini側が一時的に混雑している(503)場合やレート制限(429)の場合は、
+        _send_with_retry が自動的に少し待って再試行する。
+        """
         if self.chat is None:
             fallback = self.error_message or "Gemini API が利用できないため、AI相談を開始できません。"
             return AgentTurnResult(
@@ -321,15 +321,7 @@ class AkiyaAgent:
                 tool_calls=[],
             )
 
-        response = self.chat.send_message(user_message)
-=======
-        """ユーザーの発話を送り、必要なツール呼び出しを内部で完結させた上で最終回答を返す。
-
-        Gemini側が一時的に混雑している(503)場合やレート制限(429)の場合は、
-        _send_with_retry が自動的に少し待って再試行する。
-        """
         response = _send_with_retry(self.chat, user_message)
->>>>>>> 8366f476c560f488334bce8bdc8a56665f951e1e
         tool_calls_log: list[ToolCallLog] = []
 
         iterations = 0
