@@ -85,7 +85,8 @@ function initMap() {
 
     defaultMarkersGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
-        maxClusterRadius: 45
+        maxClusterRadius: 45,
+        disableClusteringAtZoom: 15  // 拡大して1件を見ている時は、絶対に数字付きクラスターにしない
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -128,13 +129,27 @@ async function fetchProperties() {
             });
         }
 
-        // 診断フォーム(/diagnosis)からの遷移(?property_id=123)の場合は、
-        // その物件のエリアを自動選択したうえで、詳細パネルを開いた状態で表示する。
         const params = new URLSearchParams(window.location.search);
+
+        // 診断フォーム(/diagnosis)がマッチした候補(?property_ids=1,2,3)の場合は、
+        // 1件に絞らず、候補を一覧(カード+ピン)で表示する。
+        const idsParam = params.get('property_ids');
+        const matchedIds = idsParam ? idsParam.split(',').map((s) => s.trim()).filter(Boolean) : [];
+        const matchedHouses = matchedIds.length
+            ? propertyData.filter((h) => matchedIds.includes(String(h.global_id)))
+            : [];
+
+        // チャット画面の物件カードからの遷移(?property_id=123、1件のみ)の場合は、
+        // その物件のエリアを自動選択したうえで、詳細パネルを開いた状態で表示する。
         const targetId = params.get('property_id');
         const targetHouse = targetId ? propertyData.find(h => String(h.global_id) === String(targetId)) : null;
 
-        if (targetHouse) {
+        if (matchedHouses.length > 0) {
+            renderPropertyCards(matchedHouses, true);
+            plotMapMarkers(matchedHouses);
+            fitMapToVisibleProperties(matchedHouses);
+            updateSelection(matchedHouses[0].global_id);
+        } else if (targetHouse) {
             const pref = guessPrefecture(targetHouse);
             if (pref && prefSelect) prefSelect.value = pref;
             filterProperties(pref || 'none');
@@ -170,7 +185,7 @@ function filterProperties(pref) {
     clearDetail();
 }
 
-function renderPropertyCards(properties) {
+function renderPropertyCards(properties, forceShow) {
     const container = document.getElementById('propertyCardList');
     if (!container) return;
     container.innerHTML = '';
@@ -179,7 +194,8 @@ function renderPropertyCards(properties) {
     const selectedPref = prefSelect ? prefSelect.value : 'none';
 
     // エリア未選択（'none'）の時はメッセージのみ表示してカードを出さない
-    if (selectedPref === 'none') {
+    // (診断フォームからの検索結果表示時は forceShow=true でこのガードを飛ばす)
+    if (!forceShow && selectedPref === 'none') {
         container.innerHTML = '<p class="text-xs text-slate-500 py-3 font-medium">エリアを選択すると物件一覧が表示されます</p>';
         return;
     }
@@ -355,9 +371,17 @@ function getCoordinates(house) {
     let lng = parseFloat(house.lng || house.longitude);
     if (!isNaN(lat) && !isNaN(lng)) return [lat, lng];
 
-    // 同じ都道府県内の物件が完全に重ならないよう、id基準で少しずつ位置をずらす。
-    const latOffset = ((house.global_id || 1) % 10) * 0.03 - 0.15;
-    const lngOffset = ((house.global_id || 1) % 7) * 0.03 - 0.09;
+    // 同じ都道府県内の物件が重ならないよう、IDから疑似乱数的に位置をずらす。
+    // (以前は id % 10 / id % 7 で計算しており、組み合わせが70通りしかなく、
+    // 件数の多い県では複数物件が完全に同じ座標に重なってしまっていた。
+    // ハッシュ関数で連続的な疑似乱数を作ることで、重複がほぼ起きないようにする。)
+    const id = house.global_id || 1;
+    const hash1 = Math.abs(Math.sin(id * 12.9898) * 43758.5453) % 1;
+    const hash2 = Math.abs(Math.sin(id * 78.233) * 12543.163) % 1;
+    const angle = hash1 * Math.PI * 2;
+    const radius = 0.05 + hash2 * 0.3;
+    const latOffset = Math.cos(angle) * radius;
+    const lngOffset = Math.sin(angle) * radius;
 
     const address = house.address || house.location || '';
     if (address.includes('奥多摩')) return [35.809 + latOffset, 139.096 + lngOffset];

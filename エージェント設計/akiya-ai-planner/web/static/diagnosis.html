@@ -300,8 +300,10 @@
         return;
       }
       const data = await resp.json();
-      if (data.matched && data.property_id) {
-        window.location.href = `${FRONTEND_URL}?property_id=${data.property_id}`;
+      if (data.matched && data.results && data.results.length > 0) {
+        // マッチした候補(最大3件)のIDをまとめて渡し、地図側で一覧表示できるようにする。
+        const ids = data.results.map((r) => r.id).join(',');
+        window.location.href = `${FRONTEND_URL}?property_ids=${ids}`;
       } else {
         goToChat();
       }
