@@ -1,0 +1,96 @@
+:root {
+    --paper: #FBF9F4;
+    --ink: #22344B;
+    --ink-soft: #5C7A99;
+    --gold: #B0862A;
+    --line: #EFE9DD;
+}
+
+body {
+    background-color: var(--paper);
+    color: var(--ink);
+}
+
+/* スクロールバー */
+#propertyCardList::-webkit-scrollbar,
+#subsidyList::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+#propertyCardList::-webkit-scrollbar-thumb,
+#subsidyList::-webkit-scrollbar-thumb {
+    background-color: #D1C9B8;
+    border-radius: 3px;
+}
+
+/* 物件カード */
+.prop-card {
+    min-width: 210px;
+    max-width: 230px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.prop-card:hover {
+    border-color: var(--ink-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 52, 75, 0.08);
+}
+
+.prop-card.active {
+    border-color: var(--gold);
+    background-color: #FFFDF9;
+    box-shadow: 0 0 0 2px var(--gold);
+}
+
+.subsidy-card {
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+}
+
+/* クラスタアイコン */
+.marker-cluster-small {
+    background-color: rgba(176, 134, 42, 0.6) !important;
+}
+.marker-cluster-small div {
+    background-color: rgba(176, 134, 42, 0.9) !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.marker-cluster-medium {
+    background-color: rgba(34, 52, 75, 0.6) !important;
+}
+.marker-cluster-medium div {
+    background-color: rgba(34, 52, 75, 0.9) !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+/* 周辺施設チェックボックス凡例 */
+.amenity-legend {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    font-size: 11px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.amenity-legend label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
