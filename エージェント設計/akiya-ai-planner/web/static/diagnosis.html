@@ -220,6 +220,12 @@
         <label class="q">予算のイメージはありますか?(任意・万円)</label>
         <input type="text" name="budget" placeholder="例: 300万円くらいまで" />
       </div>
+      <div class="field">
+        <label class="q">その他(任意)</label>
+        <div class="chips" data-group="options">
+          <div class="chip" data-value="want_subsidy">🏷️ 使える補助金・支援制度も知りたい</div>
+        </div>
+      </div>
     </div>
 
     <div class="submit-row">
@@ -264,6 +270,7 @@
     const budget = form.budget.value.trim();
     const personality = selectedValues('personality');
     const environment = selectedValues('environment');
+    const wantSubsidy = selectedValues('options').includes('want_subsidy');
 
     // 診断結果を、チャットの最初のメッセージとして自然文にまとめる(フォールバック用)。
     const lines = [];
@@ -293,7 +300,7 @@
       const resp = await fetch('/api/quick-match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ job, personality, environment, hobby, lifestyle, dream, area, budget }),
+        body: JSON.stringify({ job, personality, environment, hobby, lifestyle, dream, area, budget, want_subsidy: wantSubsidy }),
       });
       if (!resp.ok) {
         goToChat();
@@ -301,11 +308,11 @@
       }
       const data = await resp.json();
       if (data.matched && data.results && data.results.length > 0) {
-        // マッチした候補(最大3件)と、関連する補助金・支援制度(あれば)をチャット画面に渡し、
-        // Geminiには問い合わせずにそのままチャット上でカード表示する
-        // (Gemini APIの呼び出し回数を消費しない)。
+        // マッチした候補(最大3件)をチャット画面に渡し、Geminiには問い合わせずに
+        // そのままチャット上でカード表示する(Gemini APIの呼び出し回数を消費しない)。
+        // 補助金・支援制度は、フォームで「知りたい」を選んだ時だけ一緒に渡す。
         sessionStorage.setItem('quickMatchResults', JSON.stringify(data.results));
-        sessionStorage.setItem('quickMatchSubsidies', JSON.stringify(data.subsidies || []));
+        sessionStorage.setItem('quickMatchSubsidies', JSON.stringify(wantSubsidy ? (data.subsidies || []) : []));
         window.location.href = '/chat?quickmatch=1';
       } else {
         goToChat();

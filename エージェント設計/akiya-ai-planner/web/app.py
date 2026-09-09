@@ -76,6 +76,7 @@ class QuickMatchRequest(BaseModel):
     dream: str | None = None
     area: str | None = None
     budget: str | None = None
+    want_subsidy: bool = False
 
 
 class QuickMatchResponse(BaseModel):
@@ -150,18 +151,21 @@ def quick_match(req: QuickMatchRequest):
     )
     results = result.get("results", [])
     if results:
-        # マッチした物件のエリア・市区町村に関連する補助金・支援制度があれば、
-        # Geminiを介さずキーワード一致だけで(APIクオータを消費せずに)一緒に返す。
-        subsidies_by_id: dict[int, dict] = {}
-        seen_areas: set[str] = set()
-        for p in results:
-            for area_key in (p.get("municipality"), p.get("area")):
-                if not area_key or area_key in seen_areas:
-                    continue
-                seen_areas.add(area_key)
-                for s in tools.search_subsidies_for_area(area_key).get("results", []):
-                    subsidies_by_id[s["id"]] = s
-        subsidies = list(subsidies_by_id.values())[:5]
+        subsidies: list[dict] = []
+        if req.want_subsidy:
+            # フォームで「補助金も知りたい」が選ばれた時だけ、マッチした物件のエリア・市区町村に
+            # 関連する補助金・支援制度を探す。Geminiは介さずキーワード一致だけなので
+            # APIクオータは消費しない。
+            subsidies_by_id: dict[int, dict] = {}
+            seen_areas: set[str] = set()
+            for p in results:
+                for area_key in (p.get("municipality"), p.get("area")):
+                    if not area_key or area_key in seen_areas:
+                        continue
+                    seen_areas.add(area_key)
+                    for s in tools.search_subsidies_for_area(area_key).get("results", []):
+                        subsidies_by_id[s["id"]] = s
+            subsidies = list(subsidies_by_id.values())[:5]
         return QuickMatchResponse(
             matched=True, property_id=results[0]["id"], count=len(results), results=results, subsidies=subsidies
         )
