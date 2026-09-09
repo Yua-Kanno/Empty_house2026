@@ -98,6 +98,21 @@ def _parse_budget_man_yen(text: str | None) -> float | None:
     return float(m.group(1)) if m else None
 
 
+def _match_reasons(p: dict, area: str, max_budget: float | None, use_type: str | None) -> list[str]:
+    """この物件がなぜマッチしたのかを、ユーザーにわかりやすい短いタグ文言のリストで返す。
+
+    quick_match()が使う検索条件(エリア・予算・想定用途)と物件データを突き合わせるだけの
+    単純なルールベース。Gemini等は使わない。
+    """
+    reasons = [f"エリア「{area}」に一致"]
+    price = p.get("price_man_yen")
+    if max_budget is not None and price is not None and price <= max_budget:
+        reasons.append("予算内")
+    if use_type and use_type in (p.get("features") or ""):
+        reasons.append(f"{use_type}向け")
+    return reasons
+
+
 def _get_or_create_agent(session_id: str | None) -> tuple[str, AkiyaAgent]:
     if session_id and session_id in SESSIONS:
         return session_id, SESSIONS[session_id]
@@ -150,6 +165,8 @@ def quick_match(req: QuickMatchRequest):
         limit=3,
     )
     results = result.get("results", [])
+    for p in results:
+        p["match_reasons"] = _match_reasons(p, req.area.strip(), max_budget, use_type)
     if results:
         subsidies: list[dict] = []
         if req.want_subsidy:

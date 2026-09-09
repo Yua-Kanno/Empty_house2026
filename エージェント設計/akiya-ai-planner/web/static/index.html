@@ -161,7 +161,18 @@
   }
   .card-title { font-weight: 700; margin-bottom: 4px; }
   .card-row { color: var(--muted); font-size: 12px; }
+  .match-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+  .match-tag {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px 9px 9px 9px;
+  }
   .card.subsidy { border-left: 3px solid var(--accent); }
+  .card.continue-chat { border-left: 3px solid var(--accent); }
   .card.cost, .card.income { border-left: 3px solid var(--clay); }
   .card.expandable { cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
   .card.expandable:hover { border-color: var(--accent); transform: translateY(-1px); }
@@ -293,6 +304,17 @@
   // 空き家カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
   function buildAkiyaCard(p) {
     const card = el("div", "card akiya expandable");
+
+    // 診断のクイックマッチ結果には、なぜこの物件がマッチしたかの理由タグ(エリア一致・予算内など)が
+    // 付いてくることがある。あれば見出しの上に小さなタグとして表示する。
+    if (p.match_reasons && p.match_reasons.length > 0) {
+      const tagRow = el("div", "match-tags");
+      for (const reason of p.match_reasons) {
+        tagRow.appendChild(el("span", "match-tag", reason));
+      }
+      card.appendChild(tagRow);
+    }
+
     const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
     card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
     if (p.area) card.appendChild(el("div", "card-row", `📍 ${p.area}`));
@@ -350,6 +372,24 @@
       wrap.appendChild(buildSubsidyCard(s));
     }
     if (wrap.children.length > 0) container.appendChild(wrap);
+  }
+
+  // 診断の一発マッチ結果が気に入らなかった時に、そのままAIとの会話に進めるようにするボタン。
+  // クリックすると診断の回答内容を最初のメッセージとして/api/chatに送り、Geminiとの
+  // 通常の会話(検索・提案)にフォールバックする。
+  function renderContinueChatPrompt(container, summaryText) {
+    const wrap = el("div", "cards");
+    const card = el("div", "card continue-chat expandable");
+    card.appendChild(el("div", "card-title", "🤖 気に入る物件がなければ"));
+    card.appendChild(el("div", "card-row", "AIに相談して、ほかの候補を探してもらう"));
+    card.addEventListener("click", () => {
+      wrap.remove();
+      sendMessage(
+        `${summaryText} さっき提案してもらった物件はどれも気に入らなかったので、ほかの候補を提案してください。`
+      );
+    });
+    wrap.appendChild(card);
+    container.appendChild(wrap);
   }
 
   function renderToolResults(container, toolCalls) {
@@ -482,6 +522,7 @@
 
   let quickMatchResults = [];
   let quickMatchSubsidies = [];
+  let quickMatchSummary = "";
   if (isQuickMatch) {
     try {
       quickMatchResults = JSON.parse(sessionStorage.getItem("quickMatchResults") || "[]");
@@ -493,8 +534,10 @@
     } catch (err) {
       quickMatchSubsidies = [];
     }
+    quickMatchSummary = sessionStorage.getItem("quickMatchSummary") || "空き家の相談をしたいです。";
     sessionStorage.removeItem("quickMatchResults");
     sessionStorage.removeItem("quickMatchSubsidies");
+    sessionStorage.removeItem("quickMatchSummary");
   }
 
   if (isQuickMatch && quickMatchResults.length > 0) {
@@ -521,6 +564,12 @@
         ).parentElement;
         renderSubsidyCards(subsidyBubbleContainer, quickMatchSubsidies);
       }
+
+      const continueBubbleContainer = appendMessage(
+        "agent",
+        "気になる物件はありましたか?"
+      ).parentElement;
+      renderContinueChatPrompt(continueBubbleContainer, quickMatchSummary);
     }, 900);
   } else if (diagnosisText) {
     appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");
