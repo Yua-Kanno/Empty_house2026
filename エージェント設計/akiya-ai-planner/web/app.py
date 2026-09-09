@@ -83,6 +83,7 @@ class QuickMatchResponse(BaseModel):
     property_id: int | None = None
     count: int
     results: list[dict]
+    subsidies: list[dict] = []
 
 
 _BUDGET_RE = re.compile(r"(\d+(?:\.\d+)?)\s*万")
@@ -149,8 +150,22 @@ def quick_match(req: QuickMatchRequest):
     )
     results = result.get("results", [])
     if results:
-        return QuickMatchResponse(matched=True, property_id=results[0]["id"], count=len(results), results=results)
-    return QuickMatchResponse(matched=False, property_id=None, count=0, results=[])
+        # マッチした物件のエリア・市区町村に関連する補助金・支援制度があれば、
+        # Geminiを介さずキーワード一致だけで(APIクオータを消費せずに)一緒に返す。
+        subsidies_by_id: dict[int, dict] = {}
+        seen_areas: set[str] = set()
+        for p in results:
+            for area_key in (p.get("municipality"), p.get("area")):
+                if not area_key or area_key in seen_areas:
+                    continue
+                seen_areas.add(area_key)
+                for s in tools.search_subsidies_for_area(area_key).get("results", []):
+                    subsidies_by_id[s["id"]] = s
+        subsidies = list(subsidies_by_id.values())[:5]
+        return QuickMatchResponse(
+            matched=True, property_id=results[0]["id"], count=len(results), results=results, subsidies=subsidies
+        )
+    return QuickMatchResponse(matched=False, property_id=None, count=0, results=[], subsidies=[])
 
 
 @app.post("/api/chat", response_model=ChatResponse)

@@ -323,12 +323,31 @@
     return card;
   }
 
+  // 補助金カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
+  function buildSubsidyCard(s) {
+    const card = el("div", "card subsidy");
+    card.appendChild(el("div", "card-title", s.title));
+    card.appendChild(el("div", "card-row", `${s.provider} / 上限${s.max_amount_man_yen}万円 / ${s.subsidy_rate}`));
+    if (s.conditions) card.appendChild(el("div", "card-row", s.conditions));
+    return card;
+  }
+
   // 診断フォームの一発マッチ結果(Geminiを介さない)をチャットのカードとして表示する。
   function renderAkiyaCards(container, results) {
     if (!results || results.length === 0) return;
     const wrap = el("div", "cards");
     for (const p of results) {
       wrap.appendChild(buildAkiyaCard(p));
+    }
+    if (wrap.children.length > 0) container.appendChild(wrap);
+  }
+
+  // 診断フォームの一発マッチに紐づく補助金・支援制度をチャットのカードとして表示する。
+  function renderSubsidyCards(container, subsidies) {
+    if (!subsidies || subsidies.length === 0) return;
+    const wrap = el("div", "cards");
+    for (const s of subsidies) {
+      wrap.appendChild(buildSubsidyCard(s));
     }
     if (wrap.children.length > 0) container.appendChild(wrap);
   }
@@ -363,10 +382,7 @@
       }
       if (tc.name === "search_subsidies" && tc.result && tc.result.results) {
         for (const s of tc.result.results) {
-          const card = el("div", "card subsidy");
-          card.appendChild(el("div", "card-title", s.title));
-          card.appendChild(el("div", "card-row", `${s.provider} / 上限${s.max_amount_man_yen}万円 / ${s.subsidy_rate}`));
-          wrap.appendChild(card);
+          wrap.appendChild(buildSubsidyCard(s));
         }
       }
       if (tc.name === "generate_shop_image" && tc.result) {
@@ -465,13 +481,20 @@
   const isQuickMatch = params.get("quickmatch") === "1";
 
   let quickMatchResults = [];
+  let quickMatchSubsidies = [];
   if (isQuickMatch) {
     try {
       quickMatchResults = JSON.parse(sessionStorage.getItem("quickMatchResults") || "[]");
     } catch (err) {
       quickMatchResults = [];
     }
+    try {
+      quickMatchSubsidies = JSON.parse(sessionStorage.getItem("quickMatchSubsidies") || "[]");
+    } catch (err) {
+      quickMatchSubsidies = [];
+    }
     sessionStorage.removeItem("quickMatchResults");
+    sessionStorage.removeItem("quickMatchSubsidies");
   }
 
   if (isQuickMatch && quickMatchResults.length > 0) {
@@ -490,6 +513,14 @@
         "診断結果をもとに、こんな空き家が見つかりました!気になる物件をクリックすると、マップ・PDF出力画面で詳しく見られます。"
       ).parentElement;
       renderAkiyaCards(bubbleContainer, quickMatchResults);
+
+      if (quickMatchSubsidies.length > 0) {
+        const subsidyBubbleContainer = appendMessage(
+          "agent",
+          "このエリアだと、こんな補助金・支援制度も使えるかもしれません。"
+        ).parentElement;
+        renderSubsidyCards(subsidyBubbleContainer, quickMatchSubsidies);
+      }
     }, 900);
   } else if (diagnosisText) {
     appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");

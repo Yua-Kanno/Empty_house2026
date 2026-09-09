@@ -301,9 +301,11 @@
       }
       const data = await resp.json();
       if (data.matched && data.results && data.results.length > 0) {
-        // マッチした候補(最大3件)をチャット画面に渡し、Geminiには問い合わせずに
-        // そのままチャット上でカード表示する(Gemini APIの呼び出し回数を消費しない)。
+        // マッチした候補(最大3件)と、関連する補助金・支援制度(あれば)をチャット画面に渡し、
+        // Geminiには問い合わせずにそのままチャット上でカード表示する
+        // (Gemini APIの呼び出し回数を消費しない)。
         sessionStorage.setItem('quickMatchResults', JSON.stringify(data.results));
+        sessionStorage.setItem('quickMatchSubsidies', JSON.stringify(data.subsidies || []));
         window.location.href = '/chat?quickmatch=1';
       } else {
         goToChat();

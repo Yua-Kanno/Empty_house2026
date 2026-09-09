@@ -417,6 +417,25 @@ def _keyword_search(query: str, area: str | None, records: list[dict], top_k: in
     return scored[:top_k]
 
 
+def search_subsidies_for_area(area: str, top_k: int = 3) -> dict:
+    """エリア名から関連する補助金・支援制度を検索する(キーワード一致のみ、Gemini APIは使わない)。
+
+    診断のクイックマッチ(Geminiとの会話を挟まない一発マッチ)から、APIクオータを消費せずに
+    該当エリアの補助金情報を添えるために使う軽量版。
+
+    Args:
+        area: エリア名・住所の一部(例: "羽生市", "館山市"など)。
+        top_k: 返す件数の上限(デフォルト3件)。
+
+    Returns:
+        {"count": int, "results": [補助金dict, ...]}(スコア0(無関係)のものは除外)
+    """
+    records = _subsidy_records()
+    scored = _keyword_search(area, area, records, top_k)
+    results = [dict(rec) for score, rec in scored if score > 0]
+    return {"count": len(results), "results": results}
+
+
 def search_subsidies(query: str, area: str | None = None, top_k: int = 3) -> dict:
     """関連する補助金・支援制度を検索する(RAG風の簡易検索)。
 
