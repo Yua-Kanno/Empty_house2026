@@ -523,7 +523,10 @@ async function updateNearbyAmenities(lat, lng) {
 
 async function fetchNearbyAmenities(lat, lng) {
     const clauses = Object.values(AMENITY_CONFIG).map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`).join('\n');
-    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out body;` });
+    // out body だと、学校・病院など「面(way/relation)」として登録されている施設は
+    // 座標(center)が返ってこず、getElementLatLngがnullを返して除外されてしまい
+    // 件数が0になっていた。out center にすることで、node以外もcenter座標付きで返ってくる。
+    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out center;` });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return data.elements || [];
