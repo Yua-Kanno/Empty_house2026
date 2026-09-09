@@ -313,6 +313,9 @@
         // 補助金・支援制度は、フォームで「知りたい」を選んだ時だけ一緒に渡す。
         sessionStorage.setItem('quickMatchResults', JSON.stringify(data.results));
         sessionStorage.setItem('quickMatchSubsidies', JSON.stringify(wantSubsidy ? (data.subsidies || []) : []));
+        // 気に入る物件がなかった時に「AIに相談する」を選んだ場合、診断の回答内容を
+        // そのままAIへの最初のメッセージとして使えるように保存しておく。
+        sessionStorage.setItem('quickMatchSummary', summary);
         window.location.href = '/chat?quickmatch=1';
       } else {
         goToChat();
