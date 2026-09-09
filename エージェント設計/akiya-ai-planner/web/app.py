@@ -110,6 +110,9 @@ def _match_reasons(p: dict, area: str, max_budget: float | None, use_type: str |
         reasons.append("予算内")
     if use_type and use_type in (p.get("features") or ""):
         reasons.append(f"{use_type}向け")
+    # search_akiyaが性格・希望環境とfeaturesを突き合わせて見つけた一致項目もタグに加える。
+    for trait in p.get("matched_traits", []):
+        reasons.append(f"「{trait}」に合う")
     return reasons
 
 
@@ -162,6 +165,8 @@ def quick_match(req: QuickMatchRequest):
         area=req.area.strip(),
         max_budget_man_yen=max_budget,
         use_type=use_type,
+        personality=req.personality,
+        environment=req.environment,
         limit=3,
     )
     results = result.get("results", [])

@@ -71,12 +71,45 @@ def _estimated_room_count(layout: str | None) -> int | None:
     return int(m.group(1)) if m else None
 
 
+# 診断フォームの「性格」「住みたい環境」チップと、物件のfeatures(自由文)を
+# ゆるく突き合わせるためのキーワード辞書。タグ付けされたデータではないため、
+# 完全一致ではなく「それらしい単語が含まれているか」で軽くスコアリングする。
+_PERSONALITY_KEYWORDS: dict[str, list[str]] = {
+    "のんびり派": ["のんびり", "ゆったり", "静か"],
+    "アクティブ派": ["駅", "利便性", "アクセス良好", "徒歩圏"],
+    "人と話すのが好き": ["店舗", "交流", "ゲストハウス", "民泊", "拠点"],
+    "一人の時間が好き": ["静か", "アトリエ", "セカンドハウス"],
+    "こだわり派": ["DIY", "リノベ", "こだわり"],
+    "自由きままな性格": ["自由", "セルフビルド"],
+}
+_ENVIRONMENT_KEYWORDS: dict[str, list[str]] = {
+    "都会寄り": ["駅", "市街地", "利便性", "中心街"],
+    "田舎・自然が多い場所": ["自然", "田舎", "緑豊か", "のんびり"],
+    "海の近く": ["海", "サーフィン", "マリン"],
+    "山の近く": ["山", "緑豊か", "渓流", "釣り"],
+}
+
+
+def _matched_trait_labels(features: str, traits: list[str] | None, keyword_map: dict[str, list[str]]) -> list[str]:
+    """選択された性格・環境の各項目のうち、features中にそれらしいキーワードがある項目名だけを返す。"""
+    if not traits:
+        return []
+    hits = []
+    for trait in traits:
+        keywords = keyword_map.get(trait, [])
+        if any(kw in features for kw in keywords):
+            hits.append(trait)
+    return hits
+
+
 def search_akiya(
     area: str | None = None,
     max_budget_man_yen: float | None = None,
     min_budget_man_yen: float | None = None,
     use_type: str | None = None,
     family_size: int | None = None,
+    personality: list[str] | None = None,
+    environment: list[str] | None = None,
     limit: int = 5,
 ) -> dict:
     """条件に合う空き家候補を検索する。
@@ -88,13 +121,17 @@ def search_akiya(
         use_type: 想定用途(例: "カフェ", "民泊", "ゲストハウス", "店舗", "移住"など)。物件の特徴文(features)から
             それらしいキーワードを含む物件を優先的に上位表示する(タグではなく自由文からのスコアリング)。
         family_size: 想定居住人数。2人以上ならLDK数が多め(3部屋以上)の物件を優先。
+        personality: 診断フォームで選ばれた性格タイプ(例: ["のんびり派", "こだわり派"])。
+            featuresの自由文とゆるく突き合わせて、それらしい物件を優先表示する。
+        environment: 住みたい環境(例: ["海の近く"])。personalityと同様にfeaturesとゆるく突き合わせる。
         limit: 返す件数の上限(デフォルト5件)。
 
     Returns:
         {"count": int, "results": [物件dict, ...]} 形式。
         各物件dictには id, title, municipality, area(住所), lat, lng, price_man_yen(nullの場合あり),
         layout, floors, land_area_sqm, building_area_sqm, structure, built_year,
-        renovation_cost_est_man_yen(物件データに基づく改修費目安。nullの場合あり), features, match_score を含む。
+        renovation_cost_est_man_yen(物件データに基づく改修費目安。nullの場合あり), features, match_score,
+        matched_traits(personality/environmentのうち実際にヒットした項目名のリスト)を含む。
     """
     records = _akiya_records()
     matched: list[tuple[float, dict]] = []
@@ -128,22 +165,28 @@ def search_akiya(
                     score += 2
                 if not wants_family and rooms <= 2:
                     score += 2
+        # 性格・住みたい環境も、featuresの自由文とゆるく突き合わせてスコアに反映する。
+        personality_hits = _matched_trait_labels(features, personality, _PERSONALITY_KEYWORDS)
+        environment_hits = _matched_trait_labels(features, environment, _ENVIRONMENT_KEYWORDS)
+        score += len(personality_hits) * 1.0
+        score += len(environment_hits) * 1.5
         # 予算に近い(安すぎず高すぎない)ものを少し優遇。価格未掲載は中立(0)扱い。
         if max_budget_man_yen and price is not None:
             score += max(0.0, 1 - abs(price - max_budget_man_yen) / max_budget_man_yen)
 
-        matched.append((score, rec))
+        matched.append((score, rec, personality_hits + environment_hits))
 
-    def _sort_key(item: tuple[float, dict]) -> tuple[float, float]:
-        score, rec = item
+    def _sort_key(item: tuple[float, dict, list[str]]) -> tuple[float, float]:
+        score, rec, _hits = item
         price = rec.get("price_man_yen")
         return (-score, price if price is not None else float("inf"))
 
     matched.sort(key=_sort_key)
     results = []
-    for score, rec in matched[:limit]:
+    for score, rec, hits in matched[:limit]:
         item = dict(rec)
         item["match_score"] = round(score, 2)
+        item["matched_traits"] = hits
         results.append(item)
 
     return {"count": len(results), "results": results}

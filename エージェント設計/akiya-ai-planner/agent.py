@@ -196,6 +196,17 @@ FUNCTION_DECLARATIONS = [
                 "min_budget_man_yen": {"type": "number", "description": "予算下限(万円)"},
                 "use_type": {"type": "string", "description": "想定用途(例: カフェ, 民泊, ゲストハウス, 店舗, 移住)。物件の特徴文からそれらしい記述がある物件を優先表示する。"},
                 "family_size": {"type": "integer", "description": "想定居住人数"},
+                "personality": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "会話から読み取れるユーザーの性格タイプ(例: [\"のんびり派\", \"こだわり派\"])。"
+                                    "物件の特徴文とゆるく突き合わせて優先表示する。わかる範囲でよい。",
+                },
+                "environment": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "会話から読み取れる住みたい環境(例: [\"海の近く\"])。personalityと同様に使う。",
+                },
                 "limit": {"type": "integer", "description": "返す件数の上限。指定なければ5件。"},
             },
         },
