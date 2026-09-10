@@ -86,7 +86,7 @@ function initMap() {
     defaultMarkersGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 45,
-        disableClusteringAtZoom: 15  // 拡大して1件を見ている時は、絶対に数字付きクラスターにしない
+        disableClusteringAtZoom: 15
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -121,26 +121,41 @@ async function fetchProperties() {
         
         if (prefSelect) {
             prefSelect.innerHTML = '<option value="none">エリアを選択してください</option>';
-            prefectures.forEach(prefecture => {
-                const option = document.createElement('option');
-                option.value = prefecture;
-                option.textContent = prefecture;
-                prefSelect.appendChild(option);
+
+            const regionMap = {
+                '北海道・東北': ['北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'],
+                '関東': ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'],
+                '中部': ['新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県'],
+                '近畿': ['三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'],
+                '中国・四国': ['鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県'],
+                '九州・沖縄': ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県']
+            };
+
+            Object.entries(regionMap).forEach(([regionName, prefList]) => {
+                const availablePrefs = prefList.filter(p => prefectures.includes(p));
+                if (availablePrefs.length > 0) {
+                    const group = document.createElement('optgroup');
+                    group.label = regionName;
+
+                    availablePrefs.forEach(prefecture => {
+                        const option = document.createElement('option');
+                        option.value = prefecture;
+                        option.textContent = prefecture;
+                        group.appendChild(option);
+                    });
+
+                    prefSelect.appendChild(group);
+                }
             });
         }
 
         const params = new URLSearchParams(window.location.search);
-
-        // 診断フォーム(/diagnosis)がマッチした候補(?property_ids=1,2,3)の場合は、
-        // 1件に絞らず、候補を一覧(カード+ピン)で表示する。
         const idsParam = params.get('property_ids');
         const matchedIds = idsParam ? idsParam.split(',').map((s) => s.trim()).filter(Boolean) : [];
         const matchedHouses = matchedIds.length
             ? propertyData.filter((h) => matchedIds.includes(String(h.global_id)))
             : [];
 
-        // チャット画面の物件カードからの遷移(?property_id=123、1件のみ)の場合は、
-        // その物件のエリアを自動選択したうえで、詳細パネルを開いた状態で表示する。
         const targetId = params.get('property_id');
         const targetHouse = targetId ? propertyData.find(h => String(h.global_id) === String(targetId)) : null;
 
@@ -193,8 +208,6 @@ function renderPropertyCards(properties, forceShow) {
     const prefSelect = document.getElementById('prefSelect');
     const selectedPref = prefSelect ? prefSelect.value : 'none';
 
-    // エリア未選択（'none'）の時はメッセージのみ表示してカードを出さない
-    // (診断フォームからの検索結果表示時は forceShow=true でこのガードを飛ばす)
     if (!forceShow && selectedPref === 'none') {
         container.innerHTML = '<p class="text-xs text-slate-500 py-3 font-medium">エリアを選択すると物件一覧が表示されます</p>';
         return;
@@ -208,7 +221,6 @@ function renderPropertyCards(properties, forceShow) {
     properties.forEach((house, index) => {
         const id = house.global_id;
         const name = house.name || house.title || '物件';
-
         const tags = house.tags || generateDefaultTags(index);
 
         const card = document.createElement('div');
@@ -339,7 +351,6 @@ function fitMapToVisibleProperties(filteredProperties) {
     }
 }
 
-// 都道府県ごとの代表座標(県庁所在地付近)。実際の緯度経度データが無い物件のフォールバック用。
 const PREF_COORDS = {
     '北海道': [43.0642, 141.3469], '青森県': [40.8244, 140.7400], '岩手県': [39.7036, 141.1527],
     '宮城県': [38.2688, 140.8721], '秋田県': [39.7186, 140.1024], '山形県': [38.2404, 140.3633],
@@ -371,10 +382,6 @@ function getCoordinates(house) {
     let lng = parseFloat(house.lng || house.longitude);
     if (!isNaN(lat) && !isNaN(lng)) return [lat, lng];
 
-    // 同じ都道府県内の物件が重ならないよう、IDから疑似乱数的に位置をずらす。
-    // (以前は id % 10 / id % 7 で計算しており、組み合わせが70通りしかなく、
-    // 件数の多い県では複数物件が完全に同じ座標に重なってしまっていた。
-    // ハッシュ関数で連続的な疑似乱数を作ることで、重複がほぼ起きないようにする。)
     const id = house.global_id || 1;
     const hash1 = Math.abs(Math.sin(id * 12.9898) * 43758.5453) % 1;
     const hash2 = Math.abs(Math.sin(id * 78.233) * 12543.163) % 1;
@@ -523,9 +530,6 @@ async function updateNearbyAmenities(lat, lng) {
 
 async function fetchNearbyAmenities(lat, lng) {
     const clauses = Object.values(AMENITY_CONFIG).map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`).join('\n');
-    // out body だと、学校・病院など「面(way/relation)」として登録されている施設は
-    // 座標(center)が返ってこず、getElementLatLngがnullを返して除外されてしまい
-    // 件数が0になっていた。out center にすることで、node以外もcenter座標付きで返ってくる。
     const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out center;` });
     if (!res.ok) throw new Error();
     const data = await res.json();

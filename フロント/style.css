@@ -11,6 +11,19 @@ body {
     color: var(--ink);
 }
 
+/* ドロップダウンのグループヘッダー */
+optgroup {
+    font-weight: bold;
+    color: var(--gold);
+    background-color: #FFFFFF;
+}
+
+option {
+    font-weight: normal;
+    color: var(--ink);
+    padding-left: 10px;
+}
+
 /* スクロールバー */
 #propertyCardList::-webkit-scrollbar,
 #subsidyList::-webkit-scrollbar {
