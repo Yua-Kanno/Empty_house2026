@@ -35,8 +35,8 @@ load_dotenv()
 # Gemini側が混雑している時(503)やレート制限(429)は、一時的なものであることが多いため、
 # 少し待って自動的にリトライする。ユーザーには「考え中」のまま見えるだけで、失敗を意識させない。
 _RETRYABLE_CODES = {429, 503}
-_MAX_RETRIES = 3
-_RETRY_BASE_DELAY_SEC = 2.0
+_MAX_RETRIES = 5
+_RETRY_BASE_DELAY_SEC = 3.0
 
 
 class DailyQuotaExceededError(RuntimeError):
