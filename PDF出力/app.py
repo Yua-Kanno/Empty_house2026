@@ -1,12 +1,32 @@
 import os
 import sqlite3
 from io import BytesIO
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from urllib.parse import quote
+
+import requests
+from dotenv import load_dotenv
+from flask import Flask, Response, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import generate_proposal
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(CURRENT_DIR)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+# 空き家周辺の観光・景観スポット検索(Google Places API (New))に使うキー。
+# 未設定の場合は機能自体を無効化し、/api/nearby-spots は空リストを返す
+# (このキーはここでしか使わず、ブラウザには一切送信しない)。
+GOOGLE_PLACES_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "").strip()
+# 観光・景観系として検索する対象タイプ。Google側の仕様変更でタイプ名が
+# 変わった場合はここだけ直せばよい。
+# 参考: https://developers.google.com/maps/documentation/places/web-service/place-types
+PLACES_SIGHTSEEING_TYPES = [
+    "tourist_attraction",
+    "park",
+    "museum",
+    "art_gallery",
+    "historical_landmark",
+]
 # 「フロント」フォルダのパスを正確に取得
 FRONTEND_DIR = os.path.join(BASE_DIR, "フロント")
 DATABASE_PATH = os.path.join(BASE_DIR, "empty_house.db")
@@ -84,6 +104,64 @@ def load_subsidies_from_database(municipality):
         ).fetchall()
     return [dict(row) for row in rows]
 
+
+def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
+    """空き家の緯度経度から近い観光・景観スポットをGoogle Places API (New)で検索する。
+
+    APIキー未設定、通信失敗、該当なしのいずれの場合もエラーにはせず、
+    spots=[] と note(理由)を返す(フロント側は「該当する補助金情報はありません」と
+    同じ考え方で、取得できない場合は静かに「見つかりませんでした」を表示する想定)。
+    """
+    if not GOOGLE_PLACES_API_KEY:
+        return {"spots": [], "note": "GOOGLE_PLACES_API_KEYが設定されていません。"}
+
+    try:
+        response = requests.post(
+            "https://places.googleapis.com/v1/places:searchNearby",
+            headers={
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": GOOGLE_PLACES_API_KEY,
+                "X-Goog-FieldMask": (
+                    "places.displayName,places.rating,places.userRatingCount,"
+                    "places.formattedAddress,places.location,places.types,places.photos"
+                ),
+            },
+            json={
+                "includedTypes": PLACES_SIGHTSEEING_TYPES,
+                "maxResultCount": max_results,
+                "rankPreference": "POPULARITY",
+                "locationRestriction": {
+                    "circle": {
+                        "center": {"latitude": lat, "longitude": lng},
+                        "radius": radius_m,
+                    }
+                },
+            },
+            timeout=8,
+        )
+        response.raise_for_status()
+        data = response.json()
+    except requests.RequestException as e:
+        print(f"Places API error: {e}")
+        return {"spots": [], "note": "Google Places APIへの通信に失敗しました。"}
+
+    spots = []
+    for place in data.get("places", []):
+        photos = place.get("photos") or []
+        photo_name = photos[0].get("name") if photos else None
+        location = place.get("location") or {}
+        spots.append({
+            "name": (place.get("displayName") or {}).get("text", ""),
+            "rating": place.get("rating"),
+            "user_rating_count": place.get("userRatingCount"),
+            "address": place.get("formattedAddress"),
+            "lat": location.get("latitude"),
+            "lng": location.get("longitude"),
+            "types": place.get("types", []),
+            "photo_url": f"/api/place-photo?name={quote(photo_name, safe='')}" if photo_name else None,
+        })
+    return {"spots": spots, "note": None}
+
 # Gunicorn等での起動時に一度だけDBを構築しておく(初回リクエストが複数同時に来て
 # 競合するのを防ぐ)。失敗してもアプリ自体は起動させ、後続のリクエスト側の
 # init_database() 呼び出しでリトライされるようにする。
@@ -125,6 +203,39 @@ def get_subsidies():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
+
+# 周辺の観光・景観スポットAPI(Google Places API (New) をサーバー側で呼び出す)
+@app.route('/api/nearby-spots', methods=['GET'])
+def get_nearby_spots():
+    try:
+        lat = request.args.get('lat', type=float)
+        lng = request.args.get('lng', type=float)
+        if lat is None or lng is None:
+            return jsonify({"spots": [], "note": "lat/lngが指定されていません。"}), 400
+        return jsonify(fetch_nearby_sightseeing_spots(lat, lng))
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+# 観光・景観スポットの写真プロキシ(APIキーをブラウザに渡さないため、ここで中継する)
+@app.route('/api/place-photo', methods=['GET'])
+def get_place_photo():
+    name = request.args.get('name', '').strip()
+    if not name or not GOOGLE_PLACES_API_KEY:
+        return '', 404
+    try:
+        response = requests.get(
+            f"https://places.googleapis.com/v1/{name}/media",
+            params={"maxWidthPx": 480, "key": GOOGLE_PLACES_API_KEY},
+            timeout=8,
+        )
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Places photo error: {e}")
+        return '', 502
+    return Response(response.content, mimetype=response.headers.get('Content-Type', 'image/jpeg'))
+
 
 # PDF生成API
 @app.route('/api/generate-pdf', methods=['GET', 'POST'])

@@ -59,6 +59,10 @@ const AMENITY_CONFIG = {
     supermarket: { query: 'nwr["shop"="supermarket"]', icon: createAmenityIcon('🛒', '#5F7350'), symbol: '🛒', label: 'スーパー' },
     station: { query: 'nwr["railway"="station"]', icon: createAmenityIcon('🚃', '#5C7A99'), symbol: '🚃', label: '駅' },
     hospital: { query: 'nwr["amenity"="hospital"]', icon: createAmenityIcon('🏥', '#954C36'), symbol: '🏥', label: '病院' },
+    // 観光・景観スポットはOverpass(OSM)ではなくGoogle Places APIから取得するため
+    // queryを持たない。initAmenityLayers/addAmenityLegendControlのレイヤー・凡例の
+    // 仕組みだけ共用し、取得自体はupdateNearbySightseeingSpots()が行う。
+    sightseeing: { icon: createAmenityIcon('🏞️', '#7A5C99'), symbol: '🏞️', label: '観光・景観' },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -316,6 +320,7 @@ function updateSelection(selectedId) {
 
     map.flyTo(coords, 14, { animate: true, duration: 0.9 });
     updateNearbyAmenities(coords[0], coords[1]);
+    updateNearbySightseeingSpots(coords[0], coords[1]);
     updateChart(house);
 }
 
@@ -330,7 +335,12 @@ function clearDetail() {
     
     const statusEl = document.getElementById('amenityStatus');
     if (statusEl) statusEl.textContent = '物件を選択してください';
-    
+
+    const sightseeingStatusEl = document.getElementById('sightseeingStatus');
+    if (sightseeingStatusEl) sightseeingStatusEl.textContent = '物件を選択してください';
+    const sightseeingListEl = document.getElementById('sightseeingList');
+    if (sightseeingListEl) sightseeingListEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
+
     document.querySelectorAll('.prop-card').forEach(card => card.classList.remove('active'));
 
     if (selectedMarker) {
@@ -529,11 +539,75 @@ async function updateNearbyAmenities(lat, lng) {
 }
 
 async function fetchNearbyAmenities(lat, lng) {
-    const clauses = Object.values(AMENITY_CONFIG).map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`).join('\n');
+    // sightseeingはOverpass対象外(queryを持たない)なので除外する。
+    const clauses = Object.values(AMENITY_CONFIG)
+        .filter(cfg => cfg.query)
+        .map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`)
+        .join('\n');
     const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out center;` });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return data.elements || [];
+}
+
+// --- 観光・景観スポット(Google Places API。バックエンド/api/nearby-spots経由) ---
+
+const SIGHTSEEING_RADIUS_M = 3000;
+let sightseeingRequestId = 0;
+
+async function updateNearbySightseeingSpots(lat, lng) {
+    const listEl = document.getElementById('sightseeingList');
+    const statusEl = document.getElementById('sightseeingStatus');
+    const requestId = ++sightseeingRequestId;
+
+    if (amenityLayers.sightseeing) amenityLayers.sightseeing.clearLayers();
+    if (statusEl) statusEl.textContent = '観光・景観スポットを検索中...';
+    if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">読み込み中...</p>';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/nearby-spots?lat=${lat}&lng=${lng}`);
+        if (requestId !== sightseeingRequestId) return;
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const spots = data.spots || [];
+
+        if (spots.length === 0) {
+            if (statusEl) statusEl.textContent = data.note || '観光・景観スポットは見つかりませんでした';
+            if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">該当する観光・景観スポットはありません</p>';
+            return;
+        }
+
+        if (statusEl) statusEl.textContent = `半径${SIGHTSEEING_RADIUS_M / 1000}km: ${spots.length}件見つかりました`;
+
+        spots.forEach(spot => {
+            if (spot.lat == null || spot.lng == null) return;
+            L.marker([spot.lat, spot.lng], { icon: AMENITY_CONFIG.sightseeing.icon })
+                .bindPopup(`
+                    <b>${spot.name || '観光スポット'}</b><br>
+                    ${spot.photo_url ? `<img src="${API_BASE_URL}${spot.photo_url}" style="width:160px;border-radius:4px;margin:4px 0;">` : ''}
+                    ${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? `(${spot.user_rating_count}件)` : ''}` : ''}
+                `)
+                .addTo(amenityLayers.sightseeing);
+        });
+
+        if (listEl) {
+            listEl.innerHTML = spots.map(spot => `
+                <div class="sight-card flex-shrink-0">
+                    ${spot.photo_url
+                        ? `<img src="${API_BASE_URL}${spot.photo_url}" class="sight-card-photo" loading="lazy" alt="${spot.name || ''}">`
+                        : `<div class="sight-card-photo sight-card-photo--placeholder">🏞️</div>`}
+                    <div class="p-2">
+                        <p class="font-semibold text-[#22344B] text-xs truncate">${spot.name || '-'}</p>
+                        <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (err) {
+        if (requestId !== sightseeingRequestId) return;
+        if (statusEl) statusEl.textContent = '観光・景観スポットを取得できませんでした';
+        if (listEl) listEl.innerHTML = '<p class="text-rose-700 py-4 text-center text-xs">観光・景観スポットを読み込めませんでした</p>';
+    }
 }
 
 function getElementLatLng(element) {
