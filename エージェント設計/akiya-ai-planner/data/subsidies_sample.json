@@ -10,6 +10,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/3以内",
       "conditions": "危険と判定された空き家の解体・撤去工事費用",
+      "source_url": "https://www.city.sapporo.jp/toshi/k-shido/akiya/akiyahojyo.html",
       "keywords": "札幌市危険空き家等除却費補助制度 札幌市 解体 危険と判定された空き家の解体・撤去工事費用"
     },
     {
@@ -21,6 +22,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺環境に著しい悪影響を及ぼす不良空き家の解体費用",
+      "source_url": "https://www.city.hakodate.hokkaido.jp/docs/2016042700059/",
       "keywords": "函館市不良空き家等除却手続助成金 函館市 解体 周辺環境に著しい悪影響を及ぼす不良空き家の解体費用"
     },
     {
@@ -32,6 +34,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得または賃借して行う改修工事",
+      "source_url": "https://www.city.hakodate.hokkaido.jp/docs/2021042200010/",
       "keywords": "函館市空き家改修事業補助金 函館市 改修 空き家バンク登録物件を取得または賃借して行う改修工事"
     },
     {
@@ -43,6 +46,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上危険な状態にある老朽空き家の解体撤去費用",
+      "source_url": "https://www.city.asahikawa.hokkaido.jp/kurashi/401/ju01/ju002/d053128.html",
       "keywords": "旭川市危険空き家等除却費補助金 旭川市 解体 保安上危険な状態にある老朽空き家の解体撤去費用"
     },
     {
@@ -54,6 +58,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある老朽空き家の解体費用の補助",
+      "source_url": "https://www.city.otaru.lg.jp/docs/2020102800771/file_contents/youkou.pdf",
       "keywords": "小樽市老朽空き家等除却費補助金 小樽市 解体 倒壊のおそれがある老朽空き家の解体費用の補助"
     },
     {
@@ -65,6 +70,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "放置された危険空家の解体撤去工事費",
+      "source_url": "https://www.city.obihiro.hokkaido.jp/kurashi/sumai/akiya/1003027.html",
       "keywords": "帯広市危険空家等除却費補助金 帯広市 解体 放置された危険空家の解体撤去工事費"
     },
     {
@@ -76,6 +82,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "安全上支障のある危険空家の解体費用",
+      "source_url": "https://www.city.kushiro.lg.jp/kurashi/sumai/1004491/1004495.html",
       "keywords": "釧路市危険空家等除却補助金 釧路市 解体 安全上支障のある危険空家の解体費用"
     },
     {
@@ -87,6 +94,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険空き家として認定された住宅の除却費用",
+      "source_url": "https://www.city.kitami.lg.jp/administration/work/detail.php?content=10993",
       "keywords": "北見市危険空家等除却補助金 北見市 解体 危険空き家として認定された住宅の除却費用"
     },
     {
@@ -98,6 +106,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺住民の生命・財産を保護するための危険空家解体費",
+      "source_url": null,
       "keywords": "江別市危険空家等除却費補助金 江別市 解体 周辺住民の生命・財産を保護するための危険空家解体費"
     },
     {
@@ -109,6 +118,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "老朽化し危険と診断された住宅の解体費用",
+      "source_url": null,
       "keywords": "苫小牧市危険空家等除却補助金 苫小牧市 解体 老朽化し危険と診断された住宅の解体費用"
     },
     {
@@ -120,6 +130,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊等の恐れがある特定危険空家の除却費支援",
+      "source_url": null,
       "keywords": "室蘭市危険空家等除却費補助金 室蘭市 解体 倒壊等の恐れがある特定危険空家の除却費支援"
     },
     {
@@ -131,6 +142,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある老朽空き家の解体費用",
+      "source_url": null,
       "keywords": "青森市老朽空き家等除却補給金 青森市 解体 倒壊のおそれがある老朽空き家の解体費用"
     },
     {
@@ -142,6 +154,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を購入して行う改修工事",
+      "source_url": null,
       "keywords": "弘前市空き家活用リフォーム助成事業 弘前市 改修 空き家バンク登録物件を購入して行う改修工事"
     },
     {
@@ -153,6 +166,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上危険な老朽空家の解体撤去費用",
+      "source_url": null,
       "keywords": "盛岡市危険空家等除却事業補助金 盛岡市 解体 保安上危険な老朽空家の解体撤去費用"
     },
     {
@@ -164,6 +178,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住者が空き家バンク物件を取得・改修する場合",
+      "source_url": null,
       "keywords": "花巻市空き家リフォーム助成事業 花巻市 改修 移住者が空き家バンク物件を取得・改修する場合"
     },
     {
@@ -175,6 +190,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺環境に支障をきたす危険空き家の解体費",
+      "source_url": null,
       "keywords": "仙台市老朽空き家等除却特例事業 仙台市 解体 周辺環境に支障をきたす危険空き家の解体費"
     },
     {
@@ -186,6 +202,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の改修または残置物処理",
+      "source_url": null,
       "keywords": "石巻市空き家バンク活用補助金 石巻市 改修 空き家バンク登録物件の改修または残置物処理"
     },
     {
@@ -197,6 +214,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険と認定された空き家の解体工事費用",
+      "source_url": "https://www.city.akita.lg.jp/kurashi/sumai/1007487/1041984.html",
       "keywords": "秋田市危険空家等除却事業補助金 秋田市 解体 危険と認定された空き家の解体工事費用"
     },
     {
@@ -208,6 +226,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "定額",
       "conditions": "市内への移住を目的とした空き家の購入支援",
+      "source_url": null,
       "keywords": "横手市空き家定住支援事業補助金 横手市 取得 市内への移住を目的とした空き家の購入支援"
     },
     {
@@ -219,6 +238,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "放置された危険な老朽住宅の除却費",
+      "source_url": null,
       "keywords": "山形市老朽空き家等除却補助金 山形市 解体 放置された危険な老朽住宅の除却費"
     },
     {
@@ -230,6 +250,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得してリフォームする場合",
+      "source_url": null,
       "keywords": "鶴岡市空き家活用定住促進事業補助金 鶴岡市 改修 空き家バンク登録物件を取得してリフォームする場合"
     },
     {
@@ -241,6 +262,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険度の高い老朽住宅の解体撤去費",
+      "source_url": "https://www.city.fukushima.fukushima.jp/material/files/group/61/te.pdf",
       "keywords": "福島市老朽空き家等除却費補助金 福島市 解体 危険度の高い老朽住宅の解体撤去費"
     },
     {
@@ -252,6 +274,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住世帯による空き家の改修工事",
+      "source_url": "https://www.city.aizuwakamatsu.fukushima.jp/docs/2018061500016/",
       "keywords": "会津若松市空き家改修支援事業補助金 会津若松市 改修 移住世帯による空き家の改修工事"
     },
     {
@@ -263,6 +286,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊の危険がある老朽空き家の解体撤去費用",
+      "source_url": "https://www.city.hachioji.tokyo.jp/kurashi/life/003/001/akiya/p029655.html",
       "keywords": "八王子市老朽空き家等解体費補助金 八王子市 解体 倒壊の危険がある老朽空き家の解体撤去費用"
     },
     {
@@ -274,6 +298,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク等を経由して居住・活用するための改修費",
+      "source_url": null,
       "keywords": "町田市空き家活用リフォーム助成事業 町田市 改修 空き家バンク等を経由して居住・活用するための改修費"
     },
     {
@@ -285,6 +310,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺環境に悪影響を及ぼす老朽空き家の解体費用",
+      "source_url": null,
       "keywords": "横須賀市老朽空き家等解体費用補助金 横須賀市 解体 周辺環境に悪影響を及ぼす老朽空き家の解体費用"
     },
     {
@@ -296,6 +322,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得し改修する場合の費用補助",
+      "source_url": null,
       "keywords": "小田原市空き家バンク活用改修事業補助金 小田原市 改修 空き家バンク登録物件を取得し改修する場合の費用補助"
     },
     {
@@ -307,6 +334,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住・定住を目的とした空き家の改修工事",
+      "source_url": null,
       "keywords": "秩父市移住お試し空き家改修補助金 秩父市 改修 移住・定住を目的とした空き家の改修工事"
     },
     {
@@ -318,6 +346,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上危険な状態にある特定空家等の除却費",
+      "source_url": null,
       "keywords": "熊谷市危険空き家等除却補助金 熊谷市 解体 保安上危険な状態にある特定空家等の除却費"
     },
     {
@@ -329,6 +358,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "放置された危険な老朽住宅の解体費用",
+      "source_url": null,
       "keywords": "銚子市危険空家等除却事業補助金 銚子市 解体 放置された危険な老朽住宅の解体費用"
     },
     {
@@ -340,6 +370,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク物件を購入・賃貸して行う改修費支援",
+      "source_url": null,
       "keywords": "館山市空き家バンク活用定住促進補助金 館山市 改修 空き家バンク物件を購入・賃貸して行う改修費支援"
     },
     {
@@ -351,6 +382,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "安全上危険と診断された空き家の除却工事費用",
+      "source_url": null,
       "keywords": "水戸市危険空き家等除却費補助金 水戸市 解体 安全上危険と診断された空き家の除却工事費用"
     },
     {
@@ -362,6 +394,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "定額",
       "conditions": "市内空き家を取得して定住する若者・子育て世帯への支援",
+      "source_url": null,
       "keywords": "日立市ひたちマイホーム取得事業補助金 日立市 取得 市内空き家を取得して定住する若者・子育て世帯への支援"
     },
     {
@@ -373,6 +406,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある老朽空き家の解体費用",
+      "source_url": null,
       "keywords": "宇都宮市老朽空き家等除却費補助金 宇都宮市 解体 倒壊のおそれがある老朽空き家の解体費用"
     },
     {
@@ -384,6 +418,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を購入して行うリフォーム工事",
+      "source_url": "https://www.city.ashikaga.tochigi.jp/urban/000068/000376/000761/p008325.html",
       "keywords": "足利市空き家リフォーム補助金 足利市 改修 空き家バンク登録物件を購入して行うリフォーム工事"
     },
     {
@@ -395,6 +430,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上支障のある特定空家等の除却費",
+      "source_url": "https://www.city.maebashi.gunma.jp/soshiki/toshikeikakubu/kenchikujutaku/gyomu/2/1/48337.html",
       "keywords": "前橋市危険空家等除却事業補助金 前橋市 解体 保安上支障のある特定空家等の除却費"
     },
     {
@@ -406,6 +442,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の改修または片付け費用",
+      "source_url": "https://www.city.kiryu.lg.jp/kurashi/jutaku/1018097/1011339/1011204.html",
       "keywords": "桐生市空き家利活用意欲促進事業補助金 桐生市 改修 空き家バンク登録物件の改修または片付け費用"
     },
     {
@@ -417,6 +454,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "平成12年5月以前に建築された老朽木造住宅の解体費",
+      "source_url": "https://www.city.osaka.lg.jp/toshiseibi/page/0000255852.html",
       "keywords": "大阪市民間老朽木造住宅解体補助制度 大阪市 解体 平成12年5月以前に建築された老朽木造住宅の解体費"
     },
     {
@@ -428,6 +466,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家を地域貢献施設や居住用として改修する費用",
+      "source_url": null,
       "keywords": "堺市空き家活用リフォーム補助金 堺市 改修 空き家を地域貢献施設や居住用として改修する費用"
     },
     {
@@ -439,6 +478,7 @@
       "max_amount_man_yen": 90.0,
       "subsidy_rate": "2/3以内",
       "conditions": "空き家を売却・賃貸等で再活用するための改修工事費",
+      "source_url": "https://www.city.kyoto.lg.jp/tokei/page/0000329679.html",
       "keywords": "京都市空き家活用・改修支援事業補助金 京都市 改修 空き家を売却・賃貸等で再活用するための改修工事費"
     },
     {
@@ -450,6 +490,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "定額",
       "conditions": "移住者が空き家バンク物件を取得・改修する場合の支援",
+      "source_url": null,
       "keywords": "舞鶴市空き家移住定住促進事業補助金 舞鶴市 取得 移住者が空き家バンク物件を取得・改修する場合の支援"
     },
     {
@@ -461,6 +502,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "防災上・安全上危険な老朽空き家の解体費用",
+      "source_url": "https://www.city.kobe.lg.jp/a92551/business/todokede/jutakutoshikyoku/building/work/roukyuakiyahojo.html",
       "keywords": "神戸市危険空家等解体補助制度 神戸市 解体 防災上・安全上危険な老朽空き家の解体費用"
     },
     {
@@ -472,6 +514,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク物件等を居住・地域活用目的でリフォームする費用",
+      "source_url": "https://www.city.himeji.lg.jp/kurashi/0000006746.html",
       "keywords": "姫路市空き家活用支援事業補助金 姫路市 改修 空き家バンク物件等を居住・地域活用目的でリフォームする費用"
     },
     {
@@ -483,6 +526,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "安全上支障のある老朽危険空家の解体・撤去費用",
+      "source_url": "https://www.city.nara.lg.jp/site/akiya-bank/9205.html",
       "keywords": "奈良市老朽危険空家等自主解体補助金 奈良市 解体 安全上支障のある老朽危険空家の解体・撤去費用"
     },
     {
@@ -494,6 +538,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "町内の空き家を取得・賃借して行うリフォーム費用",
+      "source_url": "https://www.town.yoshino.nara.jp/soshiki/kyodonomachisuishin/sumai/146.html",
       "keywords": "吉野町空き家活用定住促進補助金 吉野町 改修 町内の空き家を取得・賃借して行うリフォーム費用"
     },
     {
@@ -505,6 +550,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある老朽空き家の解体撤去費用",
+      "source_url": null,
       "keywords": "大津市老朽空き家解体費補助金 大津市 解体 倒壊のおそれがある老朽空き家の解体撤去費用"
     },
     {
@@ -516,6 +562,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得し改修して定住する場合",
+      "source_url": null,
       "keywords": "長浜市空き家バンク活用定住促進事業補助金 長浜市 改修 空き家バンク登録物件を取得し改修して定住する場合"
     },
     {
@@ -527,6 +574,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周囲への危険度が高い老朽空き家の解体費用",
+      "source_url": "https://www.city.wakayama.wakayama.jp/kurashi/sumai_jyougesuidou/1001110/1010373/1001893.html",
       "keywords": "和歌山市老朽危険空家解体費補助金 和歌山市 解体 周囲への危険度が高い老朽空き家の解体費用"
     },
     {
@@ -538,6 +586,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住促進エリア内の空き家を改修して居住する場合",
+      "source_url": "https://www.city.tanabe.lg.jp/soshiki/kikaku/2/4/6_1/195.html",
       "keywords": "田辺市空き家改修事業補助金 田辺市 改修 移住促進エリア内の空き家を改修して居住する場合"
     },
     {
@@ -549,6 +598,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上危険な状態にある老朽空き家の解体費用",
+      "source_url": null,
       "keywords": "新潟市危険空き家等除却費補助金 新潟市 解体 保安上危険な状態にある老朽空き家の解体費用"
     },
     {
@@ -560,6 +610,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を購入・賃貸して行う改修費支援",
+      "source_url": null,
       "keywords": "長岡市空き家活用定住促進事業補助金 長岡市 改修 空き家バンク登録物件を購入・賃貸して行う改修費支援"
     },
     {
@@ -571,6 +622,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある危険空家の解体撤去費用",
+      "source_url": "https://www.city.toyama.lg.jp/kurashi/sumai/1010271/1010273/1015966.html",
       "keywords": "富山市危険空家等除却推進事業補助金 富山市 解体 倒壊のおそれがある危険空家の解体撤去費用"
     },
     {
@@ -582,6 +634,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク活用による改修工事費用の補助",
+      "source_url": "https://www.city.takaoka.toyama.jp/soshiki/kenchikuseisakuka/2/3/4/2521.html",
       "keywords": "高岡市空き家活用リフォーム補助金 高岡市 改修 空き家バンク活用による改修工事費用の補助"
     },
     {
@@ -593,6 +646,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "安全上支障をきたす老朽危険空家の解体費用",
+      "source_url": "https://www4.city.kanazawa.lg.jp/soshikikarasagasu/kenchikushidoka/gyomuannai/2_1/akiya/25441.html",
       "keywords": "金沢市危険空家等除却費補助金 金沢市 解体 安全上支障をきたす老朽危険空家の解体費用"
     },
     {
@@ -604,6 +658,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住者が空き家を取得・改修する場合の費用支援",
+      "source_url": "https://www.city.komatsu.lg.jp/soshiki/1027/akiya_akishitsubanku_komatsuchoukajouhoubanku/3079.html",
       "keywords": "小松市空き家改修支援事業補助金 小松市 改修 移住者が空き家を取得・改修する場合の費用支援"
     },
     {
@@ -615,6 +670,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺環境に悪影響を与える危険空家の解体費",
+      "source_url": "https://www.city.fukui.lg.jp/kurasi/jutaku/akiyataisaku/akiya_elimination.html",
       "keywords": "福井市危険空家等除却事業補助金 福井市 解体 周辺環境に悪影響を与える危険空家の解体費"
     },
     {
@@ -626,6 +682,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "定住目的で空き家バンク物件をリフォームする費用",
+      "source_url": null,
       "keywords": "敦賀市空き家活用定住促進補助金 敦賀市 改修 定住目的で空き家バンク物件をリフォームする費用"
     },
     {
@@ -637,6 +694,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊危険のある老朽空き家の除却工事費",
+      "source_url": null,
       "keywords": "甲府市老朽空き家解体費補助金 甲府市 解体 倒壊危険のある老朽空き家の除却工事費"
     },
     {
@@ -648,6 +706,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "移住者が空き家を取得して改修する場合の補助",
+      "source_url": "https://www.city.hokuto.yamanashi.jp/docs/18796.html",
       "keywords": "北杜市移住定住お試し空き家改修補助金 北杜市 改修 移住者が空き家を取得して改修する場合の補助"
     },
     {
@@ -659,6 +718,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上放置することが不適切である危険空家の除却費",
+      "source_url": "https://www.city.nagano.nagano.jp/n183500/contents/p003369.html",
       "keywords": "長野市危険空家等除却事業補助金 長野市 解体 保安上放置することが不適切である危険空家の除却費"
     },
     {
@@ -670,6 +730,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得し行うリフォーム費",
+      "source_url": "https://www.city.matsumoto.nagano.jp/site/benricho/3268.html",
       "keywords": "松本市空き家バンク活用改修補助金 松本市 改修 空き家バンク登録物件を取得し行うリフォーム費"
     },
     {
@@ -681,6 +742,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険と判定された特定空家等の解体費支援",
+      "source_url": "https://www.city.gifu.lg.jp/kurashi/sumai/1002445/1002450.html",
       "keywords": "岐阜市危険空家等除却補助金 岐阜市 解体 危険と判定された特定空家等の解体費支援"
     },
     {
@@ -692,6 +754,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "定住促進エリア内の空き家改修費用",
+      "source_url": null,
       "keywords": "大垣市空き家活用定住促進事業補助金 大垣市 改修 定住促進エリア内の空き家改修費用"
     },
     {
@@ -703,6 +766,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "安全上のリスクが高い特定空家等の解体費",
+      "source_url": null,
       "keywords": "静岡市特定空家等除却事業費補助金 静岡市 解体 安全上のリスクが高い特定空家等の解体費"
     },
     {
@@ -714,6 +778,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク物件を活用して行う居住用改修",
+      "source_url": null,
       "keywords": "浜松市空き家活用事業費補助金 浜松市 改修 空き家バンク物件を活用して行う居住用改修"
     },
     {
@@ -725,6 +790,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "防災上の課題がある老朽住宅の除却費補助",
+      "source_url": null,
       "keywords": "名古屋市老朽木造住宅非木造化・解体助成 名古屋市 解体 防災上の課題がある老朽住宅の除却費補助"
     },
     {
@@ -736,6 +802,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある危険な空き家の解体費",
+      "source_url": null,
       "keywords": "豊橋市危険空家等除却費補助金 豊橋市 解体 倒壊のおそれがある危険な空き家の解体費"
     },
     {
@@ -747,6 +814,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊危険のある老朽空き家の解体費用",
+      "source_url": null,
       "keywords": "鳥取市危険空き家等除却費補助金 鳥取市 解体 倒壊危険のある老朽空き家の解体費用"
     },
     {
@@ -758,6 +826,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク物件を取得・改修する場合",
+      "source_url": null,
       "keywords": "松江市空き家活用定住促進補助金 松江市 改修 空き家バンク物件を取得・改修する場合"
     },
     {
@@ -769,6 +838,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上危険な空き家の除却工事費",
+      "source_url": "https://www.city.okayama.jp/kurashi/0000006222.html",
       "keywords": "岡山市危険空家等除却費補助金 岡山市 解体 保安上危険な空き家の除却工事費"
     },
     {
@@ -780,6 +850,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "避難路沿い等の老朽空き家解体費",
+      "source_url": "https://www.city.hiroshima.lg.jp/living/sumai/1003056/1018457.html",
       "keywords": "広島市老朽空き家等除却費補助金 広島市 解体 避難路沿い等の老朽空き家解体費"
     },
     {
@@ -791,6 +862,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市内空き家を購入して改修・居住する費用",
+      "source_url": "https://www.city.shimonoseki.lg.jp/soshiki/70/2583.html",
       "keywords": "下関市空き家リフォーム補助金 下関市 改修 市内空き家を購入して改修・居住する費用"
     },
     {
@@ -802,6 +874,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "放置された危険空家の解体費補助",
+      "source_url": "https://www.city.tokushima.tokushima.jp/smph/kurashi/house/house_keikaku/house_kaitai.html",
       "keywords": "徳島市危険空家等除却支援事業補助金 徳島市 解体 放置された危険空家の解体費補助"
     },
     {
@@ -813,6 +886,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周辺への危険性が高い空き家の撤去費",
+      "source_url": "https://www.city.takamatsu.kagawa.jp/smph/kurashi/kurashi/sumai/akiya/akiya_jokyaku.html",
       "keywords": "高松市危険空家等除却事業補助金 高松市 解体 周辺への危険性が高い空き家の撤去費"
     },
     {
@@ -824,6 +898,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険と判断された老朽空き家の解体費",
+      "source_url": "https://www.city.matsuyama.ehime.jp/kurashi/kurashi/hojokin/akiyajokyaku.html",
       "keywords": "松山市老朽危険空家等除却事業補助金 松山市 解体 危険と判断された老朽空き家の解体費"
     },
     {
@@ -835,6 +910,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "地震時の倒壊等を防ぐ老朽住宅の除却費",
+      "source_url": "https://www.city.kochi.kochi.jp/soshiki/58/roukyuh271011.html",
       "keywords": "高知市老朽住宅等除却事業費補助金 高知市 解体 地震時の倒壊等を防ぐ老朽住宅の除却費"
     },
     {
@@ -846,6 +922,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "老朽化し危険な空き家の解体撤去費用",
+      "source_url": "https://www.city.kitakyushu.lg.jp/contents/07200004.html",
       "keywords": "北九州市老朽空き家等除却補助金 北九州市 解体 老朽化し危険な空き家の解体撤去費用"
     },
     {
@@ -857,6 +934,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク物件の改修費支援",
+      "source_url": null,
       "keywords": "佐賀市空き家活用定住促進事業補助金 佐賀市 改修 空き家バンク物件の改修費支援"
     },
     {
@@ -868,6 +946,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "斜面地・老朽危険空き家の解体費",
+      "source_url": "https://www.city.nagasaki.lg.jp/sumai/620000/625000/p004268.html",
       "keywords": "長崎市老朽危険空き家等除却費補助金 長崎市 解体 斜面地・老朽危険空き家の解体費"
     },
     {
@@ -879,6 +958,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "保安上支障のある空き家の除却費用",
+      "source_url": "https://www.city.kumamoto.jp/kiji00324944/index.html",
       "keywords": "熊本市危険空家等除却費補助金 熊本市 解体 保安上支障のある空き家の除却費用"
     },
     {
@@ -890,6 +970,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある空き家の解体費",
+      "source_url": "https://www.city.oita.oita.jp/o168/kurashi/sumaijoho/documents/roukyu1.pdf",
       "keywords": "大分市危険空家等除却事業補助金 大分市 解体 倒壊のおそれがある空き家の解体費"
     },
     {
@@ -901,6 +982,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険な特定空家等の除却費支援",
+      "source_url": "https://www.city.miyazaki.miyazaki.jp/fs/8/5/2/1/0/7/_/852107.pdf",
       "keywords": "宮崎市危険空家等除却費補助金 宮崎市 解体 危険な特定空家等の除却費支援"
     },
     {
@@ -912,6 +994,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "危険度の高い老朽空き家の除却費",
+      "source_url": "https://www.city.kagoshima.lg.jp/kensetu/kenchiku/kenshido/machizukuri/kaihatsu/kenchiku/rokyu/documents/akiyakaitaihojochirashi.pdf",
       "keywords": "鹿児島市危険空家等除却事業補助金 鹿児島市 解体 危険度の高い老朽空き家の除却費"
     },
     {
@@ -923,6 +1006,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "周囲への支障がある危険空家の解体費",
+      "source_url": "https://www.city.naha.okinawa.jp/kurasitetuduki/life/sumai/akiya/jokyakuhojo.files/R7pamphlet.pdf",
       "keywords": "那覇市危険空家等除却事業補助金 那覇市 解体 周囲への支障がある危険空家の解体費"
     },
     {
@@ -934,6 +1018,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "倒壊のおそれがある危険空き家の解体費用",
+      "source_url": null,
       "keywords": "津市危険空き家等除却費補助金 津市 解体 倒壊のおそれがある危険空き家の解体費用"
     },
     {
@@ -945,6 +1030,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を取得して行う改修工事",
+      "source_url": null,
       "keywords": "四日市市空き家リフォーム事業補助金 四日市市 改修 空き家バンク登録物件を取得して行う改修工事"
     },
     {
@@ -956,6 +1042,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3以内",
       "conditions": "市外在住の子育て世帯等(18歳未満の子がいる世帯または夫婦とも40歳未満)が、空き家バンク登録物件等を取得後1年2か月以内にリフォームに着工し市内に転入する場合が対象。",
+      "source_url": null,
       "keywords": "佐倉市定住人口維持増加活動支援事業(空き家バンク等子育て世帯等定住促進補助事業) 佐倉市 改修 市外在住の子育て世帯等(18歳未満の子がいる世帯または夫婦とも40歳未満)が、空き家バンク登録物件等を取得後1年2か月以内にリフォームに着工し市内に転入する場合が対象。"
     },
     {
@@ -967,6 +1054,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/3以内",
       "conditions": "空家バンクを通じて売買契約を結んだ(契約から2年以内の)空家のリフォームが対象。",
+      "source_url": null,
       "keywords": "八千代市空家リフォーム費補助事業 八千代市 改修 空家バンクを通じて売買契約を結んだ(契約から2年以内の)空家のリフォームが対象。"
     },
     {
@@ -978,6 +1066,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンクを通じて売買または賃貸借契約が成立した空き家のリフォーム費用が対象。",
+      "source_url": null,
       "keywords": "勝浦市空き家流通促進補助金(リフォーム補助金) 勝浦市 改修 空き家バンクを通じて売買または賃貸借契約が成立した空き家のリフォーム費用が対象。"
     },
     {
@@ -989,6 +1078,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3",
       "conditions": "旧野栄町区域の空き家バンク登録物件を購入・賃借し定住目的で居住するための改修工事が対象。",
+      "source_url": null,
       "keywords": "匝瑳市空き家バンク登録物件改修補助金 匝瑳市 改修 旧野栄町区域の空き家バンク登録物件を購入・賃借し定住目的で居住するための改修工事が対象。"
     },
     {
@@ -1000,6 +1090,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2(高経年住宅団地内は2/3)",
       "conditions": "町内自治会や地域団体が地域活性化等の用途で空き家を改修する場合が対象。",
+      "source_url": null,
       "keywords": "千葉市空き家・空き地管理活用応援制度(空き家活用事業) 千葉市緑区 改修 町内自治会や地域団体が地域活性化等の用途で空き家を改修する場合が対象。"
     },
     {
@@ -1011,6 +1102,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2(高経年住宅団地内は2/3)",
       "conditions": "町内自治会や地域団体が地域活性化等の用途で空き家を改修する場合が対象。",
+      "source_url": null,
       "keywords": "千葉市空き家・空き地管理活用応援制度(空き家活用事業) 千葉市若葉区 改修 町内自治会や地域団体が地域活性化等の用途で空き家を改修する場合が対象。"
     },
     {
@@ -1022,6 +1114,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/5",
       "conditions": "空き家バンクに登録された物件をリフォームする場合が対象。",
+      "source_url": null,
       "keywords": "栄町空き家バンク登録住宅リフォーム補助金 印旛郡栄町 改修 空き家バンクに登録された物件をリフォームする場合が対象。"
     },
     {
@@ -1033,6 +1126,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/10",
       "conditions": "確認済証交付から10年以上経過した市内の自己居住用住宅のリフォーム(工事費20万円以上)が対象。",
+      "source_url": null,
       "keywords": "印西市空き家リフォーム工事補助金 印西市 改修 確認済証交付から10年以上経過した市内の自己居住用住宅のリフォーム(工事費20万円以上)が対象。"
     },
     {
@@ -1044,6 +1138,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "1/2",
       "conditions": "1年以上空き家で特定空家等または不良住宅に該当する個人所有の一戸建ての解体工事が対象。",
+      "source_url": null,
       "keywords": "君津市空き家解体撤去補助金 君津市 解体 1年以上空き家で特定空家等または不良住宅に該当する個人所有の一戸建ての解体工事が対象。"
     },
     {
@@ -1055,6 +1150,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/3以内",
       "conditions": "登録空き家を購入し今後3年以上大多喜町に居住する人が町内業者に依頼して行う100万円以上の改修工事が対象。",
+      "source_url": null,
       "keywords": "大多喜町空き家利用促進奨励金(改修費補助) 夷隅郡大多喜町 改修 登録空き家を購入し今後3年以上大多喜町に居住する人が町内業者に依頼して行う100万円以上の改修工事が対象。"
     },
     {
@@ -1066,6 +1162,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "富津市空家バンク登録物件を購入または賃貸し、契約から1年以内に着手するリフォームが対象。",
+      "source_url": null,
       "keywords": "富津市空家バンクリフォーム補助金 富津市 改修 富津市空家バンク登録物件を購入または賃貸し、契約から1年以内に着手するリフォームが対象。"
     },
     {
@@ -1077,6 +1174,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "4/5",
       "conditions": "特定空家等に該当する個人所有の戸建て住宅の除却工事が対象。",
+      "source_url": null,
       "keywords": "富里市危険空家除却工事費補助事業 富里市 解体 特定空家等に該当する個人所有の戸建て住宅の除却工事が対象。"
     },
     {
@@ -1088,6 +1186,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "2/3以内",
       "conditions": "山武市空き家バンク登録物件を取得し市内へ移住・定住する人が行う改修工事が対象。",
+      "source_url": null,
       "keywords": "山武市空き家バンク登録物件改修事業補助金 山武市 改修 山武市空き家バンク登録物件を取得し市内へ移住・定住する人が行う改修工事が対象。"
     },
     {
@@ -1099,6 +1198,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "15%",
       "conditions": "現に空き家となっている住宅、または空き家となる予定の住宅へ新たに入居する際のリフォーム工事が対象。",
+      "source_url": null,
       "keywords": "芝山町住宅リフォーム補助金(空家のリフォーム枠) 山武郡芝山町 改修 現に空き家となっている住宅、または空き家となる予定の住宅へ新たに入居する際のリフォーム工事が対象。"
     },
     {
@@ -1110,6 +1210,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "1年以上使用されていない市内の戸建て空き家を住宅用に改修し10年以上活用する場合が対象。",
+      "source_url": null,
       "keywords": "成田市空家改修補助金 成田市 改修 1年以上使用されていない市内の戸建て空き家を住宅用に改修し10年以上活用する場合が対象。"
     },
     {
@@ -1121,6 +1222,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家を改修し滞在体験施設や交流施設等の用途で10年以上活用する場合が対象。",
+      "source_url": null,
       "keywords": "旭市空家活用支援事業補助金 旭市 改修 空き家を改修し滞在体験施設や交流施設等の用途で10年以上活用する場合が対象。"
     },
     {
@@ -1132,6 +1234,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "木更津市空家バンク登録物件を購入・賃借した人が住居として活用するためのリフォーム工事が対象。",
+      "source_url": null,
       "keywords": "木更津市空家リフォーム助成制度 木更津市 改修 木更津市空家バンク登録物件を購入・賃借した人が住居として活用するためのリフォーム工事が対象。"
     },
     {
@@ -1143,6 +1246,7 @@
       "max_amount_man_yen": 500.0,
       "subsidy_rate": "2/3以内",
       "conditions": "市内で1年以上使用されていない空き家を交流施設等の公益的施設に改修し、工事後10年以上その用途で使用する場合が対象。",
+      "source_url": null,
       "keywords": "いわき市空き家改修支援事業補助金 いわき市 改修 市内で1年以上使用されていない空き家を交流施設等の公益的施設に改修し、工事後10年以上その用途で使用する場合が対象。"
     },
     {
@@ -1154,6 +1258,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "市外から転入し空き家を購入・賃借した者が20万円以上の改修工事を行い、助成後5年以上定住する場合が対象。",
+      "source_url": null,
       "keywords": "二本松市空き家改修費等助成金 二本松市 改修 市外から転入し空き家を購入・賃借した者が20万円以上の改修工事を行い、助成後5年以上定住する場合が対象。"
     },
     {
@@ -1165,6 +1270,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "伊達市空き家バンク登録物件を購入した個人の改修費を補助(過疎地域内物件は上限20万円加算)。",
+      "source_url": null,
       "keywords": "伊達市空き家改修等支援事業補助金 伊達市 改修 伊達市空き家バンク登録物件を購入した個人の改修費を補助(過疎地域内物件は上限20万円加算)。"
     },
     {
@@ -1176,6 +1282,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "全額(自己負担30万円差引)",
       "conditions": "対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。",
+      "source_url": null,
       "keywords": "福島県12市町村空き家改修等補助金 伊達郡川俣町 改修 対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。"
     },
     {
@@ -1187,6 +1294,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "全額(自己負担30万円差引)",
       "conditions": "帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。",
+      "source_url": null,
       "keywords": "福島県12市町村空き家改修等補助金 双葉郡双葉町 改修 帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。"
     },
     {
@@ -1198,6 +1306,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "全額(自己負担30万円差引)",
       "conditions": "帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。",
+      "source_url": null,
       "keywords": "福島県12市町村空き家改修等補助金 双葉郡大熊町 改修 帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。"
     },
     {
@@ -1209,6 +1318,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "全額(自己負担30万円差引)",
       "conditions": "帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。",
+      "source_url": null,
       "keywords": "福島県12市町村空き家改修等補助金 双葉郡楢葉町 改修 帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。"
     },
     {
@@ -1220,6 +1330,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "全額(自己負担30万円差引)",
       "conditions": "帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。",
+      "source_url": null,
       "keywords": "福島県12市町村空き家改修等補助金 双葉郡浪江町 改修 帰還困難区域等を含む対象12市町村外から転入する移住者等が空き家を改修し、5年以上定住することなどが条件。"
     },
     {
@@ -1231,6 +1342,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "2/3〜9/10",
       "conditions": "組合・団体等が空き建築物を地域活用のために改修する費用を補助。",
+      "source_url": null,
       "keywords": "喜多方市空き家再生推進事業補助金 喜多方市 改修 組合・団体等が空き建築物を地域活用のために改修する費用を補助。"
     },
     {
@@ -1242,6 +1354,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "町内の空き家を改修する場合に費用の一部を補助。",
+      "source_url": null,
       "keywords": "会津美里町空き家改修補助金 大沼郡会津美里町 改修 町内の空き家を改修する場合に費用の一部を補助。"
     },
     {
@@ -1253,6 +1366,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3",
       "conditions": "村内の空き家を改修する場合に費用の一部を補助。",
+      "source_url": null,
       "keywords": "昭和村空き家改修援助金 大沼郡昭和村 改修 村内の空き家を改修する場合に費用の一部を補助。"
     },
     {
@@ -1264,6 +1378,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "3/4以内",
       "conditions": "町内の空き家を改修する場合に費用の一部を補助。",
+      "source_url": null,
       "keywords": "金山町空き家・住宅対策支援事業補助金(空き家改修) 大沼郡金山町 改修 町内の空き家を改修する場合に費用の一部を補助。"
     },
     {
@@ -1275,6 +1390,7 @@
       "max_amount_man_yen": 276.0,
       "subsidy_rate": "1/2",
       "conditions": "個人が空き家の改修等を行う費用を補助(移住・定住促進、新婚・子育て世帯の住環境支援、空き家流通促進が目的)。",
+      "source_url": null,
       "keywords": "本宮市空き家改修等支援事業補助金 本宮市 改修 個人が空き家の改修等を行う費用を補助(移住・定住促進、新婚・子育て世帯の住環境支援、空き家流通促進が目的)。"
     },
     {
@@ -1286,6 +1402,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家を除却(解体)する個人に費用の一部を補助。",
+      "source_url": null,
       "keywords": "矢祭町空き家除却支援補助金 東白川郡矢祭町 解体 空き家を除却(解体)する個人に費用の一部を補助。"
     },
     {
@@ -1297,6 +1414,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "個人が空家等を除却(解体)する費用の一部を補助。",
+      "source_url": null,
       "keywords": "会津坂下町空家等除却推進事業補助金 河沼郡会津坂下町 解体 個人が空家等を除却(解体)する費用の一部を補助。"
     },
     {
@@ -1308,6 +1426,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2(町内業者)又は1/4(町外業者)",
       "conditions": "空き家の有効活用と町内への移住・定住促進を目的に改修工事費を補助。",
+      "source_url": null,
       "keywords": "柳津町空き家改修支援事業補助金 河沼郡柳津町 改修 空き家の有効活用と町内への移住・定住促進を目的に改修工事費を補助。"
     },
     {
@@ -1319,6 +1438,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3以内",
       "conditions": "空き家を購入・賃借した20歳以上の者が台所・浴室・便所等の改修を行い、1年以内に入居して5年以上定住する場合が対象。",
+      "source_url": null,
       "keywords": "湯川村空き家改修事業補助金 河沼郡湯川村 改修 空き家を購入・賃借した20歳以上の者が台所・浴室・便所等の改修を行い、1年以内に入居して5年以上定住する場合が対象。"
     },
     {
@@ -1330,6 +1450,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内(30万円超過分)",
       "conditions": "田村市空き家・空き地情報バンク登録物件を購入・賃借した移住者が内外装等を改修し、5年以上居住する場合が対象。",
+      "source_url": null,
       "keywords": "田村市空き家改修支援事業補助金 田村市 改修 田村市空き家・空き地情報バンク登録物件を購入・賃借した移住者が内外装等を改修し、5年以上居住する場合が対象。"
     },
     {
@@ -1341,6 +1462,7 @@
       "max_amount_man_yen": 180.0,
       "subsidy_rate": "1/2",
       "conditions": "移住・定住の促進を目的に、個人が空き家の改修等を行う費用の一部を補助。",
+      "source_url": null,
       "keywords": "小野町空き家改修等支援事業補助金 田村郡小野町 改修 移住・定住の促進を目的に、個人が空き家の改修等を行う費用の一部を補助。"
     },
     {
@@ -1352,6 +1474,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "1/2",
       "conditions": "県外からの移住者や子育て世帯等が空き家を購入・賃借して改修する費用を補助。",
+      "source_url": null,
       "keywords": "相馬市空き家改修等支援事業補助金 相馬市 改修 県外からの移住者や子育て世帯等が空き家を購入・賃借して改修する費用を補助。"
     },
     {
@@ -1363,6 +1486,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "2/3",
       "conditions": "村内の空き家を居住のために改修する費用を補助(除去等は別途1/2補助)。",
+      "source_url": null,
       "keywords": "玉川村空き家活用等支援事業補助金 石川郡玉川村 改修 村内の空き家を居住のために改修する費用を補助(除去等は別途1/2補助)。"
     },
     {
@@ -1374,6 +1498,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "須賀川市空家バンク登録物件を購入・賃借し3年以上居住する者の改修費を補助(長沼・岩瀬地区は上限100万円)。",
+      "source_url": null,
       "keywords": "須賀川市空家リフォーム補助金 須賀川市 改修 須賀川市空家バンク登録物件を購入・賃借し3年以上居住する者の改修費を補助(長沼・岩瀬地区は上限100万円)。"
     },
     {
@@ -1385,6 +1510,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "定額",
       "conditions": "むつ市立地適正化計画で定める居住誘導区域内等にある空き家等を改修・利活用する個人が対象。",
+      "source_url": null,
       "keywords": "むつ市空き家等利活用推進事業費補助金 むつ市 改修 むつ市立地適正化計画で定める居住誘導区域内等にある空き家等を改修・利活用する個人が対象。"
     },
     {
@@ -1396,6 +1522,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "15%以内",
       "conditions": "空き家バンク登録住宅を取得して改修等を行う個人が対象(通常リフォームは12.5%、空き家バンク登録住宅は15%、上限60万円)。",
+      "source_url": null,
       "keywords": "南部町住宅新築改修等支援事業補助金 三戸郡南部町 改修 空き家バンク登録住宅を取得して改修等を行う個人が対象(通常リフォームは12.5%、空き家バンク登録住宅は15%、上限60万円)。"
     },
     {
@@ -1407,6 +1534,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "定額",
       "conditions": "弘前圏域空き家・空き地バンク登録物件を取得して改修する個人が対象(県外からの移住者は上限60万円)。",
+      "source_url": null,
       "keywords": "黒石市空き家利活用事業補助金 黒石市 改修 弘前圏域空き家・空き地バンク登録物件を取得して改修する個人が対象(県外からの移住者は上限60万円)。"
     },
     {
@@ -1418,6 +1546,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を購入または賃借した者が行う改修工事費の一部を補助。",
+      "source_url": null,
       "keywords": "つくばみらい市空家活用補助金 つくばみらい市 改修 空き家バンク登録物件を購入または賃借した者が行う改修工事費の一部を補助。"
     },
     {
@@ -1429,6 +1558,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンクに登録されている物件の購入者等が行う改修・家財処分費用の一部を補助。",
+      "source_url": null,
       "keywords": "つくば市空家活用補助金 つくば市 改修 空き家バンクに登録されている物件の購入者等が行う改修・家財処分費用の一部を補助。"
     },
     {
@@ -1440,6 +1570,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3以内",
       "conditions": "空き家を改修し地域交流拠点として活用する団体等に対し改修費を補助。",
+      "source_url": null,
       "keywords": "空家等を活用した地域交流拠点づくり支援補助金 ひたちなか市 改修 空き家を改修し地域交流拠点として活用する団体等に対し改修費を補助。"
     },
     {
@@ -1451,6 +1582,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件を改修する際の工事費の一部を助成。",
+      "source_url": null,
       "keywords": "利根町空き家リフォーム工事助成金 北相馬郡利根町 改修 空き家バンク登録物件を改修する際の工事費の一部を助成。"
     },
     {
@@ -1462,6 +1594,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市外在住者が古河市空き家バンク登録物件を購入してリフォームする場合の費用の一部を補助。",
+      "source_url": null,
       "keywords": "古河市空き家等バンクリフォーム支援補助金 古河市 改修 市外在住者が古河市空き家バンク登録物件を購入してリフォームする場合の費用の一部を補助。"
     },
     {
@@ -1473,6 +1606,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンクに登録された物件の修繕費用の一部を補助。",
+      "source_url": null,
       "keywords": "小美玉市空家活用支援補助金 小美玉市 改修 空き家バンクに登録された物件の修繕費用の一部を補助。"
     },
     {
@@ -1484,6 +1618,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の改修費用の一部を補助。",
+      "source_url": null,
       "keywords": "常総市空家等バンク活用支援補助金 常総市 改修 空き家バンク登録物件の改修費用の一部を補助。"
     },
     {
@@ -1495,6 +1630,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市内の空き家をリフォームし定住促進につなげる場合の工事費を助成。",
+      "source_url": null,
       "keywords": "常陸太田市空き家リフォーム工事助成金 常陸太田市 改修 市内の空き家をリフォームし定住促進につなげる場合の工事費を助成。"
     },
     {
@@ -1506,6 +1642,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "1年以上使用されず特定空家等または不良住宅と判定された個人所有の一戸建て住宅等の解体費用の一部を補助。",
+      "source_url": null,
       "keywords": "桜川市空家等の除却補助金 桜川市 解体 1年以上使用されず特定空家等または不良住宅と判定された個人所有の一戸建て住宅等の解体費用の一部を補助。"
     },
     {
@@ -1517,6 +1654,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市外から空家・空地バンク登録物件を購入または賃借し10年以上居住する子育て世帯が行う改修工事費を補助。",
+      "source_url": null,
       "keywords": "うしく子育て世帯空家活用応援補助金 牛久市 改修 市外から空家・空地バンク登録物件を購入または賃借し10年以上居住する子育て世帯が行う改修工事費を補助。"
     },
     {
@@ -1528,6 +1666,7 @@
       "max_amount_man_yen": 10.0,
       "subsidy_rate": "1/10以内",
       "conditions": "自己居住用住宅のリフォーム工事費の一部を補助(移住のため市外から転入し空家等に居住する場合のリフォームも対象)。",
+      "source_url": null,
       "keywords": "石岡市住宅、店舗等リフォーム支援事業費補助金 石岡市 改修 自己居住用住宅のリフォーム工事費の一部を補助(移住のため市外から転入し空家等に居住する場合のリフォームも対象)。"
     },
     {
@@ -1539,6 +1678,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の改修費用の一部を補助(移住者は上限120万円)。",
+      "source_url": null,
       "keywords": "神栖市空家利活用促進事業補助金 神栖市 改修 空き家バンク登録物件の改修費用の一部を補助(移住者は上限120万円)。"
     },
     {
@@ -1550,6 +1690,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンクを通じて成約した物件の改修費用の一部を補助。",
+      "source_url": null,
       "keywords": "稲敷市空き家バンク活用促進事業補助金 稲敷市 改修 空き家バンクを通じて成約した物件の改修費用の一部を補助。"
     },
     {
@@ -1561,6 +1702,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の修繕費用の一部を補助。",
+      "source_url": null,
       "keywords": "笠間市空家活用支援補助金 笠間市 改修 空き家バンク登録物件の修繕費用の一部を補助。"
     },
     {
@@ -1572,6 +1714,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/3以内",
       "conditions": "管理不全な状態にある空家等の解体工事費用の一部を補助。",
+      "source_url": null,
       "keywords": "筑西市空家等解体支援補助金 筑西市 解体 管理不全な状態にある空家等の解体工事費用の一部を補助。"
     },
     {
@@ -1583,6 +1726,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンク登録物件の改修費用の一部を助成。",
+      "source_url": null,
       "keywords": "那珂市空き家バンクリフォーム助成事業 那珂市 改修 空き家バンク登録物件の改修費用の一部を助成。"
     },
     {
@@ -1594,6 +1738,7 @@
       "max_amount_man_yen": 120.0,
       "subsidy_rate": "2/3以内",
       "conditions": "空き家バンク登録物件のリフォーム費用の一部を補助(上限額は条件により80万~120万円)。",
+      "source_url": null,
       "keywords": "東海村空家等解体・リフォーム補助事業 那珂郡東海村 改修 空き家バンク登録物件のリフォーム費用の一部を補助(上限額は条件により80万~120万円)。"
     },
     {
@@ -1605,6 +1750,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/3以内",
       "conditions": "昭和56年5月31日以前に建築され1年以上居住されていない戸建て等の解体費用の一部を補助。",
+      "source_url": null,
       "keywords": "高萩市空き家解体支援事業費補助金 高萩市 解体 昭和56年5月31日以前に建築され1年以上居住されていない戸建て等の解体費用の一部を補助。"
     },
     {
@@ -1616,6 +1762,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンクに登録され現行の耐震基準等を満たす物件の購入者・利用登録者が行う改修工事費を補助。",
+      "source_url": null,
       "keywords": "龍ケ崎市空家バンク活用促進事業補助金 龍ケ崎市 改修 空き家バンクに登録され現行の耐震基準等を満たす物件の購入者・利用登録者が行う改修工事費を補助。"
     },
     {
@@ -1627,6 +1774,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3以内",
       "conditions": "空き家所有者が空き家バンクに売買物件として登録し、購入予定の子育て世帯等向けにリフォームする場合が対象。",
+      "source_url": null,
       "keywords": "野木町子育て世帯等向け空き家リフォーム支援事業補助金 下都賀郡野木町 改修 空き家所有者が空き家バンクに売買物件として登録し、購入予定の子育て世帯等向けにリフォームする場合が対象。"
     },
     {
@@ -1638,6 +1786,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "市が認定した特定空家等または不良空家等の除却(解体)工事費の2分の1を補助。",
+      "source_url": null,
       "keywords": "下野市老朽危険空家等除却促進補助金 下野市 解体 市が認定した特定空家等または不良空家等の除却(解体)工事費の2分の1を補助。"
     },
     {
@@ -1649,6 +1798,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "昭和56年5月31日以前着工の戸建・併用住宅で倒壊等のおそれがある空き家の解体工事費の2分の1を補助。",
+      "source_url": null,
       "keywords": "栃木市空き家解体費補助金 栃木市 解体 昭和56年5月31日以前着工の戸建・併用住宅で倒壊等のおそれがある空き家の解体工事費の2分の1を補助。"
     },
     {
@@ -1660,6 +1810,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "真岡市空き家バンクに登録された空き家を購入等した者が行う20万円以上のリフォーム工事費の2分の1以内を補助。",
+      "source_url": null,
       "keywords": "真岡市空き家バンクリフォーム工事補助金 真岡市 改修 真岡市空き家バンクに登録された空き家を購入等した者が行う20万円以上のリフォーム工事費の2分の1以内を補助。"
     },
     {
@@ -1671,6 +1822,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2(移住者)または2/3(子育て世帯等)",
       "conditions": "空き家住宅を取得し改修工事等を実施する個人が対象。",
+      "source_url": null,
       "keywords": "矢板市空家等活用支援補助金 矢板市 改修 空き家住宅を取得し改修工事等を実施する個人が対象。"
     },
     {
@@ -1682,6 +1834,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/3",
       "conditions": "空き家バンク利用登録者が行う20万円以上のリフォーム工事費の3分の1を補助(居住誘導区域内は36万円)。",
+      "source_url": null,
       "keywords": "那須塩原市空き家バンク登録建物リフォーム・家財処分費補助金 那須塩原市 改修 空き家バンク利用登録者が行う20万円以上のリフォーム工事費の3分の1を補助(居住誘導区域内は36万円)。"
     },
     {
@@ -1693,6 +1846,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "市外に1年以上居住する者が鹿沼市空き家バンク登録住宅を購入しリフォームし、完了後市内に転入して10年以上定住する場合が対象。",
+      "source_url": null,
       "keywords": "鹿沼市空き家バンクリフォーム補助金 鹿沼市 改修 市外に1年以上居住する者が鹿沼市空き家バンク登録住宅を購入しリフォームし、完了後市内に転入して10年以上定住する場合が対象。"
     },
     {
@@ -1704,6 +1858,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "茂原市空き家バンクに登録された空き家を購入してリフォームし、売買契約から2年以内に工事を完了してその住宅に転入・定住すること。",
+      "source_url": null,
       "keywords": "茂原市空き家バンク登録物件リフォーム補助金 茂原市 改修 茂原市空き家バンクに登録された空き家を購入してリフォームし、売買契約から2年以内に工事を完了してその住宅に転入・定住すること。"
     },
     {
@@ -1715,6 +1870,7 @@
       "max_amount_man_yen": 25.0,
       "subsidy_rate": "1/2",
       "conditions": "空家バンクに登録した空き家の売買または賃貸が成約した場合に改修費用の半額を助成。",
+      "source_url": null,
       "keywords": "野田市空家バンク成約時改修費用助成 野田市 改修 空家バンクに登録した空き家の売買または賃貸が成約した場合に改修費用の半額を助成。"
     },
     {
@@ -1726,6 +1882,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "工事費の10%(空き家バンク登録物件は上限10万円加算)",
       "conditions": "町内の空き家を取得して自ら居住するため町内施工業者がリフォームし、売買契約から1年以内に着工・完了すること。",
+      "source_url": null,
       "keywords": "一宮町空き家リフォーム補助金 長生郡一宮町 改修 町内の空き家を取得して自ら居住するため町内施工業者がリフォームし、売買契約から1年以内に着工・完了すること。"
     },
     {
@@ -1737,6 +1894,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "町内で5年以上使用されていない戸建て空き家を所有者または相続人が町内業者に依頼して全て除却する場合が対象。",
+      "source_url": null,
       "keywords": "睦沢町空き家除却支援補助金 長生郡睦沢町 解体 町内で5年以上使用されていない戸建て空き家を所有者または相続人が町内業者に依頼して全て除却する場合が対象。"
     },
     {
@@ -1748,6 +1906,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家バンク制度を利用して物件を購入または賃借契約した方が行う改修・内装・屋根・外壁等の資材費(5万円以上)を対象に補助。",
+      "source_url": null,
       "keywords": "長柄町セルフリノベーション資材費補助 長生郡長柄町 改修 空き家バンク制度を利用して物件を購入または賃借契約した方が行う改修・内装・屋根・外壁等の資材費(5万円以上)を対象に補助。"
     },
     {
@@ -1759,6 +1918,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "特定空家等に認定された個人所有の戸建て住宅を、市内業者が除却して敷地を更地にする工事が対象。",
+      "source_url": null,
       "keywords": "香取市危険空家除却工事補助金 香取市 解体 特定空家等に認定された個人所有の戸建て住宅を、市内業者が除却して敷地を更地にする工事が対象。"
     },
     {
@@ -1770,6 +1930,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空家をリフォームして利活用する所有者等が対象。",
+      "source_url": null,
       "keywords": "東北町空家リフォーム事業費補助金 上北郡東北町 改修 空家をリフォームして利活用する所有者等が対象。"
     },
     {
@@ -1781,6 +1942,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "2/3以内(リフォーム・リノベーション工事分)",
       "conditions": "空き家の売買に伴う登記・家財整理搬出・仲介手数料・リフォーム工事費等の一部を個人に補助。",
+      "source_url": null,
       "keywords": "八戸市空き家流通促進事業補助金 八戸市 改修 空き家の売買に伴う登記・家財整理搬出・仲介手数料・リフォーム工事費等の一部を個人に補助。"
     },
     {
@@ -1792,6 +1954,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/5以内(20%)",
       "conditions": "町内の空き家等をリフォームする際の工事費用の一部を補助。",
+      "source_url": null,
       "keywords": "外ヶ浜町空き家等リフォーム支援事業補助金 東津軽郡外ヶ浜町 改修 町内の空き家等をリフォームする際の工事費用の一部を補助。"
     },
     {
@@ -1803,6 +1966,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内(リフォーム分)",
       "conditions": "五所川原圏域空き家バンク等に登録された町内住居物件のリフォーム費用等の一部を個人に補助。",
+      "source_url": null,
       "keywords": "深浦町空き家バンク利活用促進事業補助金 西津軽郡深浦町 改修 五所川原圏域空き家バンク等に登録された町内住居物件のリフォーム費用等の一部を個人に補助。"
     },
     {
@@ -1814,6 +1978,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "村外から転入した50歳未満の者が村内の空き家等を取得して改修する場合が対象(子どもがいる世帯は上限150万円)。",
+      "source_url": null,
       "keywords": "下北山村住宅活用促進事業補助金(物件改修補助金) 吉野郡下北山村 改修 村外から転入した50歳未満の者が村内の空き家等を取得して改修する場合が対象(子どもがいる世帯は上限150万円)。"
     },
     {
@@ -1825,6 +1990,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "下市町空き家バンク登録物件を売買・賃貸契約後1年以内に町内業者が改修する場合が対象(18〜45歳の若者世帯は上限100万円)。",
+      "source_url": null,
       "keywords": "下市町空き家リフォーム補助金 吉野郡下市 改修 下市町空き家バンク登録物件を売買・賃貸契約後1年以内に町内業者が改修する場合が対象(18〜45歳の若者世帯は上限100万円)。"
     },
     {
@@ -1836,6 +2002,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "4/5",
       "conditions": "町内にある不良住宅認定の空き家等を許可業者が解体する場合が対象。",
+      "source_url": null,
       "keywords": "大淀町老朽危険空家等除却事業補助金 吉野郡大淀町 解体 町内にある不良住宅認定の空き家等を許可業者が解体する場合が対象。"
     },
     {
@@ -1847,6 +2014,7 @@
       "max_amount_man_yen": 400.0,
       "subsidy_rate": "2/3〜1/3(居住地等により異なる)",
       "conditions": "市内の空き家を購入・賃貸してから1年以内に市内事業者と契約して行う施設改修等が対象。",
+      "source_url": null,
       "keywords": "宇陀市空き家対策・起業者支援補助金 宇陀市 改修 市内の空き家を購入・賃貸してから1年以内に市内事業者と契約して行う施設改修等が対象。"
     },
     {
@@ -1858,6 +2026,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "4/5以内",
       "conditions": "村内の特定空家等・不良空家等を所有者等が除却する場合が対象。",
+      "source_url": null,
       "keywords": "御杖村空き家等除却費用補助金 宇陀郡御杖村 解体 村内の特定空家等・不良空家等を所有者等が除却する場合が対象。"
     },
     {
@@ -1869,6 +2038,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/3以内",
       "conditions": "村内の老朽危険空家等を個人所有者が解体する場合が対象。",
+      "source_url": null,
       "keywords": "山添村老朽危険空家等解体支援事業 山辺郡山添村 解体 村内の老朽危険空家等を個人所有者が解体する場合が対象。"
     },
     {
@@ -1880,6 +2050,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "御所市の空き家・町家バンク登録物件を所有者等または利用希望者が改修する場合が対象。",
+      "source_url": null,
       "keywords": "御所市空き家・町家バンク活用住宅支援補助金 御所市 改修 御所市の空き家・町家バンク登録物件を所有者等または利用希望者が改修する場合が対象。"
     },
     {
@@ -1891,6 +2062,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "町内の空き家を購入・取得した20歳以上の者が改修する場合が対象(子ども1人につき10万円等の加算あり)。",
+      "source_url": null,
       "keywords": "三郷町定住化促進空き家活用補助金 生駒郡三郷町 改修 町内の空き家を購入・取得した20歳以上の者が改修する場合が対象(子ども1人につき10万円等の加算あり)。"
     },
     {
@@ -1902,6 +2074,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2",
       "conditions": "平群町空き家バンク登録物件を39歳以下の個人・世帯が10年以上住む意思で改修する場合が対象。",
+      "source_url": null,
       "keywords": "平群町移住定住空き家改修支援事業補助金 生駒郡平群町 改修 平群町空き家バンク登録物件を39歳以下の個人・世帯が10年以上住む意思で改修する場合が対象。"
     },
     {
@@ -1913,6 +2086,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2",
       "conditions": "町内で不良度評点80点以上の空き家を所有者等が解体する場合が対象。",
+      "source_url": null,
       "keywords": "川西町空き家対策補助金(危険空家除却費補助金) 磯城郡川西町 解体 町内で不良度評点80点以上の空き家を所有者等が解体する場合が対象。"
     },
     {
@@ -1924,6 +2098,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/3以内",
       "conditions": "移住・定住に向けた住環境整備のため、個人が行う住宅の改修費・工事費等を補助。",
+      "source_url": null,
       "keywords": "岩泉町住まいるづくり事業補助金(住宅改修補助) 下閉伊郡岩泉町 改修 移住・定住に向けた住環境整備のため、個人が行う住宅の改修費・工事費等を補助。"
     },
     {
@@ -1935,6 +2110,7 @@
       "max_amount_man_yen": 85.0,
       "subsidy_rate": "1/2以内",
       "conditions": "県外から久慈市へ移住する者が、市の空き家バンク登録物件を購入・改修する費用を補助。",
+      "source_url": null,
       "keywords": "定住空き家購入等事業費補助金 久慈市 改修 県外から久慈市へ移住する者が、市の空き家バンク登録物件を購入・改修する費用を補助。"
     },
     {
@@ -1946,6 +2122,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市の空き家バンク登録物件の購入・改修にかかる経費を対象に、若者または移住者の定住を支援する個人向け補助。",
+      "source_url": null,
       "keywords": "八幡平市若者・移住者空き家住まい支援補助金 八幡平市 改修 市の空き家バンク登録物件の購入・改修にかかる経費を対象に、若者または移住者の定住を支援する個人向け補助。"
     },
     {
@@ -1957,6 +2134,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市の空き家バンク登録物件の増築・改築・リフォーム費用を補助(39歳以下の若者世代または移住者等が対象)。",
+      "source_url": null,
       "keywords": "若者・移住者向け空き家改修費補助金 北上市 改修 市の空き家バンク登録物件の増築・改築・リフォーム費用を補助(39歳以下の若者世代または移住者等が対象)。"
     },
     {
@@ -1968,6 +2146,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市の空き家バンクを利用して購入または賃借した空き家の改修工事費を補助。",
+      "source_url": null,
       "keywords": "大船渡市空き家改修工事補助金 大船渡市 改修 市の空き家バンクを利用して購入または賃借した空き家の改修工事費を補助。"
     },
     {
@@ -1979,6 +2158,7 @@
       "max_amount_man_yen": 70.0,
       "subsidy_rate": "1/3以内",
       "conditions": "市内に所有する空き家に自ら居住するためリフォームする個人が対象。",
+      "source_url": null,
       "keywords": "空家等利活用補助金(リフォーム) 宮古市 改修 市内に所有する空き家に自ら居住するためリフォームする個人が対象。"
     },
     {
@@ -1990,6 +2170,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市の空き家バンク登録物件の改修費を補助(39歳以下の若者世代または移住者が対象)。",
+      "source_url": null,
       "keywords": "若者・移住者向け空き家バンク物件取得・改修費補助金 滝沢市 改修 市の空き家バンク登録物件の改修費を補助(39歳以下の若者世代または移住者が対象)。"
     },
     {
@@ -2001,6 +2182,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "1/2",
       "conditions": "町内に所在する個人所有の空き家の解体(除却)に要する工事費の一部を補助。",
+      "source_url": null,
       "keywords": "木古内町空き家等除却費補助金 上磯郡木古内町 解体 町内に所在する個人所有の空き家の解体(除却)に要する工事費の一部を補助。"
     },
     {
@@ -2012,6 +2194,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "町内にあり特定空家等と判定された空家等の所有者が対象。自発的解体を促進する制度。",
+      "source_url": null,
       "keywords": "浦幌町特定空家等解体補助金 十勝郡浦幌町 解体 町内にあり特定空家等と判定された空家等の所有者が対象。自発的解体を促進する制度。"
     },
     {
@@ -2023,6 +2206,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2(除却工事費の2分の1)",
       "conditions": "町内の空き家、または今後住む予定のない昭和56年5月31日以前建築の住宅が対象。除却工事費30万円以上。町空家等情報提供制度への登録が必要。",
+      "source_url": null,
       "keywords": "秩父別町住宅等除却費補助金 雨竜郡秩父別町 解体 町内の空き家、または今後住む予定のない昭和56年5月31日以前建築の住宅が対象。除却工事費30万円以上。町空家等情報提供制度への登録が必要。"
     },
     {
@@ -2034,6 +2218,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2(補助対象経費の2分の1)",
       "conditions": "市内の特定空家等(上限50万円)または管理不全空家等(上限30万円)が対象。個人所有で所有権以外の権利設定がないこと。",
+      "source_url": null,
       "keywords": "北秋田市特定空家等解体撤去事業費補助金 北秋田市 解体 市内の特定空家等(上限50万円)または管理不全空家等(上限30万円)が対象。個人所有で所有権以外の権利設定がないこと。"
     },
     {
@@ -2045,6 +2230,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "4/5以内(危険空き家)、1/2以内(老朽空き家等)",
       "conditions": "市内の空き家で、危険空き家等または建築後40年以上の老朽空き家が対象。",
+      "source_url": null,
       "keywords": "大仙市空き家等解体補助金制度 大仙市 解体 市内の空き家で、危険空き家等または建築後40年以上の老朽空き家が対象。"
     },
     {
@@ -2056,6 +2242,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "工事費の10%(一般)、15%(子育て・移住支援型)",
       "conditions": "市内業者による50万円以上のリフォーム工事。空き家購入世帯や移住登録者が対象。",
+      "source_url": null,
       "keywords": "由利本荘市住宅リフォーム資金助成事業(空き家購入支援型) 由利本荘市 改修 市内業者による50万円以上のリフォーム工事。空き家購入世帯や移住登録者が対象。"
     },
     {
@@ -2067,6 +2254,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "町の空き家バンク登録物件で、売買または賃貸契約が成立した入居者等が対象。",
+      "source_url": null,
       "keywords": "関ケ原町空き家リフォーム補助金 不破郡関ケ原町 改修 町の空き家バンク登録物件で、売買または賃貸契約が成立した入居者等が対象。"
     },
     {
@@ -2078,6 +2266,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "1/2以内",
       "conditions": "一戸建ての空き家を賃貸するためのリフォーム工事を行い、賃貸借契約が成立していることが対象。",
+      "source_url": null,
       "keywords": "中津川市空き家再生リフォーム補助事業 中津川市 改修 一戸建ての空き家を賃貸するためのリフォーム工事を行い、賃貸借契約が成立していることが対象。"
     },
     {
@@ -2089,6 +2278,7 @@
       "max_amount_man_yen": 10.0,
       "subsidy_rate": "1/10",
       "conditions": "空き家のリフォーム工事が対象。市内業者への発注、工事費50万円以上(税抜)。",
+      "source_url": null,
       "keywords": "可児市空家等活用促進事業補助金(改修) 可児市 改修 空き家のリフォーム工事が対象。市内業者への発注、工事費50万円以上(税抜)。"
     },
     {
@@ -2100,6 +2290,7 @@
       "max_amount_man_yen": 120.0,
       "subsidy_rate": "1/2",
       "conditions": "18歳以上の町外からの転入者が、空き家バンク登録物件を改修する場合が対象。",
+      "source_url": null,
       "keywords": "御嵩町空き家改修費支援補助金事業 可児郡御嵩町 改修 18歳以上の町外からの転入者が、空き家バンク登録物件を改修する場合が対象。"
     },
     {
@@ -2111,6 +2302,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家の取得・改修を行い10年以上居住する者が対象。自治会加入、市税の滞納がないことなどが条件。",
+      "source_url": null,
       "keywords": "各務原市空家利活用促進補助金 各務原市 改修 空き家の取得・改修を行い10年以上居住する者が対象。自治会加入、市税の滞納がないことなどが条件。"
     },
     {
@@ -2122,6 +2314,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "市街化区域内の空き家を購入した子育て世帯または新婚世帯が行うリフォームまたは建て直しが対象。",
+      "source_url": null,
       "keywords": "多治見市空き家再生補助事業 多治見市 改修 市街化区域内の空き家を購入した子育て世帯または新婚世帯が行うリフォームまたは建て直しが対象。"
     },
     {
@@ -2133,6 +2326,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "市内業者施工2/3以内、市外業者施工1/2以内",
       "conditions": "空き家バンク登録物件の入居者または入居予定者が対象で、工事費10万円以上、5年以上居住する意思があることが条件。",
+      "source_url": null,
       "keywords": "瑞浪市空き家等改修補助金交付事業 瑞浪市 改修 空き家バンク登録物件の入居者または入居予定者が対象で、工事費10万円以上、5年以上居住する意思があることが条件。"
     },
     {
@@ -2144,6 +2338,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/2以内",
       "conditions": "市内空き家の取得・改修による定住が対象。一定の耐震要件、自治会加入などが条件。",
+      "source_url": null,
       "keywords": "羽島市空家利活用促進補助金 羽島市 改修 市内空き家の取得・改修による定住が対象。一定の耐震要件、自治会加入などが条件。"
     },
     {
@@ -2155,6 +2350,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/2",
       "conditions": "関市空き家情報バンク登録物件の契約成立後に行うリフォーム工事が対象。",
+      "source_url": null,
       "keywords": "関市空き家情報バンクリフォーム補助金 関市 改修 関市空き家情報バンク登録物件の契約成立後に行うリフォーム工事が対象。"
     },
     {
@@ -2166,6 +2362,7 @@
       "max_amount_man_yen": 250.0,
       "subsidy_rate": "1/2(補助対象工事費の1/2以内)",
       "conditions": "空き家を売却または賃貸できる権利を持つ所有者が、賃貸住宅化のための増改築・リフォームを行う場合が対象。",
+      "source_url": null,
       "keywords": "飛騨市空き家等賃貸住宅改修事業補助金(第4期) 飛騨市 改修 空き家を売却または賃貸できる権利を持つ所有者が、賃貸住宅化のための増改築・リフォームを行う場合が対象。"
     },
     {
@@ -2177,6 +2374,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "1/2",
       "conditions": "市外から中心市街地へ定住するための住宅の取得・改修が対象。5年以上の定住意思が条件。",
+      "source_url": null,
       "keywords": "高山市まちなか定住促進事業補助金 高山市 改修 市外から中心市街地へ定住するための住宅の取得・改修が対象。5年以上の定住意思が条件。"
     },
     {
@@ -2188,6 +2386,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "補助対象経費の2分の1(1,000円未満切り捨て)",
       "conditions": "空き家バンクに登録されている家屋を居住目的で改修する事業で、市内事業者が施工するもの。",
+      "source_url": null,
       "keywords": "三条市空き家改修補助金 三条市 改修 空き家バンクに登録されている家屋を居住目的で改修する事業で、市内事業者が施工するもの。"
     },
     {
@@ -2199,6 +2398,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "リフォーム費用の3分の1(20万円以上が対象)",
       "conditions": "市外からの移住に伴い空き家を購入してリフォームする場合が対象。",
+      "source_url": null,
       "keywords": "空き家定住促進利活用補助金 上越市 改修 市外からの移住に伴い空き家を購入してリフォームする場合が対象。"
     },
     {
@@ -2210,6 +2410,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "上限100万円、下限5万円",
       "conditions": "相川地区等の指定区域内にある戦前建築等の歴史的建造物で、空き家等が対象。10年以上の使用継続等が条件。",
+      "source_url": null,
       "keywords": "佐渡市町並み景観整備支援事業(内部改装) 佐渡市 改修 相川地区等の指定区域内にある戦前建築等の歴史的建造物で、空き家等が対象。10年以上の使用継続等が条件。"
     },
     {
@@ -2221,6 +2422,7 @@
       "max_amount_man_yen": 25.0,
       "subsidy_rate": "改修経費の50%(上限25万円)",
       "conditions": "新潟県外からの転入者、または市外から転入する子育て世帯が対象。居住誘導区域内の物件が対象。",
+      "source_url": null,
       "keywords": "十日町市空き家利活用支援事業補助金 十日町市 改修 新潟県外からの転入者、または市外から転入する子育て世帯が対象。居住誘導区域内の物件が対象。"
     },
     {
@@ -2232,6 +2434,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "定額(要件満たすと最大10万円加算)",
       "conditions": "中古住宅を購入、または相続・贈与で取得。対象経費100万円以上のリフォーム工事。市内業者に発注。",
+      "source_url": null,
       "keywords": "中古住宅リフォーム補助金 南魚沼市 改修 中古住宅を購入、または相続・贈与で取得。対象経費100万円以上のリフォーム工事。市内業者に発注。"
     },
     {
@@ -2243,6 +2446,7 @@
       "max_amount_man_yen": 45.0,
       "subsidy_rate": "50%",
       "conditions": "市内の中古住宅をリフォームすること。市内の工事施工者に依頼。",
+      "source_url": null,
       "keywords": "令和8年度中古住宅リフォーム補助金 新発田市 改修 市内の中古住宅をリフォームすること。市内の工事施工者に依頼。"
     },
     {
@@ -2254,6 +2458,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "解体工事費(消費税除く)の2分の1",
       "conditions": "特定空き家等・不良住宅は上限100万円、老朽空き家は上限50万円。個人所有で住居として登記。",
+      "source_url": null,
       "keywords": "胎内市空き家等解体補助金 胎内市 解体 特定空き家等・不良住宅は上限100万円、老朽空き家は上限50万円。個人所有で住居として登記。"
     },
     {
@@ -2265,6 +2470,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "一般20%/世帯要件40%/空き家活用(転居)30%/空き家活用(転入)50%",
       "conditions": "市内の施工業者を利用して住宅リフォームを実施する方が対象。",
+      "source_url": null,
       "keywords": "住宅リフォーム支援事業 魚沼市 改修 市内の施工業者を利用して住宅リフォームを実施する方が対象。"
     },
     {
@@ -2276,6 +2482,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "改修費用の2/3(購入住宅上限100万円、賃借住宅上限70万円)",
       "conditions": "空き家・空き地バンクに登録された物件の改修が対象。転入者または子育て世帯が対象。",
+      "source_url": null,
       "keywords": "尾花沢市空き家活用支援事業(改修) 尾花沢市 改修 空き家・空き地バンクに登録された物件の改修が対象。転入者または子育て世帯が対象。"
     },
     {
@@ -2287,6 +2494,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "解体費用の80%",
       "conditions": "住宅は上限100万円(町内業者発注の場合200万円)。付属建物は一敷地合計上限20万円(町内業者発注の場合50万円)。共有者全員の除却同意が必要。",
+      "source_url": null,
       "keywords": "舟形町不良住宅等除去事業補助金 最上郡舟形町 解体 住宅は上限100万円(町内業者発注の場合200万円)。付属建物は一敷地合計上限20万円(町内業者発注の場合50万円)。共有者全員の除却同意が必要。"
     },
     {
@@ -2298,6 +2506,7 @@
       "max_amount_man_yen": 120.0,
       "subsidy_rate": "改修経費の2/3(町内事業者契約で上限120万円、町外事業者は上限100万円)",
       "conditions": "空き家バンクに登録され、居住目的で1年以上使われていない町内住宅が対象。改修経費50万円以上の工事が対象。10年以上の居住、町税滞納がないこと等が条件。",
+      "source_url": null,
       "keywords": "河北町空き家利活用支援事業費補助金 西村山郡河北町 改修 空き家バンクに登録され、居住目的で1年以上使われていない町内住宅が対象。改修経費50万円以上の工事が対象。10年以上の居住、町税滞納がないこと等が条件。"
     },
     {
@@ -2309,6 +2518,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "工事に要する費用の2/3",
       "conditions": "久喜市内の空き家(概ね1年以上不使用)を地域交流拠点等として10年間利活用するための改修が対象。建築基準法・耐震基準適合が必要。",
+      "source_url": null,
       "keywords": "久喜市空き家利活用補助金 久喜市 改修 久喜市内の空き家(概ね1年以上不使用)を地域交流拠点等として10年間利活用するための改修が対象。建築基準法・耐震基準適合が必要。"
     },
     {
@@ -2320,6 +2530,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "工事費の1/2以内",
       "conditions": "空き家バンク登録物件を購入し3年以上居住予定であることが必要。町内事業者が施工し工事費総額20万円以上。",
+      "source_url": null,
       "keywords": "越生町空き家改修事業補助金 入間郡越生町 改修 空き家バンク登録物件を購入し3年以上居住予定であることが必要。町内事業者が施工し工事費総額20万円以上。"
     },
     {
@@ -2331,6 +2542,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の1/2",
       "conditions": "改修工事費用は上限40万円、家財処分費用は上限10万円。空き家バンク登録物件はさらに10万円加算。5年以上自ら居住する所有者が対象。",
+      "source_url": null,
       "keywords": "坂戸市空き家改修工事等補助金制度 坂戸市 改修 改修工事費用は上限40万円、家財処分費用は上限10万円。空き家バンク登録物件はさらに10万円加算。5年以上自ら居住する所有者が対象。"
     },
     {
@@ -2342,6 +2554,7 @@
       "max_amount_man_yen": 65.0,
       "subsidy_rate": "購入費・リフォーム工事費の1/2以内",
       "conditions": "空き家バンク登録物件が対象。市外からの転入者、または市外転入者に空き家を提供する者が対象。子育て世帯等の要件を満たすごとに加算。",
+      "source_url": null,
       "keywords": "東松山市移住促進空き家利活用補助金 東松山市 改修 空き家バンク登録物件が対象。市外からの転入者、または市外転入者に空き家を提供する者が対象。子育て世帯等の要件を満たすごとに加算。"
     },
     {
@@ -2353,6 +2566,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "基本額上限40万円、要件を満たす場合20万円加算(詳細な補助率の記載なし)",
       "conditions": "空き家の活用のための改修工事が対象。期限内申請で加算あり。",
+      "source_url": null,
       "keywords": "小川町空き家活用促進事業補助金制度 比企郡小川町 改修 空き家の活用のための改修工事が対象。期限内申請で加算あり。"
     },
     {
@@ -2364,6 +2578,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "リフォーム対象費用の4分の3",
       "conditions": "鳩山ニュータウン地区の空き家バンク登録物件が対象。年度により予算措置がない場合があるため、最新の実施状況は要確認。",
+      "source_url": null,
       "keywords": "鳩山町空き家バンク鳩山ニュータウン地区登録空き家リフォーム補助金制度 比企郡鳩山町 改修 鳩山ニュータウン地区の空き家バンク登録物件が対象。年度により予算措置がない場合があるため、最新の実施状況は要確認。"
     },
     {
@@ -2375,6 +2590,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "補助対象経費の3分の1(市内事業者施工で上限30万円)",
       "conditions": "昭和56年5月31日以前建築で1年以上使用されていない空き家が対象。全部取り壊して更地にすることが必要。",
+      "source_url": null,
       "keywords": "羽生市空家除却補助金 羽生市 解体 昭和56年5月31日以前建築で1年以上使用されていない空き家が対象。全部取り壊して更地にすることが必要。"
     },
     {
@@ -2386,6 +2602,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "5年間利活用の場合1/2(上限100万円)、10年間利活用の場合2/3(上限200万円)",
       "conditions": "市内の空き家(1年以上使用なし)を地域交流拠点等として利活用するための改修工事が対象。市内の建設業許可事業者による施工が必要。",
+      "source_url": null,
       "keywords": "行田市空き家利活用補助金 行田市 改修 市内の空き家(1年以上使用なし)を地域交流拠点等として利活用するための改修工事が対象。市内の建設業許可事業者による施工が必要。"
     },
     {
@@ -2397,6 +2614,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "補助対象工事費の10%(上限20万円)、子育て世帯は15%(上限30万円)",
       "conditions": "市内に住所があること、市内業者が施工すること、工事費が50万円以上であること。",
+      "source_url": null,
       "keywords": "にかほ市住宅リフォーム推進事業補助金(空き家購入型) にかほ市 改修 市内に住所があること、市内業者が施工すること、工事費が50万円以上であること。"
     },
     {
@@ -2408,6 +2626,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "市内在住者10%(上限30万円)、市外転入者20%(上限50万円)",
       "conditions": "工事費が30万円以上であること、市内業者が施工すること。転入者は転入後3年以内が条件。",
+      "source_url": null,
       "keywords": "大館市住宅リフォーム支援事業補助金(空き家購入後リフォーム) 大館市 改修 工事費が30万円以上であること、市内業者が施工すること。転入者は転入後3年以内が条件。"
     },
     {
@@ -2419,6 +2638,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "解体撤去費用総額の1/2",
       "conditions": "特定空家等の全体を解体・撤去する工事が対象。",
+      "source_url": null,
       "keywords": "湯沢市特定空家等解体撤去資金助成事業 湯沢市 解体 特定空家等の全体を解体・撤去する工事が対象。"
     },
     {
@@ -2430,6 +2650,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "解体費用(税抜き)の1/2",
       "conditions": "特定空家等の解体が対象。",
+      "source_url": null,
       "keywords": "潟上市空き家解体費助成金 潟上市 解体 特定空家等の解体が対象。"
     },
     {
@@ -2441,6 +2662,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": null,
       "conditions": "特定空家、または特定空家等に至らない損傷の著しい空家等として市長が認めたものを解体撤去する場合が対象。",
+      "source_url": null,
       "keywords": "能代市危険空家等解体撤去費補助金 能代市 解体 特定空家、または特定空家等に至らない損傷の著しい空家等として市長が認めたものを解体撤去する場合が対象。"
     },
     {
@@ -2452,6 +2674,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/5",
       "conditions": "町外居住者が町内に移住してリフォームする場合が対象。工事費20万円以上であること。18歳以下の世帯員1人につき3万円を加算。",
+      "source_url": null,
       "keywords": "垂井町移住促進住宅リフォーム事業補助金 不破郡垂井町 改修 町外居住者が町内に移住してリフォームする場合が対象。工事費20万円以上であること。18歳以下の世帯員1人につき3万円を加算。"
     },
     {
@@ -2463,6 +2686,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/3以内",
       "conditions": "空き家を活用するための外装・内装・設備工事が対象。空き家バンクへの登録や一定期間の居住などが条件。",
+      "source_url": null,
       "keywords": "郡上市空き家等活用改修費補助金 郡上市 改修 空き家を活用するための外装・内装・設備工事が対象。空き家バンクへの登録や一定期間の居住などが条件。"
     },
     {
@@ -2474,6 +2698,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "工事費用の3/4",
       "conditions": "転入者が市内の空き家を取得し、市内の施工業者でリフォーム工事を行う場合が対象。",
+      "source_url": null,
       "keywords": "小千谷市空き家利活用支援事業補助金 小千谷市 改修 転入者が市内の空き家を取得し、市内の施工業者でリフォーム工事を行う場合が対象。"
     },
     {
@@ -2485,6 +2710,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": null,
       "conditions": "居住するために空き家を取得した場合のリフォーム工事費用の一部を補助。",
+      "source_url": null,
       "keywords": "阿賀野市空き家リフォーム支援事業 阿賀野市 改修 居住するために空き家を取得した場合のリフォーム工事費用の一部を補助。"
     },
     {
@@ -2496,6 +2722,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": null,
       "conditions": "県が公開する県北地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。詳細な補助率・条件は町役場へ確認が必要。",
+      "source_url": null,
       "keywords": "桑折町空家改修等支援事業 伊達郡桑折町 改修 県が公開する県北地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。詳細な補助率・条件は町役場へ確認が必要。"
     },
     {
@@ -2507,6 +2734,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": null,
       "conditions": "県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:交流推進課。",
+      "source_url": null,
       "keywords": "只見町空き家改修事業 南会津郡只見町 改修 県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:交流推進課。"
     },
     {
@@ -2518,6 +2746,7 @@
       "max_amount_man_yen": 240.0,
       "subsidy_rate": null,
       "conditions": "県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:地域政策課。",
+      "source_url": null,
       "keywords": "住んで三島町空き家改修費等補助金 大沼郡三島町 改修 県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:地域政策課。"
     },
     {
@@ -2529,6 +2758,7 @@
       "max_amount_man_yen": 210.0,
       "subsidy_rate": null,
       "conditions": "県が公開する県中地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。",
+      "source_url": null,
       "keywords": "鏡石町空き家改修等支援事業補助金 岩瀬郡鏡石町 改修 県が公開する県中地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。"
     },
     {
@@ -2540,6 +2770,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": null,
       "conditions": "県が公開する県南地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。",
+      "source_url": null,
       "keywords": "棚倉町空き家改修等支援事業 東白川郡棚倉町 改修 県が公開する県南地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。"
     },
     {
@@ -2551,6 +2782,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": null,
       "conditions": "県が公開する県中地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。",
+      "source_url": null,
       "keywords": "みはるぐらし空き家改修等支援事業 田村郡三春町 改修 県が公開する県中地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。"
     },
     {
@@ -2562,6 +2794,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": null,
       "conditions": "県が公開する会津地方の空き家補助事業一覧に記載(県補助額+村補助額の最大額)。担当:建設課。",
+      "source_url": null,
       "keywords": "北塩原村空き家改修補助金 耶麻郡北塩原村 改修 県が公開する会津地方の空き家補助事業一覧に記載(県補助額+村補助額の最大額)。担当:建設課。"
     },
     {
@@ -2573,6 +2806,7 @@
       "max_amount_man_yen": 240.0,
       "subsidy_rate": null,
       "conditions": "県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:建設課。",
+      "source_url": null,
       "keywords": "猪苗代町空き家改修等支援事業 耶麻郡猪苗代町 改修 県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:建設課。"
     },
     {
@@ -2584,6 +2818,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": null,
       "conditions": "県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:行政経営課。",
+      "source_url": null,
       "keywords": "磐梯町空き家改修事業補助金 耶麻郡磐梯町 改修 県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:行政経営課。"
     },
     {
@@ -2595,6 +2830,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "老朽化により不良住宅と判定された空き家の解体を促進するための補助金。予算の範囲内で交付。",
+      "source_url": null,
       "keywords": "下妻市空き家解体費補助金 下妻市 解体 老朽化により不良住宅と判定された空き家の解体を促進するための補助金。予算の範囲内で交付。"
     },
     {
@@ -2606,6 +2842,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "町の空き家バンクに登録された空き家を購入し自己の居住用として改修工事を行う者が対象。予算の範囲内で交付。",
+      "source_url": null,
       "keywords": "八千代町空き家バンクリフォーム支援補助事業 結城郡八千代町 改修 町の空き家バンクに登録された空き家を購入し自己の居住用として改修工事を行う者が対象。予算の範囲内で交付。"
     },
     {
@@ -2617,6 +2854,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "市内の特定空家及び管理不全空家等を解体し更地にする工事費用への補助。",
+      "source_url": null,
       "keywords": "行方市空家等解体費補助金交付事業 行方市 解体 市内の特定空家及び管理不全空家等を解体し更地にする工事費用への補助。"
     },
     {
@@ -2628,6 +2866,7 @@
       "max_amount_man_yen": 160.0,
       "subsidy_rate": "補助対象経費の10分の8(80%)",
       "conditions": "町の事前調査で評定点数100点以上等、周辺住環境に深刻な影響を及ぼす空き家が対象。上限額は商業地域で160万円、それ以外の区域で80万円。所有者・相続人等で町税滞納がないこと等が条件。",
+      "source_url": null,
       "keywords": "五戸町危険空き家解体費用補助金 三戸郡五戸町 解体 町の事前調査で評定点数100点以上等、周辺住環境に深刻な影響を及ぼす空き家が対象。上限額は商業地域で160万円、それ以外の区域で80万円。所有者・相続人等で町税滞納がないこと等が条件。"
     },
     {
@@ -2639,6 +2878,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "リフォーム費用の2分の1",
       "conditions": "町の空き家バンクに登録された延床面積50平米以上の物件が対象。移住者が賃貸・購入契約を結びリフォーム後に居住する場合等が対象。工事完了後5年以上の利用継続等が条件。",
+      "source_url": null,
       "keywords": "野辺地町空き家リフォーム事業費補助金 上北郡野辺地町 改修 町の空き家バンクに登録された延床面積50平米以上の物件が対象。移住者が賃貸・購入契約を結びリフォーム後に居住する場合等が対象。工事完了後5年以上の利用継続等が条件。"
     },
     {
@@ -2650,6 +2890,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "補助対象経費の実支出額の合計の3分の2",
       "conditions": "対象経費は空き家の購入費とリフォーム費用。上限額は世帯区分・居住地により30万〜80万円。弘前圏域空き家・空き地バンク登録物件等が対象。10年以上の定住意思が条件。",
+      "source_url": null,
       "keywords": "板柳町空き家利活用定住支援事業費補助金 北津軽郡板柳町 改修 対象経費は空き家の購入費とリフォーム費用。上限額は世帯区分・居住地により30万〜80万円。弘前圏域空き家・空き地バンク登録物件等が対象。10年以上の定住意思が条件。"
     },
     {
@@ -2661,6 +2902,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "補助対象経費の2分の1",
       "conditions": "町内の個人所有木造空き家で、事前調査により「老朽危険空き家」と認定された物件が対象。所有者または相続人が申請者、税の滞納なし等が条件。",
+      "source_url": null,
       "keywords": "平内町老朽危険空き家除却促進事業補助金 東津軽郡平内町 解体 町内の個人所有木造空き家で、事前調査により「老朽危険空き家」と認定された物件が対象。所有者または相続人が申請者、税の滞納なし等が条件。"
     },
     {
@@ -2672,6 +2914,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象工事費等の2分の1",
       "conditions": "空家バンクに登録し成約に結び付いた空家等の所有者・購入者・賃借人であること。町内に事務所等を持つ事業者が施工すること。",
+      "source_url": null,
       "keywords": "壬生町空家バンクリフォーム補助金 下都賀郡壬生町 改修 空家バンクに登録し成約に結び付いた空家等の所有者・購入者・賃借人であること。町内に事務所等を持つ事業者が施工すること。"
     },
     {
@@ -2683,6 +2926,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修費の1/2(耐震改修を同時に行う場合は耐震費用の1/2を加算)",
       "conditions": "売買契約時に市外在住、契約から1年以内に申請、10年以上の居住を誓約、市税の滞納なし。",
+      "source_url": null,
       "keywords": "佐野市空き家改修費用補助金 佐野市 改修 売買契約時に市外在住、契約から1年以内に申請、10年以上の居住を誓約、市税の滞納なし。"
     },
     {
@@ -2694,6 +2938,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修工事経費の2分の1以内(子育て世帯が入居する場合は10万円加算)",
       "conditions": "塩谷町空き家バンク制度に登録されている物件のみが対象。町内の業者が施工すること。",
+      "source_url": null,
       "keywords": "塩谷町空き家改修事業補助金 塩谷郡塩谷町 改修 塩谷町空き家バンク制度に登録されている物件のみが対象。町内の業者が施工すること。"
     },
     {
@@ -2705,6 +2950,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "補助対象経費の2分の1以内(移住者は上限50万円、子育て世帯等は上限100万円)",
       "conditions": "空き家バンク登録物件を購入してリフォームすること。10年以上居住を誓約。市内事業者が施工すること。リフォーム経費20万円以上。",
+      "source_url": null,
       "keywords": "日光市空き家バンクリフォーム補助金 日光市 改修 空き家バンク登録物件を購入してリフォームすること。10年以上居住を誓約。市内事業者が施工すること。リフォーム経費20万円以上。"
     },
     {
@@ -2716,6 +2962,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "工事費の1/2",
       "conditions": "空き家バンク登録物件の所有者・入居者等、20万円以上の工事、10年以上の定住、3親等以内の親族でないこと。",
+      "source_url": null,
       "keywords": "上三川町空き家バンクリフォーム補助金 河内郡上三川町 改修 空き家バンク登録物件の所有者・入居者等、20万円以上の工事、10年以上の定住、3親等以内の親族でないこと。"
     },
     {
@@ -2727,6 +2974,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "移住者は工事費の1/2(上限50万円)、子育て世帯等は工事費の3分の2(上限100万円)",
       "conditions": "空家バンクに登録した物件の所有者・入居者・入居予定者であること。",
+      "source_url": null,
       "keywords": "市貝町空家バンクリフォーム補助金 芳賀郡市貝町 改修 空家バンクに登録した物件の所有者・入居者・入居予定者であること。"
     },
     {
@@ -2738,6 +2986,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "子育て世帯等は工事費の3分の2以内(上限100万円)、それ以外は2分の1以内(上限50万円)",
       "conditions": "空き家バンクに登録された空き家等の所有者・購入者・賃借人、町税等の滞納なし、交付後10年以上居住。",
+      "source_url": null,
       "keywords": "益子町空き家バンクリフォーム補助制度 芳賀郡益子町 改修 空き家バンクに登録された空き家等の所有者・購入者・賃借人、町税等の滞納なし、交付後10年以上居住。"
     },
     {
@@ -2749,6 +2998,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "子育て世帯等・その他ともに工事費の3分の2相当額(子育て世帯等は上限100万円、それ以外は上限50万円)",
       "conditions": "空き家バンクに登録された物件であること。",
+      "source_url": null,
       "keywords": "芳賀町空き家バンクリフォーム補助金 芳賀郡芳賀町 改修 空き家バンクに登録された物件であること。"
     },
     {
@@ -2760,6 +3010,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "子育て世帯または若者夫婦世帯は改修工事費の3分の2(上限100万円)、その他の世帯は2分の1(上限50万円)",
       "conditions": "空き家情報バンクに登録された物件を売買または賃貸し改修工事を行うこと。町税等の滞納なし。",
+      "source_url": null,
       "keywords": "茂木町空き家リフォーム等補助事業 芳賀郡茂木町 改修 空き家情報バンクに登録された物件を売買または賃貸し改修工事を行うこと。町税等の滞納なし。"
     },
     {
@@ -2771,6 +3022,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "補助対象費用の10%",
       "conditions": "2021年4月以降に空き家バンク住宅を取得、建築後5年以上、市内業者が施工、補助対象経費50万円以上。",
+      "source_url": null,
       "keywords": "那須烏山市空き家バンク住宅改修補助金 那須烏山市 改修 2021年4月以降に空き家バンク住宅を取得、建築後5年以上、市内業者が施工、補助対象経費50万円以上。"
     },
     {
@@ -2782,6 +3034,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "一般世帯は経費の1/2(上限20万円)、子育て世帯は経費の1/2(上限30万円)",
       "conditions": "町の空き家情報バンクに登録された空き家を賃借、5年以上の居住、工事費20万円以上。",
+      "source_url": null,
       "keywords": "那珂川町空き家改修費補助金 那須郡那珂川町 改修 町の空き家情報バンクに登録された空き家を賃借、5年以上の居住、工事費20万円以上。"
     },
     {
@@ -2793,6 +3046,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "補助対象経費の2分の1",
       "conditions": "空き家バンクに登録された建物を購入し移住すること、主要構造部のリフォームであること、町内業者が施工。",
+      "source_url": null,
       "keywords": "那須町空き家バンク登録建物リフォーム補助金 那須郡那須町 改修 空き家バンクに登録された建物を購入し移住すること、主要構造部のリフォームであること、町内業者が施工。"
     },
     {
@@ -2804,6 +3058,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "補助対象経費の2/3(基本額120万円+加算額最大80万円)",
       "conditions": "市外に1年以上居住していた移住者であること。10年以上居住、市税の滞納なし。子育て世帯等の加算あり。",
+      "source_url": null,
       "keywords": "伊勢崎市移住者支援空き家改修補助事業 伊勢崎市 改修 市外に1年以上居住していた移住者であること。10年以上居住、市税の滞納なし。子育て世帯等の加算あり。"
     },
     {
@@ -2815,6 +3070,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": "購入費用及び改修等費用の1/10",
       "conditions": "空き家バンクに登録された物件を定住目的で賃借または購入すること。町に住民登録している夫婦または転入者が対象。",
+      "source_url": null,
       "keywords": "みなかみ町空き家等活用促進事業 利根郡みなかみ町 改修 空き家バンクに登録された物件を定住目的で賃借または購入すること。町に住民登録している夫婦または転入者が対象。"
     },
     {
@@ -2826,6 +3082,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "工事金額の3分の2以内(うち2分の1は国の補助)",
       "conditions": "移住者向けの体験施設や賃貸物件として改修する場合が対象。村内施工業者に発注すること。",
+      "source_url": null,
       "keywords": "嬬恋村空家対策総合支援事業補助金 吾妻郡嬬恋村 改修 移住者向けの体験施設や賃貸物件として改修する場合が対象。村内施工業者に発注すること。"
     },
     {
@@ -2837,6 +3094,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "事業費の3分の1",
       "conditions": "個人所有の戸建て住宅で5年以上空き家であること。県・国交省許可を得た町内業者が施工すること。",
+      "source_url": null,
       "keywords": "東吾妻町空家除却費補助金事業 吾妻郡東吾妻町 解体 個人所有の戸建て住宅で5年以上空き家であること。県・国交省許可を得た町内業者が施工すること。"
     },
     {
@@ -2848,6 +3106,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "改修工事費の2分の1",
       "conditions": "申請年度末までに工事完了。予算がなくなり次第終了。",
+      "source_url": null,
       "keywords": "安中市空家リフォーム事業費補助金 安中市 改修 申請年度末までに工事完了。予算がなくなり次第終了。"
     },
     {
@@ -2859,6 +3118,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "20万円以上の対象工事費の1/10、上限30万円(転入者・子育て世帯等は20万円加算し最大50万円)",
       "conditions": "1年以上空き家であった個人所有物件が対象。市内業者が施工。",
+      "source_url": null,
       "keywords": "渋川市空家活用支援事業(リフォーム補助) 渋川市 改修 1年以上空き家であった個人所有物件が対象。市内業者が施工。"
     },
     {
@@ -2870,6 +3130,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "基本補助:改修費の1/2(上限30万円)+加算補助:改修費の1/6(上限30万円、町内業者利用時)",
       "conditions": "空き家バンク登録物件または町が空き家と判断した建物。居住者または売却・賃貸を確約した所有者。",
+      "source_url": null,
       "keywords": "丸森町空き家再生支援事業 伊具郡丸森町 改修 空き家バンク登録物件または町が空き家と判断した建物。居住者または売却・賃貸を確約した所有者。"
     },
     {
@@ -2881,6 +3142,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修等にかかった経費の2分の1",
       "conditions": "改修等の経費が10万円以上であること。空き家情報バンク登録物件、または市の空き家等利活用促進プラットフォーム事業により契約した空き家であること。5年以上定住。",
+      "source_url": null,
       "keywords": "登米市空き家改修事業補助金 登米市 改修 改修等の経費が10万円以上であること。空き家情報バンク登録物件、または市の空き家等利活用促進プラットフォーム事業により契約した空き家であること。5年以上定住。"
     },
     {
@@ -2892,6 +3154,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "事業費の5%(基礎額)+空き家バンク活用で10万円加算",
       "conditions": "建築後20年以上経過した空き家の購入・建て替え・リフォーム工事が対象。転入の場合上限40万円。町外に2年以上居住していたこと等が条件。",
+      "source_url": null,
       "keywords": "大和町空き家住宅購入支援事業 黒川郡大和町 改修 建築後20年以上経過した空き家の購入・建て替え・リフォーム工事が対象。転入の場合上限40万円。町外に2年以上居住していたこと等が条件。"
     },
     {
@@ -2903,6 +3166,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の1/2",
       "conditions": "村の実態調査で管理不全と判断された住宅等の解体・撤去が対象。所有者または相続人が対象。",
+      "source_url": null,
       "keywords": "大衡村空き家等解体支援事業補助金 黒川郡大衡村 解体 村の実態調査で管理不全と判断された住宅等の解体・撤去が対象。所有者または相続人が対象。"
     },
     {
@@ -2914,6 +3178,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/3(住民税非課税世帯は上限100万円に引き上げ)",
       "conditions": "特定空家の除却(解体)に要する経費の一部を助成。",
+      "source_url": null,
       "keywords": "伊賀市空家等除却費補助金 伊賀市 解体 特定空家の除却(解体)に要する経費の一部を助成。"
     },
     {
@@ -2925,6 +3190,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "中心市街地の空き家・空き店舗を店舗等として改修する事業が対象(法人・創業前の事業者向け)。",
+      "source_url": null,
       "keywords": "松阪市昔の風情を生かした中心市街地の空家・空店舗改修補助金 松阪市 改修 中心市街地の空き家・空き店舗を店舗等として改修する事業が対象(法人・創業前の事業者向け)。"
     },
     {
@@ -2936,6 +3202,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "工事費用の3分の1",
       "conditions": "市が特定空家等と認めた空家等が対象。所有者または相続人で市税等の滞納がないこと。",
+      "source_url": null,
       "keywords": "桑名市特定空家等除却補助金 桑名市 解体 市が特定空家等と認めた空家等が対象。所有者または相続人で市税等の滞納がないこと。"
     },
     {
@@ -2947,6 +3214,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "リフォーム工事費の3分の2",
       "conditions": "空き家をリフォームして鳥羽市へ移住する人が対象。自己の住居目的に限る。",
+      "source_url": null,
       "keywords": "鳥羽市移住促進空き家改修等支援事業費補助金 鳥羽市 改修 空き家をリフォームして鳥羽市へ移住する人が対象。自己の住居目的に限る。"
     },
     {
@@ -2958,6 +3226,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": null,
       "conditions": "1981年(昭和56年)5月31日以前に建築された空き家住宅の除却(解体)費が対象。助成上限額は戸建て住宅30万円、共同住宅100万円。",
+      "source_url": null,
       "keywords": "福生市空き家住宅除却助成事業 福生市 解体 1981年(昭和56年)5月31日以前に建築された空き家住宅の除却(解体)費が対象。助成上限額は戸建て住宅30万円、共同住宅100万円。"
     },
     {
@@ -2969,6 +3238,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "移住者:対象経費の2/3(上限100万円)、移住者以外:対象経費の1/2(上限50万円)",
       "conditions": "空家等を地域交流拠点として活用しようとする者を対象に、改修等にかかる経費の一部を補助。",
+      "source_url": null,
       "keywords": "青梅市空家等活用支援事業 青梅市 改修 空家等を地域交流拠点として活用しようとする者を対象に、改修等にかかる経費の一部を補助。"
     },
     {
@@ -2980,6 +3250,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。リフォーム費用総額20万円以上。",
+      "source_url": null,
       "keywords": "中央市空き家バンク物件リフォーム等補助金 中央市 改修 空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。リフォーム費用総額20万円以上。"
     },
     {
@@ -2991,6 +3262,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンク登録物件を対象としたリフォーム費用の補助。",
+      "source_url": null,
       "keywords": "南部町空き家バンク利用促進事業補助金 南巨摩郡南部町 改修 空き家バンク登録物件を対象としたリフォーム費用の補助。"
     },
     {
@@ -3002,6 +3274,7 @@
       "max_amount_man_yen": 25.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のもののリフォーム費用補助。",
+      "source_url": null,
       "keywords": "富士川町空き家等改修費補助金 南巨摩郡富士川町 改修 空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のもののリフォーム費用補助。"
     },
     {
@@ -3013,6 +3286,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "町が指定する危険空き家等の解体・撤去・処分費が対象。",
+      "source_url": null,
       "keywords": "身延町危険空家等解体費補助金 南巨摩郡身延町 解体 町が指定する危険空き家等の解体・撤去・処分費が対象。"
     },
     {
@@ -3024,6 +3298,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家の解体・撤去・処分費が対象(跡地を利活用することが前提)。",
+      "source_url": null,
       "keywords": "大月市空き家解体に伴う跡地利活用事業補助金 大月市 解体 空き家の解体・撤去・処分費が対象(跡地を利活用することが前提)。"
     },
     {
@@ -3035,6 +3310,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。市内の施工業者への発注が条件。",
+      "source_url": null,
       "keywords": "笛吹市空き家バンク登録物件に係る改修等補助金 笛吹市 改修 空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。市内の施工業者への発注が条件。"
     },
     {
@@ -3046,6 +3322,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "2/3",
       "conditions": "賃貸借または使用貸借契約が成立した空き家のリフォーム費用が対象。",
+      "source_url": null,
       "keywords": "都留市空家等地域活性化拠点整備事業補助金 都留市 改修 賃貸借または使用貸借契約が成立した空き家のリフォーム費用が対象。"
     },
     {
@@ -3057,6 +3334,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。リフォーム費用総額20万円以上。",
+      "source_url": null,
       "keywords": "韮崎市空き家バンク事業(リフォーム補助) 韮崎市 改修 空き家バンク登録物件のうち、売買または賃貸借契約後1年以内のものが対象。リフォーム費用総額20万円以上。"
     },
     {
@@ -3068,6 +3346,7 @@
       "max_amount_man_yen": 25.0,
       "subsidy_rate": "改修工事費の1/2。家財道具等処分費は全額(上限5万円)。合計で上限25万円",
       "conditions": "空き家バンク登録物件が対象。町内施工業者が行い工事費10万円以上。3年以上居住する意思が必要。",
+      "source_url": null,
       "keywords": "信濃町空き家改修等支援事業補助金 上水内郡信濃町 改修 空き家バンク登録物件が対象。町内施工業者が行い工事費10万円以上。3年以上居住する意思が必要。"
     },
     {
@@ -3079,6 +3358,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "リフォーム経費の1/2(町内施工業者の場合上限50万円、それ以外は上限25万円)",
       "conditions": "定住のために住宅を改修する者が対象。町外に5年以上居住していた者が移住する場合など。",
+      "source_url": null,
       "keywords": "飯綱町移住定住応援リフォーム補助金 上水内郡飯綱町 改修 定住のために住宅を改修する者が対象。町外に5年以上居住していた者が移住する場合など。"
     },
     {
@@ -3090,6 +3370,7 @@
       "max_amount_man_yen": 300.0,
       "subsidy_rate": null,
       "conditions": "村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。村が行うリフォーム経費の上限は300万円。所有者への直接補助ではない点に注意。",
+      "source_url": null,
       "keywords": "高山村空き家活用推進事業 上高井郡高山村 改修 村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。村が行うリフォーム経費の上限は300万円。所有者への直接補助ではない点に注意。"
     },
     {
@@ -3101,6 +3382,7 @@
       "max_amount_man_yen": 300.0,
       "subsidy_rate": null,
       "conditions": "村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。リフォーム経費は上限300万円。所有者への直接補助ではない点に注意。",
+      "source_url": null,
       "keywords": "栄村空き家活用移住定住促進事業 下水内郡栄村 改修 村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。リフォーム経費は上限300万円。所有者への直接補助ではない点に注意。"
     },
     {
@@ -3112,6 +3394,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "補助対象経費の3分の2以内(子育て世帯は上限200万円)",
       "conditions": "定住のため空き家を購入または賃借した人が対象。市外からの転入後5年以内。工事費20万円以上。",
+      "source_url": null,
       "keywords": "中野市空き家活用等事業補助金(空き家改修事業) 中野市 改修 定住のため空き家を購入または賃借した人が対象。市外からの転入後5年以内。工事費20万円以上。"
     },
     {
@@ -3123,6 +3406,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "2分の1",
       "conditions": "町内の一戸建て住宅で1年以上使われておらず今後常時使用するものが対象。5年以上居住。",
+      "source_url": null,
       "keywords": "御代田町空家改修等補助金 北佐久郡御代田町 改修 町内の一戸建て住宅で1年以上使われておらず今後常時使用するものが対象。5年以上居住。"
     },
     {
@@ -3134,6 +3418,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の3分の2以内",
       "conditions": "空き家バンクに登録された物件の売買・賃貸借に伴う改修費と片づけ費が対象。5年以上居住が必要。",
+      "source_url": null,
       "keywords": "立科町空き家利用促進補助金 北佐久郡立科町 改修 空き家バンクに登録された物件の売買・賃貸借に伴う改修費と片づけ費が対象。5年以上居住が必要。"
     },
     {
@@ -3145,6 +3430,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": null,
       "conditions": "村の空き家・空き地情報登録制度に登録された空き家が対象。居住のための内外装・屋根・給排水設備工事等が対象。",
+      "source_url": null,
       "keywords": "青木村空き家活用補助金 小県郡青木村 改修 村の空き家・空き地情報登録制度に登録された空き家が対象。居住のための内外装・屋根・給排水設備工事等が対象。"
     },
     {
@@ -3156,6 +3442,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "対象工事費の1/3以内",
       "conditions": "空き家情報バンク登録の一戸建てを購入・賃借する人、または空き家を賃貸する所有者などが対象。",
+      "source_url": null,
       "keywords": "あわら市空き家リフォーム支援補助金 あわら市 改修 空き家情報バンク登録の一戸建てを購入・賃借する人、または空き家を賃貸する所有者などが対象。"
     },
     {
@@ -3167,6 +3454,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "1/3(18歳未満の子どもが3人以上いる世帯は30万円加算)",
       "conditions": "戸建て空き家の購入やリフォーム、旧耐震住宅の建替えにかかる費用が対象。",
+      "source_url": null,
       "keywords": "永平寺町住み続ける福井支援事業補助金(戸建て空き家の購入・リフォーム) 吉田郡永平寺町 改修 戸建て空き家の購入やリフォーム、旧耐震住宅の建替えにかかる費用が対象。"
     },
     {
@@ -3178,6 +3466,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "費用の3分の1",
       "conditions": "定住促進と空き家の有効活用を目的とした改修支援。",
+      "source_url": null,
       "keywords": "坂井市空家改修支援事業 坂井市 改修 定住促進と空き家の有効活用を目的とした改修支援。"
     },
     {
@@ -3189,6 +3478,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "工事費の3分の1",
       "conditions": "中古住宅(空き家)の購入とリフォームが対象。市外からの移住者、新婚世帯、子育て世帯等が対象。市内業者による工事が必要。",
+      "source_url": null,
       "keywords": "大野市暮らし住まいづくり支援事業(空き家購入後のリフォーム等) 大野市 改修 中古住宅(空き家)の購入とリフォームが対象。市外からの移住者、新婚世帯、子育て世帯等が対象。市内業者による工事が必要。"
     },
     {
@@ -3200,6 +3490,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "改修費用の3分の1(町内事業者の場合上限100万円、町外事業者の場合上限50万円)",
       "conditions": "おおい町に移住・定住する人が対象。延べ床面積の2分の1以上が住居として使われることが条件。",
+      "source_url": null,
       "keywords": "おおい町おおいの移住者・新婚・子育て世帯への住まい支援事業 大飯郡おおい町 改修 おおい町に移住・定住する人が対象。延べ床面積の2分の1以上が住居として使われることが条件。"
     },
     {
@@ -3211,6 +3502,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "改修に係る経費の1/2(子育て世帯は上限150万円)",
       "conditions": "珠洲市空き家バンク登録物件の買主・借主または貸主が対象。",
+      "source_url": null,
       "keywords": "珠洲市空き家改修費補助金 珠洲市 改修 珠洲市空き家バンク登録物件の買主・借主または貸主が対象。"
     },
     {
@@ -3222,6 +3514,7 @@
       "max_amount_man_yen": 225.0,
       "subsidy_rate": null,
       "conditions": "若者・子育て・UIJターン世帯は上限225万円、その他の世帯は上限200万円。空き家に10年以上居住する場合に改修工事費の一部を助成。",
+      "source_url": null,
       "keywords": "たつの市空き家活用支援事業 たつの市 改修 若者・子育て・UIJターン世帯は上限225万円、その他の世帯は上限200万円。空き家に10年以上居住する場合に改修工事費の一部を助成。"
     },
     {
@@ -3233,6 +3526,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "補助対象経費の2分の1",
       "conditions": "空家等対策特別措置法の「特定空家等」で市から指導・勧告を受けていること。不良度測定基準100点以上、個人所有者が自ら除却工事を行うこと。市税完納等が条件。",
+      "source_url": null,
       "keywords": "三木市特定空家等除却費補助金 三木市 解体 空家等対策特別措置法の「特定空家等」で市から指導・勧告を受けていること。不良度測定基準100点以上、個人所有者が自ら除却工事を行うこと。市税完納等が条件。"
     },
     {
@@ -3244,6 +3538,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": null,
       "conditions": "空き家を購入して居住する若者・子育て世帯・UIJターン者向けの改修費補助。共同住宅は上限65万円。",
+      "source_url": null,
       "keywords": "三田市空き家リフォーム補助事業 三田市 改修 空き家を購入して居住する若者・子育て世帯・UIJターン者向けの改修費補助。共同住宅は上限65万円。"
     },
     {
@@ -3255,6 +3550,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": null,
       "conditions": "空き家バンク登録物件を購入し改修する者が対象。最大50万円補助。",
+      "source_url": null,
       "keywords": "丹波篠山市空き家バンク活用住宅改修補助金 丹波篠山市 改修 空き家バンク登録物件を購入し改修する者が対象。最大50万円補助。"
     },
     {
@@ -3266,6 +3562,7 @@
       "max_amount_man_yen": 750.0,
       "subsidy_rate": "住宅型(一般)2/3、住宅型(若年・子育て/UJIターン)3/4、住宅型(学生シェアハウス)3/4",
       "conditions": "個人が居住目的で建築し現在使用されていない空き家(空き家期間6ヶ月以上、築20年以上)が対象。市内業者による工事、耐震基準を満たすことが条件。",
+      "source_url": null,
       "keywords": "加西市空き家活用支援事業補助金 加西市 改修 個人が居住目的で建築し現在使用されていない空き家(空き家期間6ヶ月以上、築20年以上)が対象。市内業者による工事、耐震基準を満たすことが条件。"
     },
     {
@@ -3277,6 +3574,7 @@
       "max_amount_man_yen": 381.5,
       "subsidy_rate": null,
       "conditions": "空き家を改修し、住宅・事業所・地域交流拠点として利活用する場合に改修費の一部を補助。",
+      "source_url": null,
       "keywords": "西脇市空き家活用支援事業補助金 西脇市 改修 空き家を改修し、住宅・事業所・地域交流拠点として利活用する場合に改修費の一部を補助。"
     },
     {
@@ -3288,6 +3586,7 @@
       "max_amount_man_yen": 500.0,
       "subsidy_rate": null,
       "conditions": "市内の一戸建て空き家を改修し、住宅・事業所・地域交流拠点として活用すること。空き家期間6ヶ月以上、築20年以上、活用期間10年以上等が条件。",
+      "source_url": null,
       "keywords": "赤穂市空家活用支援事業補助金 赤穂市 改修 市内の一戸建て空き家を改修し、住宅・事業所・地域交流拠点として活用すること。空き家期間6ヶ月以上、築20年以上、活用期間10年以上等が条件。"
     },
     {
@@ -3299,6 +3598,7 @@
       "max_amount_man_yen": 750.0,
       "subsidy_rate": "住宅型:定額、事業所型:2/3、地域交流拠点型:3/4",
       "conditions": "空き家を改修して住宅・事業所・地域交流拠点として活用する個人・個人事業主・法人が対象。",
+      "source_url": null,
       "keywords": "上郡町空き家活用支援事業補助金 赤穂郡上郡町 改修 空き家を改修して住宅・事業所・地域交流拠点として活用する個人・個人事業主・法人が対象。"
     },
     {
@@ -3310,6 +3610,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "住宅型〈一般〉1/2、住宅型〈若年・子育て支援〉2/3",
       "conditions": "市街化区域内・空き家バンク登録済、未使用期間6ヶ月以上、築20年以上が対象。昭和56年5月31日以前建築は耐震性確保または同時耐震改修が必要。",
+      "source_url": null,
       "keywords": "高砂市空き家活用支援事業補助金 高砂市 改修 市街化区域内・空き家バンク登録済、未使用期間6ヶ月以上、築20年以上が対象。昭和56年5月31日以前建築は耐震性確保または同時耐震改修が必要。"
     },
     {
@@ -3321,6 +3622,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家の改修費用(上限50万円)に加え、家財道具の処分費(上限10万円)も対象。",
+      "source_url": null,
       "keywords": "天川村空き家改修事業等補助金 吉野郡天川村 改修 空き家の改修費用(上限50万円)に加え、家財道具の処分費(上限10万円)も対象。"
     },
     {
@@ -3332,6 +3634,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": null,
       "conditions": "老朽化により近隣に悪影響を及ぼすおそれがある市内の危険な空き家が対象で、解体・除却工事が補助対象。",
+      "source_url": null,
       "keywords": "桜井市老朽危険空家等除却支援事業 桜井市 解体 老朽化により近隣に悪影響を及ぼすおそれがある市内の危険な空き家が対象で、解体・除却工事が補助対象。"
     },
     {
@@ -3343,6 +3646,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "改修費用の2分の1以内",
       "conditions": "「空き家バンク」に登録された住宅を借りる人が居住のための改修を行う場合が対象。子育て加算・里山加算あり。",
+      "source_url": null,
       "keywords": "入善町賃貸住宅改修等補助金(空き家バンク活用促進事業) 下新川郡入善町 改修 「空き家バンク」に登録された住宅を借りる人が居住のための改修を行う場合が対象。子育て加算・里山加算あり。"
     },
     {
@@ -3354,6 +3658,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "補助対象工事費用の2分の1",
       "conditions": "空き家所有者が賃貸目的でリフォームする場合が対象。改修後、空き家情報バンクに賃貸物件として概ね3年間登録すること。",
+      "source_url": null,
       "keywords": "朝日町空き家改修費補助事業(空き家利活用促進対策事業補助金) 下新川郡朝日町 改修 空き家所有者が賃貸目的でリフォームする場合が対象。改修後、空き家情報バンクに賃貸物件として概ね3年間登録すること。"
     },
     {
@@ -3365,6 +3670,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "対象経費の3分の2",
       "conditions": "対象経費50万円以上の空家改修工事が対象。県外から移住し、町内の空家に5年以上住み続ける見込みであること。",
+      "source_url": null,
       "keywords": "上市町県外転入者空家改修事業 中新川郡上市町 改修 対象経費50万円以上の空家改修工事が対象。県外から移住し、町内の空家に5年以上住み続ける見込みであること。"
     },
     {
@@ -3376,6 +3682,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "除却工事費の2分の1",
       "conditions": "倒壊等危険な「空き不良住宅」、または跡地を自治会等が10年間地域活性化に利用する「空き建築物」が対象。",
+      "source_url": null,
       "keywords": "立山町空き家除却支援事業補助金 中新川郡立山町 解体 倒壊等危険な「空き不良住宅」、または跡地を自治会等が10年間地域活性化に利用する「空き建築物」が対象。"
     },
     {
@@ -3387,6 +3694,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "経費の50%",
       "conditions": "空き家バンク登録物件を購入した人が、購入後に増築・改修を行う経費が対象。",
+      "source_url": null,
       "keywords": "南砺市空き家バンク活用促進事業補助金(購入住宅改修等補助金) 南砺市 改修 空き家バンク登録物件を購入した人が、購入後に増築・改修を行う経費が対象。"
     },
     {
@@ -3398,6 +3706,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "解体工事費の5分の4(不良度評点100点以上の場合)",
       "conditions": "居住用住宅で、空き家となって1年以上経過していること。所有権が明確で、市内業者が解体を行うこと。",
+      "source_url": null,
       "keywords": "射水市老朽危険空き家解体補助金 射水市 解体 居住用住宅で、空き家となって1年以上経過していること。所有権が明確で、市内業者が解体を行うこと。"
     },
     {
@@ -3409,6 +3718,7 @@
       "max_amount_man_yen": 350.0,
       "subsidy_rate": "対象経費の2分の1",
       "conditions": "空き家をコミュニティ施設として10年以上活用する事業が対象で、実施主体は認可地縁団体。市内事業者が施工し、工事合計額100万円以上であること。",
+      "source_url": null,
       "keywords": "小矢部市空き家活用促進事業補助金 小矢部市 改修 空き家をコミュニティ施設として10年以上活用する事業が対象で、実施主体は認可地縁団体。市内事業者が施工し、工事合計額100万円以上であること。"
     },
     {
@@ -3420,6 +3730,7 @@
       "max_amount_man_yen": 300.0,
       "subsidy_rate": "対象経費の2分の1",
       "conditions": "空き家を住宅以外の用途に改修する経費が対象(建物費)。工事実施前に市未来戦略課へ相談が必要。",
+      "source_url": null,
       "keywords": "氷見市空き家利活用支援事業費補助金 氷見市 改修 空き家を住宅以外の用途に改修する経費が対象(建物費)。工事実施前に市未来戦略課へ相談が必要。"
     },
     {
@@ -3431,6 +3742,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "木造等の危険・老朽化した空き家で、市の調査員が周辺への危険性を確認したものが対象。所有者が土地・建物を市へ寄附し、市が解体する仕組み。",
+      "source_url": null,
       "keywords": "滑川市まちなか再生事業(危険老朽空き家対策事業) 滑川市 解体 木造等の危険・老朽化した空き家で、市の調査員が周辺への危険性を確認したものが対象。所有者が土地・建物を市へ寄附し、市が解体する仕組み。"
     },
     {
@@ -3442,6 +3754,7 @@
       "max_amount_man_yen": 1000.0,
       "subsidy_rate": "経費の66%",
       "conditions": "市内の空き家を交流施設・文化施設・体験施設等の用途に10年以上活用する事業が対象。実施主体は地域住民5人以上で構成する法人・認可地縁団体・それ以外の法人・団体・個人。",
+      "source_url": null,
       "keywords": "砺波市空き家再生等推進事業補助金 砺波市 改修 市内の空き家を交流施設・文化施設・体験施設等の用途に10年以上活用する事業が対象。実施主体は地域住民5人以上で構成する法人・認可地縁団体・それ以外の法人・団体・個人。"
     },
     {
@@ -3453,6 +3766,7 @@
       "max_amount_man_yen": 70.0,
       "subsidy_rate": "解体費用の3分の1(連棟空家(主)は3分の1+10万円)",
       "conditions": "危険老朽空家の評価点が90点以上であることが必要。所有者が申請者で、市税の滞納がないこと。",
+      "source_url": null,
       "keywords": "魚津市危険老朽空家対策支援事業補助金 魚津市 解体 危険老朽空家の評価点が90点以上であることが必要。所有者が申請者で、市税の滞納がないこと。"
     },
     {
@@ -3464,6 +3778,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "対象経費の3分の2以内(町内事業者利用の場合)",
       "conditions": "美咲町空家等情報バンク関連の空き家所有者・利用希望者が対象。基本上限は60万円だが、町内事業者を利用する場合は上限100万円。",
+      "source_url": null,
       "keywords": "美咲町空家活用定住促進事業(改修費補助) 久米郡美咲町 改修 美咲町空家等情報バンク関連の空き家所有者・利用希望者が対象。基本上限は60万円だが、町内事業者を利用する場合は上限100万円。"
     },
     {
@@ -3475,6 +3790,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の3分の10以内(3/10)",
       "conditions": "町内の建築業者等が主たる施工業者であること。空き家の購入または賃貸契約後1年以内に申請、対象工事費が30万円以上であること。",
+      "source_url": null,
       "keywords": "吉備中央町空き家リフォーム事業補助金 加賀郡吉備中央町 改修 町内の建築業者等が主たる施工業者であること。空き家の購入または賃貸契約後1年以内に申請、対象工事費が30万円以上であること。"
     },
     {
@@ -3486,6 +3802,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修費の2分の1",
       "conditions": "町内の空き家を改修して移住する人が対象。工事費用10万円以上、町内業者による施工、改修後5年以上定住する意思があること。",
+      "source_url": null,
       "keywords": "和気町空き家改修補助金 和気郡和気町 改修 町内の空き家を改修して移住する人が対象。工事費用10万円以上、町内業者による施工、改修後5年以上定住する意思があること。"
     },
     {
@@ -3497,6 +3814,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "対象経費の2分の1",
       "conditions": "新見市へ移住する意図があるか、過去3年以内に移住した人が対象。対象経費30万円以上、市内事業者による施工が必要。",
+      "source_url": null,
       "keywords": "新見市空き家活用推進事業補助金(改修補助) 新見市 改修 新見市へ移住する意図があるか、過去3年以内に移住した人が対象。対象経費30万円以上、市内事業者による施工が必要。"
     },
     {
@@ -3508,6 +3826,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "3分の2",
       "conditions": "移住者が空き家を購入し改修する場合が対象。転入直近5年間岡山県外に住所があり、転入日から3年を経過していないこと。",
+      "source_url": null,
       "keywords": "津山市空き家活用定住促進事業補助金(改修補助金) 津山市 改修 移住者が空き家を購入し改修する場合が対象。転入直近5年間岡山県外に住所があり、転入日から3年を経過していないこと。"
     },
     {
@@ -3519,6 +3838,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "対象経費の2分の1",
       "conditions": "空き家バンク登録物件の所有者、または登録物件を購入・賃借した人が対象。",
+      "source_url": null,
       "keywords": "笠岡市空き家バンク物件リフォーム助成金交付事業 笠岡市 改修 空き家バンク登録物件の所有者、または登録物件を購入・賃借した人が対象。"
     },
     {
@@ -3530,6 +3850,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "費用の2分の1以内",
       "conditions": "空き家情報バンクに登録された家屋が対象。市内事業者に依頼した場合は上限10万円加算。交付から5年以上の賃貸契約または居住が必要。",
+      "source_url": null,
       "keywords": "美作市ふるさと住宅リフォーム補助金 美作市 改修 空き家情報バンクに登録された家屋が対象。市内事業者に依頼した場合は上限10万円加算。交付から5年以上の賃貸契約または居住が必要。"
     },
     {
@@ -3541,6 +3862,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "補助対象経費の2分の1",
       "conditions": "所有または賃借する戸建ての空き家が対象。購入または最初の賃借から1年以内の申請。町内業者が主たる施工者であること。",
+      "source_url": null,
       "keywords": "鏡野町定住促進空き家改修補助金 苫田郡鏡野町 改修 所有または賃借する戸建ての空き家が対象。購入または最初の賃借から1年以内の申請。町内業者が主たる施工者であること。"
     },
     {
@@ -3552,6 +3874,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象工事費の2分の1",
       "conditions": "県外からの移住者(転勤・通学を除く)が対象。改修後3年以上の居住が必要。対象物件は赤磐市空き家情報バンクへの登録物件。",
+      "source_url": null,
       "keywords": "赤磐市空き家改修費補助金事業 赤磐市 改修 県外からの移住者(転勤・通学を除く)が対象。改修後3年以上の居住が必要。対象物件は赤磐市空き家情報バンクへの登録物件。"
     },
     {
@@ -3563,6 +3886,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "倒壊等のおそれがある老朽空き家を解体する人が対象(予算の範囲内で交付)。",
+      "source_url": null,
       "keywords": "春日井市老朽空き家解体費補助金 春日井市 解体 倒壊等のおそれがある老朽空き家を解体する人が対象(予算の範囲内で交付)。"
     },
     {
@@ -3574,6 +3898,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2(事業により上限額の変動あり)",
       "conditions": "空き家の改修費・工事費が対象。対象者は個人。",
+      "source_url": null,
       "keywords": "田原市空き家等活用促進事業補助金 田原市 改修 空き家の改修費・工事費が対象。対象者は個人。"
     },
     {
@@ -3585,6 +3910,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家バンクを利用して賃貸借契約を結んだ所有者または賃借者が対象。補助金交付から10年以上の定住、または定住と空き家バンク登録期間を合わせて10年以上継続する意思が必要。",
+      "source_url": null,
       "keywords": "南知多町空き家改修費補助金 知多郡南知多町 改修 空き家バンクを利用して賃貸借契約を結んだ所有者または賃借者が対象。補助金交付から10年以上の定住、または定住と空き家バンク登録期間を合わせて10年以上継続する意思が必要。"
     },
     {
@@ -3596,6 +3922,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空家・空き店舗バンクに登録された住宅のリノベーション工事、家財処分、既存住宅状況調査が対象(店舗部分は対象外)。",
+      "source_url": null,
       "keywords": "蒲郡市空家利活用事業費補助金 蒲郡市 改修 空家・空き店舗バンクに登録された住宅のリノベーション工事、家財処分、既存住宅状況調査が対象(店舗部分は対象外)。"
     },
     {
@@ -3607,6 +3934,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "2/3",
       "conditions": "市内にある老朽化・危険な空き家の解体工事費が対象。対象者は個人。",
+      "source_url": null,
       "keywords": "豊川市老朽空家等解体費補助金 豊川市 解体 市内にある老朽化・危険な空き家の解体工事費が対象。対象者は個人。"
     },
     {
@@ -3618,6 +3946,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2以内",
       "conditions": "空き家バンクに登録された空き家で、申請年度内に改修完了が見込まれるものが対象。対象経費10万円以上かつ施工業者利用のもの。",
+      "source_url": null,
       "keywords": "愛川町空き家改修費等補助制度 愛甲郡愛川町 改修 空き家バンクに登録された空き家で、申請年度内に改修完了が見込まれるものが対象。対象経費10万円以上かつ施工業者利用のもの。"
     },
     {
@@ -3629,6 +3958,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2(消費税を除く対象経費)",
       "conditions": "空き家の所有者、または所有者の承諾を得た入居者が対象。居住部分の床面積55㎡以上で台所・トイレ・浴室・居室を備えた住宅の改修工事が対象。",
+      "source_url": null,
       "keywords": "清川村空き家賃貸用住宅リフォーム補助金制度 愛甲郡清川村 改修 空き家の所有者、または所有者の承諾を得た入居者が対象。居住部分の床面積55㎡以上で台所・トイレ・浴室・居室を備えた住宅の改修工事が対象。"
     },
     {
@@ -3640,6 +3970,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/3以内",
       "conditions": "空き家バンクに登録された一戸建てが対象。住宅用途または公益的事業拠点とするためのリフォーム費用が対象。市内施工事業者への委託が必要。",
+      "source_url": null,
       "keywords": "秦野市空家の管理及び活用促進補助金(活用促進・リフォーム区分) 秦野市 改修 空き家バンクに登録された一戸建てが対象。住宅用途または公益的事業拠点とするためのリフォーム費用が対象。市内施工事業者への委託が必要。"
     },
     {
@@ -3651,6 +3982,7 @@
       "max_amount_man_yen": 10.0,
       "subsidy_rate": null,
       "conditions": "空き家バンク登録物件の修繕、家財処分、不動産登記に必要な費用が対象。10年以上継続して居住すること等が条件。",
+      "source_url": null,
       "keywords": "山北町空き家活用助成金 足柄上郡山北町 改修 空き家バンク登録物件の修繕、家財処分、不動産登記に必要な費用が対象。10年以上継続して居住すること等が条件。"
     },
     {
@@ -3662,6 +3994,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の1/2以内(通常上限30万円、中学生以下の子と同居する場合は上限50万円)",
       "conditions": "島田市空き家バンク(川根地区限定)に登録済みまたは登録を約束していること。利用者が5年以上居住すること。",
+      "source_url": null,
       "keywords": "島田市空き家改修等事業費補助金 島田市 改修 島田市空き家バンク(川根地区限定)に登録済みまたは登録を約束していること。利用者が5年以上居住すること。"
     },
     {
@@ -3673,6 +4006,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "対象経費の1/3以内",
       "conditions": "昭和56年5月31日以前に建築された住宅で、空き家になって5年以上等の条件のいずれかに該当することが条件。",
+      "source_url": null,
       "keywords": "焼津市空き家除却事業補助金 焼津市 解体 昭和56年5月31日以前に建築された住宅で、空き家になって5年以上等の条件のいずれかに該当することが条件。"
     },
     {
@@ -3684,6 +4018,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "対象経費の1/2以内",
       "conditions": "移住者向けリフォームは上限30万円、空き家活用事業者等向けリフォームは上限100万円(10年間移住者限定の賃貸物件として登録)。",
+      "source_url": null,
       "keywords": "牧之原市空き家活用リフォーム等補助金交付事業 牧之原市 改修 移住者向けリフォームは上限30万円、空き家活用事業者等向けリフォームは上限100万円(10年間移住者限定の賃貸物件として登録)。"
     },
     {
@@ -3695,6 +4030,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "工事費100万円以上は定額20万円、工事費10万円以上100万円未満は工事費の20%",
       "conditions": "空き家バンク登録物件を取得または賃借し、町に住民登録する新規転入者が対象。当該物件に5年以上居住することが条件。",
+      "source_url": null,
       "keywords": "東伊豆町空き家バンク登録物件改修支援事業 賀茂郡東伊豆町 改修 空き家バンク登録物件を取得または賃借し、町に住民登録する新規転入者が対象。当該物件に5年以上居住することが条件。"
     },
     {
@@ -3706,6 +4042,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修工事50%(上限50万円)",
       "conditions": "松崎町空き家バンク登録物件の所有者または入居予定者が行う改修工事が対象。",
+      "source_url": null,
       "keywords": "松崎町空き家改修等補助金 賀茂郡松崎町 改修 松崎町空き家バンク登録物件の所有者または入居予定者が行う改修工事が対象。"
     },
     {
@@ -3717,6 +4054,7 @@
       "max_amount_man_yen": 75.0,
       "subsidy_rate": "30%",
       "conditions": "住宅の建て替えが可能な敷地にある空き家の除却が対象。対象者は個人。",
+      "source_url": null,
       "keywords": "豊能町住宅建替え促進事業(既存空き家除却補助金) 豊能郡豊能町 解体 住宅の建て替えが可能な敷地にある空き家の除却が対象。対象者は個人。"
     },
     {
@@ -3728,6 +4066,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": null,
       "conditions": "空き家バンクを通じて樫田地区の住宅を購入し改修する費用が対象。世帯主または同居人が45歳未満の世帯は上限50万円、それ以外の世帯は上限25万円。",
+      "source_url": null,
       "keywords": "高槻市樫田地区空き家再生事業補助金 高槻市 改修 空き家バンクを通じて樫田地区の住宅を購入し改修する費用が対象。世帯主または同居人が45歳未満の世帯は上限50万円、それ以外の世帯は上限25万円。"
     },
     {
@@ -3739,6 +4078,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "除却工事費の2分の1以内",
       "conditions": "対象は木造住宅のみ。特定空家等に認定されている場合は上限40万円。除却工事着手前の申請が必須。",
+      "source_url": null,
       "keywords": "高石市空き家除却補助制度 高石市 解体 対象は木造住宅のみ。特定空家等に認定されている場合は上限40万円。除却工事着手前の申請が必須。"
     },
     {
@@ -3750,6 +4090,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "市内で住宅を取得・改修した方が対象で、対象に空家改修が含まれる。",
+      "source_url": null,
       "keywords": "東近江市住まいる事業補助金 東近江市 改修 市内で住宅を取得・改修した方が対象で、対象に空家改修が含まれる。"
     },
     {
@@ -3761,6 +4102,7 @@
       "max_amount_man_yen": 120.0,
       "subsidy_rate": "2/3",
       "conditions": "子育て・若年世帯が「りっとう空き家バンク」を通じて空き家を取得し改修する費用が対象。県外からの転入は上限120万円、県内からの転入は上限60万円。",
+      "source_url": null,
       "keywords": "栗東市子育て・若年世帯空き家リノベーション事業補助金 栗東市 改修 子育て・若年世帯が「りっとう空き家バンク」を通じて空き家を取得し改修する費用が対象。県外からの転入は上限120万円、県内からの転入は上限60万円。"
     },
     {
@@ -3772,6 +4114,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家を事業所または地域交流施設として改修する費用が対象。",
+      "source_url": null,
       "keywords": "湖南市空家活用支援事業 湖南市 改修 空き家を事業所または地域交流施設として改修する費用が対象。"
     },
     {
@@ -3783,6 +4126,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家を取り壊した後の跡地活用を支援する補助金。",
+      "source_url": null,
       "keywords": "甲良町空き家住宅等除却支援事業補助金 犬上郡甲良町 解体 空き家を取り壊した後の跡地活用を支援する補助金。"
     },
     {
@@ -3794,6 +4138,7 @@
       "max_amount_man_yen": 180.0,
       "subsidy_rate": null,
       "conditions": "市外からの移住者が、移住促進特別区域内の空き家バンク登録空き家を購入し、自らが居住するために行う改修が対象。",
+      "source_url": null,
       "keywords": "亀岡市移住促進住宅整備事業 亀岡市 改修 市外からの移住者が、移住促進特別区域内の空き家バンク登録空き家を購入し、自らが居住するために行う改修が対象。"
     },
     {
@@ -3805,6 +4150,7 @@
       "max_amount_man_yen": 180.0,
       "subsidy_rate": "改修費の10/10以内(上限180万円)",
       "conditions": "移住促進特別区域の空き家を活用し、移住者が居住するために必要な改修を行う場合が対象。",
+      "source_url": null,
       "keywords": "南丹市移住促進事業補助金 南丹市 改修 移住促進特別区域の空き家を活用し、移住者が居住するために必要な改修を行う場合が対象。"
     },
     {
@@ -3816,6 +4162,7 @@
       "max_amount_man_yen": 180.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家を購入または賃借して改修する人が対象。登録空き家は上限180万円、登録外空き家は上限90万円。",
+      "source_url": null,
       "keywords": "綾部市定住促進事業費補助金 綾部市 改修 空き家を購入または賃借して改修する人が対象。登録空き家は上限180万円、登録外空き家は上限90万円。"
     },
     {
@@ -3827,6 +4174,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": null,
       "conditions": "老朽化し倒壊や外装材落下等のおそれがある危険な空き家等が対象。概ね1年以上空き家で管理不全、または構造上居住不可能な状態であること。",
+      "source_url": null,
       "keywords": "八代市老朽危険空き家等除却促進事業 八代市 解体 老朽化し倒壊や外装材落下等のおそれがある危険な空き家等が対象。概ね1年以上空き家で管理不全、または構造上居住不可能な状態であること。"
     },
     {
@@ -3838,6 +4186,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "対象経費の合計額の1/2",
       "conditions": "空き家バンク利用登録が完了していること、宇土市への定住・移住等の意思があること。上限額は地区により異なる。",
+      "source_url": null,
       "keywords": "宇土市空き家バンク活用補助金(賃貸時の改修費補助) 宇土市 改修 空き家バンク利用登録が完了していること、宇土市への定住・移住等の意思があること。上限額は地区により異なる。"
     },
     {
@@ -3849,6 +4198,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2または1/3",
       "conditions": "宇城市の空き家・空き地バンクに登録された空き家の改修工事にかかる費用を補助。",
+      "source_url": null,
       "keywords": "宇城市空き家改修等事業補助金 宇城市 改修 宇城市の空き家・空き地バンクに登録された空き家の改修工事にかかる費用を補助。"
     },
     {
@@ -3860,6 +4210,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": null,
       "conditions": "市内にある、1年以上使用されておらず将来的な使用見込みもない住宅(事前調査でおおむね100点以上の危険度判定)が対象。",
+      "source_url": null,
       "keywords": "玉名市老朽危険空家等除却促進事業補助金 玉名市 解体 市内にある、1年以上使用されておらず将来的な使用見込みもない住宅(事前調査でおおむね100点以上の危険度判定)が対象。"
     },
     {
@@ -3871,6 +4222,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "補助対象経費の3分の2以内",
       "conditions": "空き家バンク登録物件について売買または賃貸借契約を締結した所有者または利用登録者が対象。",
+      "source_url": null,
       "keywords": "和水町空き家バンク活用促進事業補助金 玉名郡和水町 改修 空き家バンク登録物件について売買または賃貸借契約を締結した所有者または利用登録者が対象。"
     },
     {
@@ -3882,6 +4234,7 @@
       "max_amount_man_yen": 333.0,
       "subsidy_rate": "2/3",
       "conditions": "長島町の空き家バンクに登録のある物件を改修し、住居等として利活用する工事が対象。",
+      "source_url": null,
       "keywords": "長島町空き家改修費補助金 出水郡長島町 改修 長島町の空き家バンクに登録のある物件を改修し、住居等として利活用する工事が対象。"
     },
     {
@@ -3893,6 +4246,7 @@
       "max_amount_man_yen": 15.0,
       "subsidy_rate": "15%",
       "conditions": "対象経費が20万円以上の工事であることが条件。",
+      "source_url": null,
       "keywords": "志布志市空き家リフォーム助成事業 志布志市 改修 対象経費が20万円以上の工事であることが条件。"
     },
     {
@@ -3904,6 +4258,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "工事費の1/2",
       "conditions": "指宿市の空き家バンクに登録した物件を、所有者または利用者がリフォームする場合に費用の一部を助成。",
+      "source_url": null,
       "keywords": "指宿市空き家バンクリフォーム補助金 指宿市 改修 指宿市の空き家バンクに登録した物件を、所有者または利用者がリフォームする場合に費用の一部を助成。"
     },
     {
@@ -3915,6 +4270,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "解体費用の1/3(上限30万円)",
       "conditions": "常時使用されておらず、倒壊等で周囲に深刻な危険を及ぼすおそれのある老朽危険空き家等の解体撤去が対象。",
+      "source_url": null,
       "keywords": "霧島市老朽危険空き家等解体撤去補助金 霧島市 解体 常時使用されておらず、倒壊等で周囲に深刻な危険を及ぼすおそれのある老朽危険空き家等の解体撤去が対象。"
     },
     {
@@ -3926,6 +4282,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "補助対象工事費の1/2",
       "conditions": "賃貸目的で家屋を空き家バンクに登録している所有者が対象。市外からの移住者と賃貸借契約が結ばれた物件であること。",
+      "source_url": null,
       "keywords": "えびの市空き家バンク活用事業補助金 えびの市 改修 賃貸目的で家屋を空き家バンクに登録している所有者が対象。市外からの移住者と賃貸借契約が結ばれた物件であること。"
     },
     {
@@ -3937,6 +4294,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "市外からの移住者が空き家をリフォームし、残存家財等を処分する費用の一部を補助する制度。",
+      "source_url": null,
       "keywords": "串間市移住者向け住宅改修等支援事業 串間市 改修 市外からの移住者が空き家をリフォームし、残存家財等を処分する費用の一部を補助する制度。"
     },
     {
@@ -3948,6 +4306,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "補助対象経費の2/3",
       "conditions": "日向市の空き家等情報バンクに登録された物件で、県外からの移住者と契約が成立していることが必要。",
+      "source_url": null,
       "keywords": "日向市空き家利活用促進事業補助金 日向市 改修 日向市の空き家等情報バンクに登録された物件で、県外からの移住者と契約が成立していることが必要。"
     },
     {
@@ -3959,6 +4318,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "改修費・撤去費の1/2",
       "conditions": "市の空き家バンク登録物件の改修または撤去が対象。",
+      "source_url": null,
       "keywords": "壱岐市移住者住宅等支援事業補助金(中古住宅改修費用の区分) 壱岐市 改修 市の空き家バンク登録物件の改修または撤去が対象。"
     },
     {
@@ -3970,6 +4330,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "市内の木造または鉄骨造で半分以上が住宅用途、現在使用されていない建物が対象。老朽度判定点数が100点以上であること。",
+      "source_url": null,
       "keywords": "平戸市老朽危険空き家除却事業補助金 平戸市 解体 市内の木造または鉄骨造で半分以上が住宅用途、現在使用されていない建物が対象。老朽度判定点数が100点以上であること。"
     },
     {
@@ -3981,6 +4342,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家バンク登録物件を購入して改修する場合に改修費が交付される(賃貸の場合は家賃最長12か月分補助)。",
+      "source_url": null,
       "keywords": "諫早市空き家バンク利用登録者支援補助金 諫早市 改修 空き家バンク登録物件を購入して改修する場合に改修費が交付される(賃貸の場合は家賃最長12か月分補助)。"
     },
     {
@@ -3992,6 +4354,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "改修工事費の1/2",
       "conditions": "子育て加算・地域加算あり。解体して新築する場合は最大100万円超となる旨の記載あり。",
+      "source_url": null,
       "keywords": "伊万里市実家に帰ろう住宅改修等補助金 伊万里市 改修 子育て加算・地域加算あり。解体して新築する場合は最大100万円超となる旨の記載あり。"
     },
     {
@@ -4003,6 +4366,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": "改修工事費の1/2",
       "conditions": "芦刈町は拡大補助の対象。",
+      "source_url": null,
       "keywords": "小城市空き家改修費助成事業補助金 小城市 改修 芦刈町は拡大補助の対象。"
     },
     {
@@ -4014,6 +4378,7 @@
       "max_amount_man_yen": 45.0,
       "subsidy_rate": null,
       "conditions": "補助額は条件により異なり、最大45万円。",
+      "source_url": null,
       "keywords": "武雄市空き家等リノベーション補助金 武雄市 改修 補助額は条件により異なり、最大45万円。"
     },
     {
@@ -4025,6 +4390,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2(空き家バンク登録物件の改修費)",
       "conditions": "空き家バンク登録物件が対象。改修費は1/2・上限50万円、不要物品の処分費用は1/2・上限10万円。",
+      "source_url": null,
       "keywords": "神埼市空き家改修費助成事業 神埼市 改修 空き家バンク登録物件が対象。改修費は1/2・上限50万円、不要物品の処分費用は1/2・上限10万円。"
     },
     {
@@ -4036,6 +4402,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": null,
       "conditions": "市外に住む子育て世帯または若年世帯が、移住・定住を目的に中間市空き家バンク登録の中古住宅を購入または賃借してリフォームする場合が対象。",
+      "source_url": null,
       "keywords": "中間市中古住宅リフォーム補助金制度 中間市 改修 市外に住む子育て世帯または若年世帯が、移住・定住を目的に中間市空き家バンク登録の中古住宅を購入または賃借してリフォームする場合が対象。"
     },
     {
@@ -4047,6 +4414,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家情報登録制度を利用した移住者が空き家に入居する場合、移住に要する費用(改修費用含む)の一部を補助。",
+      "source_url": null,
       "keywords": "三好市移住者支援事業 三好市 改修 空き家情報登録制度を利用した移住者が空き家に入居する場合、移住に要する費用(改修費用含む)の一部を補助。"
     },
     {
@@ -4058,6 +4426,7 @@
       "max_amount_man_yen": 320.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家バンクに登録された空き家を購入または賃借し、移住者がリノベーションする場合に工事費の一部を補助。",
+      "source_url": null,
       "keywords": "吉野川市移住促進空き家リノベーション支援事業 吉野川市 改修 空き家バンクに登録された空き家を購入または賃借し、移住者がリノベーションする場合に工事費の一部を補助。"
     },
     {
@@ -4069,6 +4438,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2",
       "conditions": "町内の戸建てまたは併用住宅で、居住されなくなってから6ヶ月以上経過した中古住宅が対象。",
+      "source_url": null,
       "keywords": "石井町空き家リフォーム助成事業 名西郡石井町 改修 町内の戸建てまたは併用住宅で、居住されなくなってから6ヶ月以上経過した中古住宅が対象。"
     },
     {
@@ -4080,6 +4450,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "2/3",
       "conditions": "美馬市空き家バンク登録物件を本人の居住用にリフォームする移住者が対象。",
+      "source_url": null,
       "keywords": "美馬市移住者向けリフォーム支援事業補助金 美馬市 改修 美馬市空き家バンク登録物件を本人の居住用にリフォームする移住者が対象。"
     },
     {
@@ -4091,6 +4462,7 @@
       "max_amount_man_yen": 320.0,
       "subsidy_rate": "2/3",
       "conditions": "空き家を移住者向け住宅や地域活性化に供する施設に改修する費用の一部を補助。",
+      "source_url": null,
       "keywords": "那賀町空き家対策総合支援改修等事業補助金 那賀郡那賀町 改修 空き家を移住者向け住宅や地域活性化に供する施設に改修する費用の一部を補助。"
     },
     {
@@ -4102,6 +4474,7 @@
       "max_amount_man_yen": 400.0,
       "subsidy_rate": "2/3",
       "conditions": "県外から移住し、県・市の空き家バンクを通じて購入・賃借した空き家に5年以上居住する意思がある方等が対象。市内業者による改修が必要。",
+      "source_url": null,
       "keywords": "住もういまばり!空き家リフォーム補助金 今治市 改修 県外から移住し、県・市の空き家バンクを通じて購入・賃借した空き家に5年以上居住する意思がある方等が対象。市内業者による改修が必要。"
     },
     {
@@ -4113,6 +4486,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "2/3",
       "conditions": "県外からの移住者が自ら居住するために行う住宅改修・家財道具搬出等が対象。",
+      "source_url": null,
       "keywords": "伊予市移住者住宅改修支援事業費補助金 伊予市 改修 県外からの移住者が自ら居住するために行う住宅改修・家財道具搬出等が対象。"
     },
     {
@@ -4124,6 +4498,7 @@
       "max_amount_man_yen": 400.0,
       "subsidy_rate": null,
       "conditions": "移住者向けの住宅改修に対する補助。住宅改修は最大400万円、家財道具の搬出・処分は最大20万円。",
+      "source_url": null,
       "keywords": "四国中央市移住者住宅改修支援事業 四国中央市 改修 移住者向けの住宅改修に対する補助。住宅改修は最大400万円、家財道具の搬出・処分は最大20万円。"
     },
     {
@@ -4135,6 +4510,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "50%以内",
       "conditions": "子育て世帯または若年夫婦世帯が対象。空き家バンク物件の購入費・登記費用、または同一敷地内で家屋を新築する場合の解体費用が補助対象経費。",
+      "source_url": null,
       "keywords": "西予市子育て世帯等空き家活用定住支援補助金 西予市 解体 子育て世帯または若年夫婦世帯が対象。空き家バンク物件の購入費・登記費用、または同一敷地内で家屋を新築する場合の解体費用が補助対象経費。"
     },
     {
@@ -4146,6 +4522,7 @@
       "max_amount_man_yen": 400.0,
       "subsidy_rate": "2/3",
       "conditions": "県外から移住し5年以上居住する意思がある世帯で、空き家バンクに登録され売買された一戸建て住宅を改修する人が対象。市内施工業者の利用が原則。",
+      "source_url": null,
       "keywords": "西条市移住者住宅改修支援事業費補助金 西条市 改修 県外から移住し5年以上居住する意思がある世帯で、空き家バンクに登録され売買された一戸建て住宅を改修する人が対象。市内施工業者の利用が原則。"
     },
     {
@@ -4157,6 +4534,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "さぬき市空き家バンク登録物件が対象。市内業者による施工が必要。改修費用上限100万円に加え、家財道具処分費用上限10万円。",
+      "source_url": null,
       "keywords": "さぬき市空き家リフォーム補助金 さぬき市 改修 さぬき市空き家バンク登録物件が対象。市内業者による施工が必要。改修費用上限100万円に加え、家財道具処分費用上限10万円。"
     },
     {
@@ -4168,6 +4546,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "香川県の市町連絡先一覧表に記載。詳細な対象要件は町役場への確認が必要。",
+      "source_url": null,
       "keywords": "まんのう町空き家改修等補助金 仲多度郡まんのう町 改修 香川県の市町連絡先一覧表に記載。詳細な対象要件は町役場への確認が必要。"
     },
     {
@@ -4179,6 +4558,7 @@
       "max_amount_man_yen": 270.0,
       "subsidy_rate": null,
       "conditions": "須崎市への移住者や移住希望者の定住を目的とした住宅の改修工事が対象。",
+      "source_url": null,
       "keywords": "須崎市移住者又は移住希望者のための空き家活用促進事業費補助金 須崎市 改修 須崎市への移住者や移住希望者の定住を目的とした住宅の改修工事が対象。"
     },
     {
@@ -4190,6 +4570,7 @@
       "max_amount_man_yen": 180.0,
       "subsidy_rate": "2/3以内",
       "conditions": "市の空き家バンク制度を活用し、市外から移住してきた人が対象。耐震工事および改修に要する経費は2/3以内(上限180万円)。",
+      "source_url": null,
       "keywords": "香美市空き家改修補助金(空き家バンク制度) 香美市 改修 市の空き家バンク制度を活用し、市外から移住してきた人が対象。耐震工事および改修に要する経費は2/3以内(上限180万円)。"
     },
     {
@@ -4201,6 +4582,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家バンクを通じて取得した空き家を改修する場合に補助金を交付する制度。インスペクション(建物状況調査)必須。",
+      "source_url": null,
       "keywords": "かつらぎ町空き家バンク登録物件改修補助金 伊都郡かつらぎ町 改修 空き家バンクを通じて取得した空き家を改修する場合に補助金を交付する制度。インスペクション(建物状況調査)必須。"
     },
     {
@@ -4212,6 +4594,7 @@
       "max_amount_man_yen": 300.0,
       "subsidy_rate": "3分の2(2/3)",
       "conditions": "空き家を活用し、住居として改修する場合の改修費が対象。事前相談が必要。",
+      "source_url": null,
       "keywords": "広川町空き家改修事業補助金 有田郡広川町 改修 空き家を活用し、住居として改修する場合の改修費が対象。事前相談が必要。"
     },
     {
@@ -4223,6 +4606,7 @@
       "max_amount_man_yen": 120.0,
       "subsidy_rate": "工事費の2/3",
       "conditions": "転居・移住に伴って空き家を購入または譲り受け、リフォーム工事を行う市外からの移住者が対象。",
+      "source_url": null,
       "keywords": "海南市空家リフォーム工事補助事業 海南市 改修 転居・移住に伴って空き家を購入または譲り受け、リフォーム工事を行う市外からの移住者が対象。"
     },
     {
@@ -4234,6 +4618,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家バンクを利用して移住した人を対象に、リフォーム工事費の一部と引っ越し代を補助する制度。",
+      "source_url": null,
       "keywords": "紀の川市定住促進支援事業補助金 紀の川市 改修 空き家バンクを利用して移住した人を対象に、リフォーム工事費の一部と引っ越し代を補助する制度。"
     },
     {
@@ -4245,6 +4630,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": null,
       "conditions": "空き家バンクに登録されている(または登録されていた)空き家が対象。居住用として性能維持・向上を目的とした改修工事費が対象。",
+      "source_url": null,
       "keywords": "山陽小野田市空き家利活用改修補助金 山陽小野田市 改修 空き家バンクに登録されている(または登録されていた)空き家が対象。居住用として性能維持・向上を目的とした改修工事費が対象。"
     },
     {
@@ -4256,6 +4642,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "住宅修繕費の1/2以内(離島地域は2/3以内)",
       "conditions": "空き家バンクを活用して中山間地域へ移住した人が対象。上限は賃貸物件50万円、購入物件100万円。",
+      "source_url": null,
       "keywords": "岩国市空き家修繕助成金 岩国市 改修 空き家バンクを活用して中山間地域へ移住した人が対象。上限は賃貸物件50万円、購入物件100万円。"
     },
     {
@@ -4267,6 +4654,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "改修工事費の3分の2",
       "conditions": "空き家バンク登録台帳に登録された空き家が対象。市内業者による10万円以上の改修工事。3年以上居住する見込みがあること。",
+      "source_url": null,
       "keywords": "柳井市空き家改修費補助金 柳井市 改修 空き家バンク登録台帳に登録された空き家が対象。市内業者による10万円以上の改修工事。3年以上居住する見込みがあること。"
     },
     {
@@ -4278,6 +4666,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費(消費税抜き)の50%",
       "conditions": "空き家バンク登録物件の購入者、または改修後に空き家バンクへ賃貸登録する所有者が対象。",
+      "source_url": null,
       "keywords": "防府市空き家利活用改修費補助金 防府市 改修 空き家バンク登録物件の購入者、または改修後に空き家バンクへ賃貸登録する所有者が対象。"
     },
     {
@@ -4289,6 +4678,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "工事費の1/2",
       "conditions": "空き家バンク登録物件を利用する市外からの移住者等が対象。市内の建築業者等が施工する改修工事が対象。",
+      "source_url": null,
       "keywords": "三原市空き家改修等支援事業補助金 三原市 改修 空き家バンク登録物件を利用する市外からの移住者等が対象。市内の建築業者等が施工する改修工事が対象。"
     },
     {
@@ -4300,6 +4690,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/2(加算あり)",
       "conditions": "三次市空き家情報バンクで物件を購入し、定住のために改修する場合が対象。",
+      "source_url": null,
       "keywords": "三次市空き家バンク改修補助金 三次市 改修 三次市空き家情報バンクで物件を購入し、定住のために改修する場合が対象。"
     },
     {
@@ -4311,6 +4702,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "1/2",
       "conditions": "対象は空き家の所有者または町外からの転入者。5年以上空き家バンクに登録するか対象の空き家に居住すること。",
+      "source_url": null,
       "keywords": "坂町空き家改修等支援事業 安芸郡坂町 改修 対象は空き家の所有者または町外からの転入者。5年以上空き家バンクに登録するか対象の空き家に居住すること。"
     },
     {
@@ -4322,6 +4714,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "移住・定住者が市内の空き家を購入し、居住のために行う改修が対象。新婚・子育て世帯等は上限100万円。",
+      "source_url": null,
       "keywords": "竹原市空き家改修移住・定住支援事業 竹原市 改修 移住・定住者が市内の空き家を購入し、居住のために行う改修が対象。新婚・子育て世帯等は上限100万円。"
     },
     {
@@ -4333,6 +4726,7 @@
       "max_amount_man_yen": 45.0,
       "subsidy_rate": "1/2",
       "conditions": "空き家の利活用のために改修工事等を行う者が対象。",
+      "source_url": null,
       "keywords": "倉吉市空き家流通促進事業 倉吉市 改修 空き家の利活用のために改修工事等を行う者が対象。"
     },
     {
@@ -4344,6 +4738,7 @@
       "max_amount_man_yen": 150.0,
       "subsidy_rate": "1/2",
       "conditions": "市場で流通していない空き家の改修工事等を行う者が対象。上限は住宅として活用する場合90万円、住宅以外に転用する場合150万円。",
+      "source_url": null,
       "keywords": "八頭町空き家利活用流通促進事業補助金 八頭郡八頭町 改修 市場で流通していない空き家の改修工事等を行う者が対象。上限は住宅として活用する場合90万円、住宅以外に転用する場合150万円。"
     },
     {
@@ -4355,6 +4750,7 @@
       "max_amount_man_yen": 90.0,
       "subsidy_rate": "1/2",
       "conditions": "定住目的で空き家を購入・賃借する者、または空き家を改修して居住者に売却・賃貸する者が対象。",
+      "source_url": null,
       "keywords": "北栄町空き家利活用流通促進事業補助金 東伯郡北栄町 改修 定住目的で空き家を購入・賃借する者、または空き家を改修して居住者に売却・賃貸する者が対象。"
     },
     {
@@ -4366,6 +4762,7 @@
       "max_amount_man_yen": 80.0,
       "subsidy_rate": "改修費の2/3",
       "conditions": "市外からの転入者で、5年以上定住する意思がある空き家バンク登録物件の利用者が対象。",
+      "source_url": null,
       "keywords": "佐伯市空き家利活用促進事業 佐伯市 改修 市外からの転入者で、5年以上定住する意思がある空き家バンク登録物件の利用者が対象。"
     },
     {
@@ -4377,6 +4774,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": null,
       "conditions": "市外から転入し、空き家バンクに登録された物件を利用する者が対象。家財処分費用と購入・改修費用の一部を合わせて上限100万円。",
+      "source_url": null,
       "keywords": "津久見市空き家利活用事業補助金 津久見市 改修 市外から転入し、空き家バンクに登録された物件を利用する者が対象。家財処分費用と購入・改修費用の一部を合わせて上限100万円。"
     },
     {
@@ -4388,6 +4786,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "移住希望者または登録物件所有者が、空き家バンク登録物件を購入または改修する場合に補助金を交付する制度。",
+      "source_url": null,
       "keywords": "豊後大野市空き家利活用補助金 豊後大野市 改修 移住希望者または登録物件所有者が、空き家バンク登録物件を購入または改修する場合に補助金を交付する制度。"
     },
     {
@@ -4399,6 +4798,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "改修費の1/2",
       "conditions": "空き家バンクを通じて売買または賃貸契約が成立した空き家の所有者または登録利用者が対象。対象となる改修工事費は50万円以上200万円以下。",
+      "source_url": null,
       "keywords": "奥出雲町空き家改修補助金 仁多郡奥出雲町 改修 空き家バンクを通じて売買または賃貸契約が成立した空き家の所有者または登録利用者が対象。対象となる改修工事費は50万円以上200万円以下。"
     },
     {
@@ -4410,6 +4810,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "対象経費(消費税抜き)の3分の1以内",
       "conditions": "子育て世帯であること、空き家バンクに登録された物件を購入したこと、市内に住民登録をしていること等が条件。",
+      "source_url": null,
       "keywords": "雲南市空き家改修補助金 雲南市 改修 子育て世帯であること、空き家バンクに登録された物件を購入したこと、市内に住民登録をしていること等が条件。"
     },
     {
@@ -4421,6 +4822,7 @@
       "max_amount_man_yen": 200.0,
       "subsidy_rate": "対象経費の3分の2以内",
       "conditions": "移住希望者と賃貸借契約を結んだ空き家所有者が、その空き家を改修する場合が対象。",
+      "source_url": null,
       "keywords": "南房総市空き家利用促進奨励補助金 南房総市 改修 移住希望者と賃貸借契約を結んだ空き家所有者が、その空き家を改修する場合が対象。"
     },
     {
@@ -4432,6 +4834,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「空き家片付け支援補助金」もある。",
+      "source_url": null,
       "keywords": "大槌町空き家リフォーム支援補助金 上閉伊郡大槌町 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「空き家片付け支援補助金」もある。"
     },
     {
@@ -4443,6 +4846,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「定住促進住宅取得費等補助」もある。",
+      "source_url": null,
       "keywords": "山田町移住定住促進リフォーム補助 下閉伊郡山田町 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「定住促進住宅取得費等補助」もある。"
     },
     {
@@ -4454,6 +4858,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「若者・移住者空き家住宅取得事業費補助金」もある。",
+      "source_url": null,
       "keywords": "軽米町空家等活用推進事業費補助金 九戸郡軽米町 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「若者・移住者空き家住宅取得事業費補助金」もある。"
     },
     {
@@ -4465,6 +4870,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。",
+      "source_url": null,
       "keywords": "野田村定住促進事業費補助金(空き家住宅改修費補助金) 九戸郡野田村 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。"
     },
     {
@@ -4476,6 +4882,7 @@
       "max_amount_man_yen": 20.0,
       "subsidy_rate": "改修工事費用の1/2",
       "conditions": "空き家バンク登録物件などを購入または賃貸した際に行う改修工事が対象。",
+      "source_url": null,
       "keywords": "奥州市空き家改修工事補助金 奥州市 改修 空き家バンク登録物件などを購入または賃貸した際に行う改修工事が対象。"
     },
     {
@@ -4487,6 +4894,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「空き家整理等補助金」もある。",
+      "source_url": null,
       "keywords": "雫石町空き家改修等補助金 岩手郡雫石町 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。別途「空き家整理等補助金」もある。"
     },
     {
@@ -4498,6 +4906,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。",
+      "source_url": null,
       "keywords": "平泉町若者・移住者空き家住まい支援事業費補助金 西磐井郡平泉町 改修 岩手県「空き家バンク活用マニュアル」の市町村別補助金一覧に記載。"
     },
     {
@@ -4509,6 +4918,7 @@
       "max_amount_man_yen": 350.0,
       "subsidy_rate": "1/2以内(過疎債の活用可)",
       "conditions": "町が空き家を10年以上借り受けて水回り等を改修し、賃貸期間最長10年で貸し出す仕組み(個人への直接助成ではなく町主体の事業)。",
+      "source_url": null,
       "keywords": "最上町定住促進空き家活用事業 最上郡最上町 改修 町が空き家を10年以上借り受けて水回り等を改修し、賃貸期間最長10年で貸し出す仕組み(個人への直接助成ではなく町主体の事業)。"
     },
     {
@@ -4520,6 +4930,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "1/3",
       "conditions": "管理不全の状態にある空き家、または景観を阻害している空き家の除却が対象。",
+      "source_url": null,
       "keywords": "金山町修景形成補助金制度 最上郡金山町 解体 管理不全の状態にある空き家、または景観を阻害している空き家の除却が対象。"
     },
     {
@@ -4531,6 +4942,7 @@
       "max_amount_man_yen": 30.0,
       "subsidy_rate": "除却工事費の1/3以内(町内業者受託の場合は上限60万円)",
       "conditions": "空家等対策特措法上の空家等が対象。空き家バンク登録済等が条件。改修は対象外で、除却後は更地化が必要。",
+      "source_url": null,
       "keywords": "中山町空家除却費及び家財処分費補助金 東村山郡中山町 解体 空家等対策特措法上の空家等が対象。空き家バンク登録済等が条件。改修は対象外で、除却後は更地化が必要。"
     },
     {
@@ -4542,6 +4954,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "対象経費の1/2以内",
       "conditions": "空き家バンク登録物件を購入・賃借して改修する場合が対象。山形県内業者との契約が条件。",
+      "source_url": null,
       "keywords": "山辺町空き家改修事業補助金 東村山郡山辺町 改修 空き家バンク登録物件を購入・賃借して改修する場合が対象。山形県内業者との契約が条件。"
     },
     {
@@ -4553,6 +4966,7 @@
       "max_amount_man_yen": 350.0,
       "subsidy_rate": "1/2以内",
       "conditions": "町が空き家を10年間借り受けて改修し、賃貸期間最長10年で貸し出す仕組み。",
+      "source_url": null,
       "keywords": "庄内町定住促進空き家活用事業 東田川郡庄内町 改修 町が空き家を10年間借り受けて改修し、賃貸期間最長10年で貸し出す仕組み。"
     },
     {
@@ -4564,6 +4978,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "空き家バンクで購入または賃貸借した住宅の改修(台所・トイレ・浴室等)、家財処分・清掃、仲介手数料、宅地購入が対象。",
+      "source_url": null,
       "keywords": "大江町空き家利活用支援事業費補助金 西村山郡大江町 改修 空き家バンクで購入または賃貸借した住宅の改修(台所・トイレ・浴室等)、家財処分・清掃、仲介手数料、宅地購入が対象。"
     },
     {
@@ -4575,6 +4990,7 @@
       "max_amount_man_yen": 70.0,
       "subsidy_rate": "対象経費の1/2",
       "conditions": "空き家等バンク登録物件の購入・賃借者等が対象。水回り・内装・屋根・外壁等の改修が対象。",
+      "source_url": null,
       "keywords": "朝日町空き家等改修支援事業補助金 西村山郡朝日町 改修 空き家等バンク登録物件の購入・賃借者等が対象。水回り・内装・屋根・外壁等の改修が対象。"
     },
     {
@@ -4586,6 +5002,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "リフォーム経費の1/2",
       "conditions": "西川町空き家バンクを通じて購入・賃貸借してから3年以内であること、10年以上継続使用することが条件。",
+      "source_url": null,
       "keywords": "西川町空き家利活用支援補助金 西村山郡西川町 改修 西川町空き家バンクを通じて購入・賃貸借してから3年以内であること、10年以上継続使用することが条件。"
     },
     {
@@ -4597,6 +5014,7 @@
       "max_amount_man_yen": 40.0,
       "subsidy_rate": "1/2",
       "conditions": "管理不全の状態にある空き家について、所有者等が行う解体費用の一部を補助。",
+      "source_url": null,
       "keywords": "飯豊町老朽危険空き家解体支援事業 西置賜郡飯豊町 解体 管理不全の状態にある空き家について、所有者等が行う解体費用の一部を補助。"
     },
     {
@@ -4608,6 +5026,7 @@
       "max_amount_man_yen": 60.0,
       "subsidy_rate": "改修工事費の1/2",
       "conditions": "空き家を居住目的で購入し改修する場合が対象。市外からの転入者は加算あり。",
+      "source_url": null,
       "keywords": "みどり市空き家改修補助金 みどり市 改修 空き家を居住目的で購入し改修する場合が対象。市外からの転入者は加算あり。"
     },
     {
@@ -4619,6 +5038,7 @@
       "max_amount_man_yen": 50.0,
       "subsidy_rate": "補助対象工事費×1/2、または延べ床面積×単価×1/2、もしくは50万円のいずれか最も少ない額",
       "conditions": "市内の1年以上使用実態のない個人所有の一戸建て・併用住宅・長屋が対象。全部除却が対象。",
+      "source_url": null,
       "keywords": "太田市空家除却補助金 太田市 解体 市内の1年以上使用実態のない個人所有の一戸建て・併用住宅・長屋が対象。全部除却が対象。"
     },
     {
@@ -4630,6 +5050,7 @@
       "max_amount_man_yen": 100.0,
       "subsidy_rate": "1/2",
       "conditions": "昭和56年5月31日以前に着工された建築物で、おおむね1年以上居住実績がないもの。登記簿または固定資産税台帳上で住宅用途であること。所有権以外の権利(賃借権等)が設定されていないこと。申請者は所有者本人(共有の場合は代表者)。村税に未納がなく暴力団関係者でないこと。解体工事着手前の事前申請が必須で、事後申請は認められない。",
+      "source_url": null,
       "keywords": "檜原村老朽空き家除却補助金 西多摩郡檜原村 解体 昭和56年5月31日以前に着工された建築物で、おおむね1年以上居住実績がないもの。登記簿または固定資産税台帳上で住宅用途であること。所有権以外の権利(賃借権等)が設定されていないこと。申請者は所有者本人(共有の場合は代表者)。村税に未納がなく暴力団関係者でないこと。解体工事着手前の事前申請が必須で、事後申請は認められない。"
     },
     {
@@ -4641,6 +5062,7 @@
       "max_amount_man_yen": null,
       "subsidy_rate": null,
       "conditions": "村が利用可能な空き家を借り上げて改修し、移住者向け住宅(移住定住促進住宅)や林業従事者向け住宅(林業従事者住宅)として提供する村主体の空き家活用事業。国の空き家再生等推進事業(令和2年度、3棟)及び森林環境譲与税(令和3年度、2棟)を活用して整備。",
+      "source_url": null,
       "keywords": "空き家再生等推進事業(移住定住促進住宅・林業従事者住宅整備) 吉野郡黒滝村 改修 村が利用可能な空き家を借り上げて改修し、移住者向け住宅(移住定住促進住宅)や林業従事者向け住宅(林業従事者住宅)として提供する村主体の空き家活用事業。国の空き家再生等推進事業(令和2年度、3棟)及び森林環境譲与税(令和3年度、2棟)を活用して整備。"
     }
   ]

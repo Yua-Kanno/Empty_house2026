@@ -424,13 +424,19 @@ async function fetchSubsidies(municipality) {
             return;
         }
 
-        subsidyList.innerHTML = subsidies.map(subsidy => `
-            <div class="subsidy-card p-2.5 text-xs">
-                <p class="font-semibold text-[#22344B]">${subsidy.subsidy_name}</p>
-                <p class="mt-0.5 text-[11px] text-[#5C7A99]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
-                <p class="text-[11px] text-[#5C7A99]">補助率: ${subsidy.rate}</p>
-            </div>
-        `).join('');
+        subsidyList.innerHTML = subsidies.map(subsidy => {
+            const detailLink = subsidy.source_url
+                ? `<a href="${subsidy.source_url}" target="_blank" rel="noopener noreferrer" class="inline-block mt-1 text-[11px] text-[#B0862A] font-semibold underline underline-offset-2">公式ページで詳細を見る →</a>`
+                : '';
+            return `
+                <div class="subsidy-card p-2.5 text-xs">
+                    <p class="font-semibold text-[#22344B]">${subsidy.subsidy_name}</p>
+                    <p class="mt-0.5 text-[11px] text-[#5C7A99]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
+                    <p class="text-[11px] text-[#5C7A99]">補助率: ${subsidy.rate}</p>
+                    ${detailLink}
+                </div>
+            `;
+        }).join('');
     } catch (err) {
         subsidyList.innerHTML = '<p class="text-rose-700 py-4 text-center text-xs">補助金情報を読み込めませんでした</p>';
     }
