@@ -591,17 +591,24 @@ async function updateNearbySightseeingSpots(lat, lng) {
         });
 
         if (listEl) {
-            listEl.innerHTML = spots.map(spot => `
-                <div class="sight-card flex-shrink-0">
-                    ${spot.photo_url
-                        ? `<img src="${API_BASE_URL}${spot.photo_url}" class="sight-card-photo" loading="lazy" alt="${spot.name || ''}">`
-                        : `<div class="sight-card-photo sight-card-photo--placeholder">🏞️</div>`}
-                    <div class="p-2">
-                        <p class="font-semibold text-[#22344B] text-xs truncate">${spot.name || '-'}</p>
-                        <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}</p>
+            listEl.innerHTML = spots.map(spot => {
+                const photoInner = spot.photo_url
+                    ? `<img src="${API_BASE_URL}${spot.photo_url}" class="sight-card-photo" loading="lazy" alt="${spot.name || ''}">`
+                    : `<div class="sight-card-photo sight-card-photo--placeholder">🏞️</div>`;
+                // 写真(カード全体)をクリックしたら、その場所のGoogleマップのページを新しいタブで開く。
+                const photoBlock = spot.maps_url
+                    ? `<a href="${spot.maps_url}" target="_blank" rel="noopener noreferrer" title="Googleマップで見る">${photoInner}</a>`
+                    : photoInner;
+                return `
+                    <div class="sight-card flex-shrink-0">
+                        ${photoBlock}
+                        <div class="p-2">
+                            <p class="font-semibold text-[#22344B] text-xs truncate">${spot.name || '-'}</p>
+                            <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}</p>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
     } catch (err) {
         if (requestId !== sightseeingRequestId) return;

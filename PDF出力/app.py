@@ -123,7 +123,8 @@ def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
                 "X-Goog-Api-Key": GOOGLE_PLACES_API_KEY,
                 "X-Goog-FieldMask": (
                     "places.displayName,places.rating,places.userRatingCount,"
-                    "places.formattedAddress,places.location,places.types,places.photos"
+                    "places.formattedAddress,places.location,places.types,places.photos,"
+                    "places.googleMapsUri"
                 ),
             },
             json={
@@ -150,8 +151,17 @@ def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
         photos = place.get("photos") or []
         photo_name = photos[0].get("name") if photos else None
         location = place.get("location") or {}
+        name = (place.get("displayName") or {}).get("text", "")
+        # Googleマップ上のその場所のページへのリンク。googleMapsUriが取れない場合に
+        # 備えて、名称+緯度経度からの検索リンクをフォールバックとして組み立てる。
+        maps_url = place.get("googleMapsUri")
+        if not maps_url and location.get("latitude") is not None:
+            maps_url = (
+                "https://www.google.com/maps/search/?api=1&query="
+                f"{quote(name)}+{location.get('latitude')},{location.get('longitude')}"
+            )
         spots.append({
-            "name": (place.get("displayName") or {}).get("text", ""),
+            "name": name,
             "rating": place.get("rating"),
             "user_rating_count": place.get("userRatingCount"),
             "address": place.get("formattedAddress"),
@@ -159,6 +169,7 @@ def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
             "lng": location.get("longitude"),
             "types": place.get("types", []),
             "photo_url": f"/api/place-photo?name={quote(photo_name, safe='')}" if photo_name else None,
+            "maps_url": maps_url,
         })
     return {"spots": spots, "note": None}
 

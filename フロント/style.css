@@ -95,6 +95,11 @@ option {
     font-size: 28px;
 }
 
+.sight-card a {
+    display: block;
+    cursor: pointer;
+}
+
 /* クラスタアイコン */
 .marker-cluster-small {
     background-color: rgba(176, 134, 42, 0.6) !important;
