@@ -6356,7 +6356,7 @@ INSERT INTO "subsidies" VALUES(61,'長野県','松本市','松本市空き家バ
 INSERT INTO "subsidies" VALUES(62,'岐阜県','岐阜市','岐阜市危険空家等除却補助金','解体',500000,'1/2以内','危険と判定された特定空家等の解体費支援','https://www.city.gifu.lg.jp/kurashi/sumai/1002445/1002450.html');
 INSERT INTO "subsidies" VALUES(63,'岐阜県','大垣市','大垣市空き家活用定住促進事業補助金','改修',500000,'1/2以内','定住促進エリア内の空き家改修費用','https://www.city.ogaki.lg.jp/0000065468.html');
 INSERT INTO "subsidies" VALUES(64,'静岡県','静岡市','静岡市特定空家等除却事業費補助金','解体',500000,'1/2以内','安全上のリスクが高い特定空家等の解体費','https://www.city.shizuoka.lg.jp/s7345/s013027.html');
-INSERT INTO "subsidies" VALUES(65,'静岡県','浜松市','浜松市空き家活用事業費補助金','改修',500000,'1/2以内','空き家バンク物件を活用して行う居住用改修',NULL);
+INSERT INTO "subsidies" VALUES(65,'静岡県','浜松市','浜松市空き家活用事業費補助金','改修',500000,'1/2以内','空き家バンク物件を活用して行う居住用改修','https://www.city.hamamatsu.shizuoka.jp/simink/akiya/akiyahozixyo.html');
 INSERT INTO "subsidies" VALUES(66,'愛知県','名古屋市','名古屋市老朽木造住宅非木造化・解体助成','解体',1000000,'1/2以内','防災上の課題がある老朽住宅の除却費補助','https://www.city.nagoya.jp/jutakutoshi/page/0000071445.html');
 INSERT INTO "subsidies" VALUES(67,'愛知県','豊橋市','豊橋市危険空家等除却費補助金','解体',500000,'1/2以内','倒壊のおそれがある危険な空き家の解体費','https://www.city.toyohashi.lg.jp/26065.htm');
 INSERT INTO "subsidies" VALUES(68,'鳥取県','鳥取市','鳥取市危険空き家等除却費補助金','解体',500000,'1/2以内','倒壊危険のある老朽空き家の解体費用','https://www.city.tottori.lg.jp/page/5831.html');
@@ -6527,7 +6527,7 @@ INSERT INTO "subsidies" VALUES(232,'福島県','田村郡三春町','みはる�
 INSERT INTO "subsidies" VALUES(233,'福島県','耶麻郡北塩原村','北塩原村空き家改修補助金','改修',1500000,NULL,'県が公開する会津地方の空き家補助事業一覧に記載(県補助額+村補助額の最大額)。担当:建設課。','https://www.vill.kitashiobara.fukushima.jp/soshiki/kensetsu/5461.html');
 INSERT INTO "subsidies" VALUES(234,'福島県','耶麻郡猪苗代町','猪苗代町空き家改修等支援事業','改修',2400000,NULL,'県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:建設課。','https://www.town.inawashiro.fukushima.jp/soshiki/8/1524.html');
 INSERT INTO "subsidies" VALUES(235,'福島県','耶麻郡磐梯町','磐梯町空き家改修事業補助金','改修',200000,NULL,'県が公開する会津地方の空き家補助事業一覧に記載(県補助額+町補助額の最大額)。担当:行政経営課。','https://www.town.bandai.fukushima.jp/uploaded/attachment/4891.pdf');
-INSERT INTO "subsidies" VALUES(236,'茨城県','下妻市','下妻市空き家解体費補助金','解体',NULL,NULL,'老朽化により不良住宅と判定された空き家の解体を促進するための補助金。予算の範囲内で交付。',NULL);
+INSERT INTO "subsidies" VALUES(236,'茨城県','下妻市','下妻市空き家解体費補助金','解体',NULL,NULL,'老朽化により不良住宅と判定された空き家の解体を促進するための補助金。予算の範囲内で交付。','https://www.city.shimotsuma.lg.jp/kurashi-tetsuzuki/sumai/akiya-bank/page009101.html');
 INSERT INTO "subsidies" VALUES(237,'茨城県','結城郡八千代町','八千代町空き家バンクリフォーム支援補助事業','改修',NULL,NULL,'町の空き家バンクに登録された空き家を購入し自己の居住用として改修工事を行う者が対象。予算の範囲内で交付。','https://www.town.ibaraki-yachiyo.lg.jp/page/page009606.html');
 INSERT INTO "subsidies" VALUES(238,'茨城県','行方市','行方市空家等解体費補助金交付事業','解体',NULL,NULL,'市内の特定空家及び管理不全空家等を解体し更地にする工事費用への補助。','https://www.city.namegata.ibaraki.jp/page/page014091.html');
 INSERT INTO "subsidies" VALUES(239,'青森県','三戸郡五戸町','五戸町危険空き家解体費用補助金','解体',1600000,'補助対象経費の10分の8(80%)','町の事前調査で評定点数100点以上等、周辺住環境に深刻な影響を及ぼす空き家が対象。上限額は商業地域で160万円、それ以外の区域で80万円。所有者・相続人等で町税滞納がないこと等が条件。','https://www.town.gonohe.aomori.jp/chosei/akiyakaitaihojo.html');
@@ -6536,7 +6536,7 @@ INSERT INTO "subsidies" VALUES(241,'青森県','北津軽郡板柳町','板柳�
 INSERT INTO "subsidies" VALUES(242,'青森県','東津軽郡平内町','平内町老朽危険空き家除却促進事業補助金','解体',400000,'補助対象経費の2分の1','町内の個人所有木造空き家で、事前調査により「老朽危険空き家」と認定された物件が対象。所有者または相続人が申請者、税の滞納なし等が条件。','https://www.town.hiranai.aomori.jp/soshiki/somu/1/8/1779.html');
 INSERT INTO "subsidies" VALUES(243,'栃木県','下都賀郡壬生町','壬生町空家バンクリフォーム補助金','改修',500000,'対象工事費等の2分の1','空家バンクに登録し成約に結び付いた空家等の所有者・購入者・賃借人であること。町内に事務所等を持つ事業者が施工すること。','https://www.town.mibu.tochigi.jp/docs/2026062400013');
 INSERT INTO "subsidies" VALUES(244,'栃木県','佐野市','佐野市空き家改修費用補助金','改修',500000,'改修費の1/2(耐震改修を同時に行う場合は耐震費用の1/2を加算)','売買契約時に市外在住、契約から1年以内に申請、10年以上の居住を誓約、市税の滞納なし。','https://www.city.sano.lg.jp/ijuteiju/sumu/housing_bank/943.html');
-INSERT INTO "subsidies" VALUES(245,'栃木県','塩谷郡塩谷町','塩谷町空き家改修事業補助金','改修',500000,'改修工事経費の2分の1以内(子育て世帯が入居する場合は10万円加算)','塩谷町空き家バンク制度に登録されている物件のみが対象。町内の業者が施工すること。',NULL);
+INSERT INTO "subsidies" VALUES(245,'栃木県','塩谷郡塩谷町','塩谷町空き家改修事業補助金','改修',500000,'改修工事経費の2分の1以内(子育て世帯が入居する場合は10万円加算)','塩谷町空き家バンク制度に登録されている物件のみが対象。町内の業者が施工すること。','https://www1.g-reiki.net/town.shioya/reiki_honbun/e136RG00000791.html');
 INSERT INTO "subsidies" VALUES(246,'栃木県','日光市','日光市空き家バンクリフォーム補助金','改修',1000000,'補助対象経費の2分の1以内(移住者は上限50万円、子育て世帯等は上限100万円)','空き家バンク登録物件を購入してリフォームすること。10年以上居住を誓約。市内事業者が施工すること。リフォーム経費20万円以上。','https://www.city.nikko.lg.jp/soshiki/7/1035/6/1/713.html');
 INSERT INTO "subsidies" VALUES(247,'栃木県','河内郡上三川町','上三川町空き家バンクリフォーム補助金','改修',500000,'工事費の1/2','空き家バンク登録物件の所有者・入居者等、20万円以上の工事、10年以上の定住、3親等以内の親族でないこと。','https://www.town.kaminokawa.lg.jp/0077/info-0000002297-0.html');
 INSERT INTO "subsidies" VALUES(248,'栃木県','芳賀郡市貝町','市貝町空家バンクリフォーム補助金','改修',1000000,'移住者は工事費の1/2(上限50万円)、子育て世帯等は工事費の3分の2(上限100万円)','空家バンクに登録した物件の所有者・入居者・入居予定者であること。','https://www.town.ichikai.tochigi.jp/Info/1636');
@@ -6610,7 +6610,7 @@ INSERT INTO "subsidies" VALUES(315,'岡山県','久米郡美咲町','美咲町�
 INSERT INTO "subsidies" VALUES(316,'岡山県','加賀郡吉備中央町','吉備中央町空き家リフォーム事業補助金','改修',500000,'対象経費の3分の10以内(3/10)','町内の建築業者等が主たる施工業者であること。空き家の購入または賃貸契約後1年以内に申請、対象工事費が30万円以上であること。','https://www.town.kibichuo.lg.jp/site/teijyu/190.html');
 INSERT INTO "subsidies" VALUES(317,'岡山県','和気郡和気町','和気町空き家改修補助金','改修',500000,'改修費の2分の1','町内の空き家を改修して移住する人が対象。工事費用10万円以上、町内業者による施工、改修後5年以上定住する意思があること。','https://www.town.wake.lg.jp/soshiki/ijusuishin/gyomu/4/5/87.html');
 INSERT INTO "subsidies" VALUES(318,'岡山県','新見市','新見市空き家活用推進事業補助金(改修補助)','改修',1500000,'対象経費の2分の1','新見市へ移住する意図があるか、過去3年以内に移住した人が対象。対象経費30万円以上、市内事業者による施工が必要。','https://www.city.niimi.okayama.jp/gyosei/gyosei_detail/index/35.html');
-INSERT INTO "subsidies" VALUES(319,'岡山県','津山市','津山市空き家活用定住促進事業補助金(改修補助金)','改修',600000,'3分の2','移住者が空き家を購入し改修する場合が対象。転入直近5年間岡山県外に住所があり、転入日から3年を経過していないこと。',NULL);
+INSERT INTO "subsidies" VALUES(319,'岡山県','津山市','津山市空き家活用定住促進事業補助金(改修補助金)','改修',600000,'3分の2','移住者が空き家を購入し改修する場合が対象。転入直近5年間岡山県外に住所があり、転入日から3年を経過していないこと。','https://www.city.tsuyama.lg.jp/life/index2.php?id=4704');
 INSERT INTO "subsidies" VALUES(320,'岡山県','笠岡市','笠岡市空き家バンク物件リフォーム助成金交付事業','改修',300000,'対象経費の2分の1','空き家バンク登録物件の所有者、または登録物件を購入・賃借した人が対象。','https://www.city.kasaoka.okayama.jp/soshiki/28/42597.html');
 INSERT INTO "subsidies" VALUES(321,'岡山県','美作市','美作市ふるさと住宅リフォーム補助金','改修',300000,'費用の2分の1以内','空き家情報バンクに登録された家屋が対象。市内事業者に依頼した場合は上限10万円加算。交付から5年以上の賃貸契約または居住が必要。','https://www.city.mimasaka.lg.jp/section/reiki/reiki_honbun/r140RG00001559.html');
 INSERT INTO "subsidies" VALUES(322,'岡山県','苫田郡鏡野町','鏡野町定住促進空き家改修補助金','改修',500000,'補助対象経費の2分の1','所有または賃借する戸建ての空き家が対象。購入または最初の賃借から1年以内の申請。町内業者が主たる施工者であること。','https://www.town.kagamino.lg.jp/soshiki/22/1122.html');
@@ -6656,7 +6656,7 @@ INSERT INTO "subsidies" VALUES(361,'長崎県','平戸市','平戸市老朽危�
 INSERT INTO "subsidies" VALUES(362,'長崎県','諫早市','諫早市空き家バンク利用登録者支援補助金','改修',NULL,NULL,'空き家バンク登録物件を購入して改修する場合に改修費が交付される(賃貸の場合は家賃最長12か月分補助)。','https://www.city.isahaya.nagasaki.jp/site/i-iju/9944.html');
 INSERT INTO "subsidies" VALUES(363,'佐賀県','伊万里市','伊万里市実家に帰ろう住宅改修等補助金','改修',500000,'改修工事費の1/2','子育て加算・地域加算あり。解体して新築する場合は最大100万円超となる旨の記載あり。','https://www.city.imari.lg.jp/21380.htm');
 INSERT INTO "subsidies" VALUES(364,'佐賀県','小城市','小城市空き家改修費助成事業補助金','改修',NULL,'改修工事費の1/2','芦刈町は拡大補助の対象。','https://www.city.ogi.lg.jp/main/20133.html');
-INSERT INTO "subsidies" VALUES(365,'佐賀県','武雄市','武雄市空き家等リノベーション補助金','改修',450000,NULL,'補助額は条件により異なり、最大45万円。',NULL);
+INSERT INTO "subsidies" VALUES(365,'佐賀県','武雄市','武雄市空き家等リノベーション補助金','改修',450000,NULL,'補助額は条件により異なり、最大45万円。','https://takeo-ijyu.jp/support/');
 INSERT INTO "subsidies" VALUES(366,'佐賀県','神埼市','神埼市空き家改修費助成事業','改修',500000,'1/2(空き家バンク登録物件の改修費)','空き家バンク登録物件が対象。改修費は1/2・上限50万円、不要物品の処分費用は1/2・上限10万円。','https://www.city.kanzaki.saga.jp/main/3837.html');
 INSERT INTO "subsidies" VALUES(367,'福岡県','中間市','中間市中古住宅リフォーム補助金制度','改修',300000,NULL,'市外に住む子育て世帯または若年世帯が、移住・定住を目的に中間市空き家バンク登録の中古住宅を購入または賃借してリフォームする場合が対象。','https://www.city.nakama.lg.jp/soshiki/19/1270.html');
 INSERT INTO "subsidies" VALUES(368,'徳島県','三好市','三好市移住者支援事業','改修',2000000,'2/3','空き家情報登録制度を利用した移住者が空き家に入居する場合、移住に要する費用(改修費用含む)の一部を補助。','https://www.miyoshi.i-tokushima.jp/docs/4874.html');
@@ -6678,7 +6678,7 @@ INSERT INTO "subsidies" VALUES(383,'和歌山県','有田郡広川町','広川�
 INSERT INTO "subsidies" VALUES(384,'和歌山県','海南市','海南市空家リフォーム工事補助事業','改修',1200000,'工事費の2/3','転居・移住に伴って空き家を購入または譲り受け、リフォーム工事を行う市外からの移住者が対象。','https://www.city.kainan.lg.jp/kakubusho/machizukuribu/toshiseibika/akiya_kanren/1604298898087.html');
 INSERT INTO "subsidies" VALUES(385,'和歌山県','紀の川市','紀の川市定住促進支援事業補助金','改修',NULL,NULL,'空き家バンクを利用して移住した人を対象に、リフォーム工事費の一部と引っ越し代を補助する制度。','https://www.city.kinokawa.lg.jp/006/2021-0803-1600-73.html');
 INSERT INTO "subsidies" VALUES(386,'山口県','山陽小野田市','山陽小野田市空き家利活用改修補助金','改修',1000000,NULL,'空き家バンクに登録されている(または登録されていた)空き家が対象。居住用として性能維持・向上を目的とした改修工事費が対象。','https://www.city.sanyo-onoda.lg.jp/uploaded/attachment/49527.pdf');
-INSERT INTO "subsidies" VALUES(387,'山口県','岩国市','岩国市空き家修繕助成金','改修',1000000,'住宅修繕費の1/2以内(離島地域は2/3以内)','空き家バンクを活用して中山間地域へ移住した人が対象。上限は賃貸物件50万円、購入物件100万円。',NULL);
+INSERT INTO "subsidies" VALUES(387,'山口県','岩国市','岩国市空き家修繕助成金','改修',1000000,'住宅修繕費の1/2以内(離島地域は2/3以内)','空き家バンクを活用して中山間地域へ移住した人が対象。上限は賃貸物件50万円、購入物件100万円。','https://iwakuni-iju.jp/support-seido-3.html');
 INSERT INTO "subsidies" VALUES(388,'山口県','柳井市','柳井市空き家改修費補助金','改修',600000,'改修工事費の3分の2','空き家バンク登録台帳に登録された空き家が対象。市内業者による10万円以上の改修工事。3年以上居住する見込みがあること。','https://www.city-yanai.jp/site/yanai-gurashi/akiya-kaisyuhi.html');
 INSERT INTO "subsidies" VALUES(389,'山口県','防府市','防府市空き家利活用改修費補助金','改修',500000,'対象経費(消費税抜き)の50%','空き家バンク登録物件の購入者、または改修後に空き家バンクへ賃貸登録する所有者が対象。','https://www.city.hofu.yamaguchi.jp/uploaded/attachment/139017.pdf');
 INSERT INTO "subsidies" VALUES(390,'広島県','三原市','三原市空き家改修等支援事業補助金','改修',300000,'工事費の1/2','空き家バンク登録物件を利用する市外からの移住者等が対象。市内の建築業者等が施工する改修工事が対象。','https://www.city.mihara.hiroshima.jp/soshiki/21/akiyahojyo.html');
@@ -6689,8 +6689,8 @@ INSERT INTO "subsidies" VALUES(394,'鳥取県','倉吉市','倉吉市空き家�
 INSERT INTO "subsidies" VALUES(395,'鳥取県','八頭郡八頭町','八頭町空き家利活用流通促進事業補助金','改修',1500000,'1/2','市場で流通していない空き家の改修工事等を行う者が対象。上限は住宅として活用する場合90万円、住宅以外に転用する場合150万円。','https://www.town.yazu.tottori.jp/site/lifestage/1275.html');
 INSERT INTO "subsidies" VALUES(396,'鳥取県','東伯郡北栄町','北栄町空き家利活用流通促進事業補助金','改修',900000,'1/2','定住目的で空き家を購入・賃借する者、または空き家を改修して居住者に売却・賃貸する者が対象。','https://www.ehokuei.net/soshiki/9/1742.html');
 INSERT INTO "subsidies" VALUES(397,'大分県','佐伯市','佐伯市空き家利活用促進事業','改修',800000,'改修費の2/3','市外からの転入者で、5年以上定住する意思がある空き家バンク登録物件の利用者が対象。','https://www.city.saiki.oita.jp/reiki/reiki_honbun/r159RG00001542.html');
-INSERT INTO "subsidies" VALUES(398,'大分県','津久見市','津久見市空き家利活用事業補助金','改修',1000000,NULL,'市外から転入し、空き家バンクに登録された物件を利用する者が対象。家財処分費用と購入・改修費用の一部を合わせて上限100万円。',NULL);
-INSERT INTO "subsidies" VALUES(399,'大分県','豊後大野市','豊後大野市空き家利活用補助金','改修',NULL,NULL,'移住希望者または登録物件所有者が、空き家バンク登録物件を購入または改修する場合に補助金を交付する制度。',NULL);
+INSERT INTO "subsidies" VALUES(398,'大分県','津久見市','津久見市空き家利活用事業補助金','改修',1000000,NULL,'市外から転入し、空き家バンクに登録された物件を利用する者が対象。家財処分費用と購入・改修費用の一部を合わせて上限100万円。','https://www1.g-reiki.net/city.tsukumi.oita/reiki_honbun/q508RG00000441.html');
+INSERT INTO "subsidies" VALUES(399,'大分県','豊後大野市','豊後大野市空き家利活用補助金','改修',NULL,NULL,'移住希望者または登録物件所有者が、空き家バンク登録物件を購入または改修する場合に補助金を交付する制度。','https://bungoono-iju.com/support/shien/seido/%E7%A9%BA%E3%81%8D%E5%AE%B6%E6%94%B9%E4%BF%AE%E8%A3%9C%E5%8A%A9%E9%87%91-2/');
 INSERT INTO "subsidies" VALUES(400,'島根県','仁多郡奥出雲町','奥出雲町空き家改修補助金','改修',1000000,'改修費の1/2','空き家バンクを通じて売買または賃貸契約が成立した空き家の所有者または登録利用者が対象。対象となる改修工事費は50万円以上200万円以下。','http://www3.town.okuizumo.shimane.jp/reiki/reiki_int/reiki_honbun/r184RG00001126.html');
 INSERT INTO "subsidies" VALUES(401,'島根県','雲南市','雲南市空き家改修補助金','改修',300000,'対象経費(消費税抜き)の3分の1以内','子育て世帯であること、空き家バンクに登録された物件を購入したこと、市内に住民登録をしていること等が条件。','https://www.city.unnan.shimane.jp/unnan/shiseijouhou/pr/shihou/21nenshihou08/info210801.html');
 INSERT INTO "subsidies" VALUES(402,'千葉県','南房総市','南房総市空き家利用促進奨励補助金','改修',2000000,'対象経費の3分の2以内','移住希望者と賃貸借契約を結んだ空き家所有者が、その空き家を改修する場合が対象。',NULL);

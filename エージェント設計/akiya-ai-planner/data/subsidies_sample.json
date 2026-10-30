@@ -712,7 +712,7 @@
     "max_amount": 500000,
     "rate": "1/2以内",
     "conditions": "空き家バンク物件を活用して行う居住用改修",
-    "source_url": null
+    "source_url": "https://www.city.hamamatsu.shizuoka.jp/simink/akiya/akiyahozixyo.html"
   },
   {
     "id": 66,
@@ -2593,7 +2593,7 @@
     "max_amount": null,
     "rate": null,
     "conditions": "老朽化により不良住宅と判定された空き家の解体を促進するための補助金。予算の範囲内で交付。",
-    "source_url": null
+    "source_url": "https://www.city.shimotsuma.lg.jp/kurashi-tetsuzuki/sumai/akiya-bank/page009101.html"
   },
   {
     "id": 237,
@@ -2692,7 +2692,7 @@
     "max_amount": 500000,
     "rate": "改修工事経費の2分の1以内(子育て世帯が入居する場合は10万円加算)",
     "conditions": "塩谷町空き家バンク制度に登録されている物件のみが対象。町内の業者が施工すること。",
-    "source_url": null
+    "source_url": "https://www1.g-reiki.net/town.shioya/reiki_honbun/e136RG00000791.html"
   },
   {
     "id": 246,
@@ -3506,7 +3506,7 @@
     "max_amount": 600000,
     "rate": "3分の2",
     "conditions": "移住者が空き家を購入し改修する場合が対象。転入直近5年間岡山県外に住所があり、転入日から3年を経過していないこと。",
-    "source_url": null
+    "source_url": "https://www.city.tsuyama.lg.jp/life/index2.php?id=4704"
   },
   {
     "id": 320,
@@ -4012,7 +4012,7 @@
     "max_amount": 450000,
     "rate": null,
     "conditions": "補助額は条件により異なり、最大45万円。",
-    "source_url": null
+    "source_url": "https://takeo-ijyu.jp/support/"
   },
   {
     "id": 366,
@@ -4254,7 +4254,7 @@
     "max_amount": 1000000,
     "rate": "住宅修繕費の1/2以内(離島地域は2/3以内)",
     "conditions": "空き家バンクを活用して中山間地域へ移住した人が対象。上限は賃貸物件50万円、購入物件100万円。",
-    "source_url": null
+    "source_url": "https://iwakuni-iju.jp/support-seido-3.html"
   },
   {
     "id": 388,
@@ -4375,7 +4375,7 @@
     "max_amount": 1000000,
     "rate": null,
     "conditions": "市外から転入し、空き家バンクに登録された物件を利用する者が対象。家財処分費用と購入・改修費用の一部を合わせて上限100万円。",
-    "source_url": null
+    "source_url": "https://www1.g-reiki.net/city.tsukumi.oita/reiki_honbun/q508RG00000441.html"
   },
   {
     "id": 399,
@@ -4386,7 +4386,7 @@
     "max_amount": null,
     "rate": null,
     "conditions": "移住希望者または登録物件所有者が、空き家バンク登録物件を購入または改修する場合に補助金を交付する制度。",
-    "source_url": null
+    "source_url": "https://bungoono-iju.com/support/shien/seido/%E7%A9%BA%E3%81%8D%E5%AE%B6%E6%94%B9%E4%BF%AE%E8%A3%9C%E5%8A%A9%E9%87%91-2/"
   },
   {
     "id": 400,
