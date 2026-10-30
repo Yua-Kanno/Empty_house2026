@@ -96,7 +96,7 @@
     "max_amount": 500000,
     "rate": "1/2以内",
     "conditions": "周辺住民の生命・財産を保護するための危険空家解体費",
-    "source_url": null
+    "source_url": "https://www.city.ebetsu.hokkaido.jp/uploaded/attachment/81328.pdf"
   },
   {
     "id": 10,
@@ -107,7 +107,7 @@
     "max_amount": 500000,
     "rate": "1/2以内",
     "conditions": "老朽化し危険と診断された住宅の解体費用",
-    "source_url": null
+    "source_url": "https://www.city.tomakomai.hokkaido.jp/files/00044300/00044332/20260526100538.pdf"
   },
   {
     "id": 11,
@@ -129,7 +129,7 @@
     "max_amount": 500000,
     "rate": "1/2以内",
     "conditions": "倒壊のおそれがある老朽空き家の解体費用",
-    "source_url": null
+    "source_url": "https://www.city.aomori.aomori.jp/_res/projects/default_project/_page_/001/009/350/r8chirashi.pdf"
   },
   {
     "id": 13,
@@ -173,7 +173,7 @@
     "max_amount": 500000,
     "rate": "1/2以内",
     "conditions": "周辺環境に支障をきたす危険空き家の解体費",
-    "source_url": null
+    "source_url": "https://www.city.sendai.jp/shiminsekatsu/kurashi/anzen/anzen/akiya/jokyaku.html"
   },
   {
     "id": 17,
@@ -1922,7 +1922,7 @@
     "max_amount": 1000000,
     "rate": "1/3以内",
     "conditions": "移住・定住に向けた住環境整備のため、個人が行う住宅の改修費・工事費等を補助。",
-    "source_url": null
+    "source_url": "https://www.town.iwaizumi.lg.jp/docs/2025033100013/"
   },
   {
     "id": 176,
@@ -1944,7 +1944,7 @@
     "max_amount": 400000,
     "rate": "1/2以内",
     "conditions": "市の空き家バンク登録物件の購入・改修にかかる経費を対象に、若者または移住者の定住を支援する個人向け補助。",
-    "source_url": null
+    "source_url": "https://www.city.hachimantai.lg.jp/soshiki/machi/11371.html"
   },
   {
     "id": 178,
@@ -1999,7 +1999,7 @@
     "max_amount": 600000,
     "rate": "1/2",
     "conditions": "町内に所在する個人所有の空き家の解体(除却)に要する工事費の一部を補助。",
-    "source_url": null
+    "source_url": "https://www.town.kikonai.hokkaido.jp/kurashi/tetsuzuki/akiyakaitaihojo.html"
   },
   {
     "id": 183,
@@ -2010,7 +2010,7 @@
     "max_amount": 500000,
     "rate": "1/2",
     "conditions": "町内にあり特定空家等と判定された空家等の所有者が対象。自発的解体を促進する制度。",
-    "source_url": null
+    "source_url": "https://www.urahoro.jp/life/?content=685"
   },
   {
     "id": 184,
@@ -2021,7 +2021,7 @@
     "max_amount": 1000000,
     "rate": "1/2(除却工事費の2分の1)",
     "conditions": "町内の空き家、または今後住む予定のない昭和56年5月31日以前建築の住宅が対象。除却工事費30万円以上。町空家等情報提供制度への登録が必要。",
-    "source_url": null
+    "source_url": "https://town.chippubetsu.hokkaido.jp/common/img/content/content_20240820_101019.pdf"
   },
   {
     "id": 185,
@@ -2032,7 +2032,7 @@
     "max_amount": 500000,
     "rate": "1/2(補助対象経費の2分の1)",
     "conditions": "市内の特定空家等(上限50万円)または管理不全空家等(上限30万円)が対象。個人所有で所有権以外の権利設定がないこと。",
-    "source_url": null
+    "source_url": "https://www.city.kitaakita.akita.jp/uploads/public/archive_0000008798_00/001_youkou.pdf"
   },
   {
     "id": 186,
@@ -2043,7 +2043,7 @@
     "max_amount": 2000000,
     "rate": "4/5以内(危険空き家)、1/2以内(老朽空き家等)",
     "conditions": "市内の空き家で、危険空き家等または建築後40年以上の老朽空き家が対象。",
-    "source_url": null
+    "source_url": "https://www.city.daisen.lg.jp/archive/contents-12195"
   },
   {
     "id": 187,
@@ -2054,7 +2054,7 @@
     "max_amount": 200000,
     "rate": "工事費の10%(一般)、15%(子育て・移住支援型)",
     "conditions": "市内業者による50万円以上のリフォーム工事。空き家購入世帯や移住登録者が対象。",
-    "source_url": null
+    "source_url": "https://www.city.yurihonjo.lg.jp/1000002/1001865/1001926/1009669.html"
   },
   {
     "id": 188,
@@ -3066,7 +3066,7 @@
     "max_amount": 250000,
     "rate": "改修工事費の1/2。家財道具等処分費は全額(上限5万円)。合計で上限25万円",
     "conditions": "空き家バンク登録物件が対象。町内施工業者が行い工事費10万円以上。3年以上居住する意思が必要。",
-    "source_url": null
+    "source_url": "https://www.town.shinano.lg.jp/docs/9923205.html"
   },
   {
     "id": 280,
@@ -3088,7 +3088,7 @@
     "max_amount": 3000000,
     "rate": null,
     "conditions": "村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。村が行うリフォーム経費の上限は300万円。所有者への直接補助ではない点に注意。",
-    "source_url": null
+    "source_url": "https://www.vill.takayama.nagano.jp/akiyabank/file/R8-1_akiya_hojo_honbun.pdf"
   },
   {
     "id": 282,
@@ -3099,7 +3099,7 @@
     "max_amount": 3000000,
     "rate": null,
     "conditions": "村が空き家を借り上げてリフォームし、移住希望者に転貸する事業。リフォーム経費は上限300万円。所有者への直接補助ではない点に注意。",
-    "source_url": null
+    "source_url": "http://www.vill.sakae.nagano.jp/docs/2671.html"
   },
   {
     "id": 283,
@@ -3110,7 +3110,7 @@
     "max_amount": 800000,
     "rate": "補助対象経費の3分の2以内(子育て世帯は上限200万円)",
     "conditions": "定住のため空き家を購入または賃借した人が対象。市外からの転入後5年以内。工事費20万円以上。",
-    "source_url": null
+    "source_url": "https://www.city.nakano.nagano.jp/docs/2015033100328/file_contents/katuyoyoukou.pdf"
   },
   {
     "id": 284,
@@ -3121,7 +3121,7 @@
     "max_amount": 500000,
     "rate": "2分の1",
     "conditions": "町内の一戸建て住宅で1年以上使われておらず今後常時使用するものが対象。5年以上居住。",
-    "source_url": null
+    "source_url": "https://www.town.miyota.nagano.jp/category/akiyabank/131762.html"
   },
   {
     "id": 285,
@@ -3132,7 +3132,7 @@
     "max_amount": 500000,
     "rate": "対象経費の3分の2以内",
     "conditions": "空き家バンクに登録された物件の売買・賃貸借に伴う改修費と片づけ費が対象。5年以上居住が必要。",
-    "source_url": null
+    "source_url": "https://www.town.tateshina.nagano.jp/soshiki/kikaku/kikakushinko/776.html"
   },
   {
     "id": 286,
@@ -3143,7 +3143,7 @@
     "max_amount": 200000,
     "rate": null,
     "conditions": "村の空き家・空き地情報登録制度に登録された空き家が対象。居住のための内外装・屋根・給排水設備工事等が対象。",
-    "source_url": null
+    "source_url": "https://vill.aoki.nagano.jp/asset/00032/gyousei/syoukoukannkouijuuka/ijyuteijyu/akiyakatuyou_youkou.pdf"
   },
   {
     "id": 287,
@@ -4089,7 +4089,7 @@
     "max_amount": 3200000,
     "rate": "2/3",
     "conditions": "空き家を移住者向け住宅や地域活性化に供する施設に改修する費用の一部を補助。",
-    "source_url": null
+    "source_url": "https://www.town.tokushima-naka.lg.jp/iju/iinaka-kurashi/sumai/akiya/hojokin/1529537.html"
   },
   {
     "id": 373,
@@ -4111,7 +4111,7 @@
     "max_amount": 2000000,
     "rate": "2/3",
     "conditions": "県外からの移住者が自ら居住するために行う住宅改修・家財道具搬出等が対象。",
-    "source_url": null
+    "source_url": "https://www.city.iyo.lg.jp/soumukikaku/ijyu/jyuutakukaisyuuhojo.html"
   },
   {
     "id": 375,
@@ -4122,7 +4122,7 @@
     "max_amount": 4000000,
     "rate": null,
     "conditions": "移住者向けの住宅改修に対する補助。住宅改修は最大400万円、家財道具の搬出・処分は最大20万円。",
-    "source_url": null
+    "source_url": "https://www.city.shikokuchuo.ehime.jp/soshiki/65/52540.html"
   },
   {
     "id": 376,
@@ -4133,7 +4133,7 @@
     "max_amount": 2000000,
     "rate": "50%以内",
     "conditions": "子育て世帯または若年夫婦世帯が対象。空き家バンク物件の購入費・登記費用、または同一敷地内で家屋を新築する場合の解体費用が補助対象経費。",
-    "source_url": null
+    "source_url": "https://www.city.seiyo.ehime.jp/kakuka/kensetsu/kensetsu/sumai/15433.html"
   },
   {
     "id": 377,
@@ -4166,7 +4166,7 @@
     "max_amount": 1000000,
     "rate": "1/2",
     "conditions": "香川県の市町連絡先一覧表に記載。詳細な対象要件は町役場への確認が必要。",
-    "source_url": null
+    "source_url": "https://www.town.manno.lg.jp/site/miryoku-hasshin/1326.html"
   },
   {
     "id": 380,
@@ -4177,7 +4177,7 @@
     "max_amount": 2700000,
     "rate": null,
     "conditions": "須崎市への移住者や移住希望者の定住を目的とした住宅の改修工事が対象。",
-    "source_url": null
+    "source_url": "https://www.city.susaki.lg.jp/reiki/reiki_honbun/o307RG00000809.html"
   },
   {
     "id": 381,
@@ -4188,7 +4188,7 @@
     "max_amount": 1800000,
     "rate": "2/3以内",
     "conditions": "市の空き家バンク制度を活用し、市外から移住してきた人が対象。耐震工事および改修に要する経費は2/3以内(上限180万円)。",
-    "source_url": null
+    "source_url": "https://www.city.kami.lg.jp/soshiki/9/akiyahojo.html"
   },
   {
     "id": 382,
@@ -4199,7 +4199,7 @@
     "max_amount": null,
     "rate": null,
     "conditions": "空き家バンクを通じて取得した空き家を改修する場合に補助金を交付する制度。インスペクション(建物状況調査)必須。",
-    "source_url": null
+    "source_url": "https://www.town.katsuragi.wakayama.jp/teijyu/020/010/2023-0920-1532-16.html"
   },
   {
     "id": 383,
@@ -4210,7 +4210,7 @@
     "max_amount": 3000000,
     "rate": "3分の2(2/3)",
     "conditions": "空き家を活用し、住居として改修する場合の改修費が対象。事前相談が必要。",
-    "source_url": null
+    "source_url": "https://www.town.hirogawa.wakayama.jp/soumu/akiyakaisyuu.html"
   },
   {
     "id": 384,
