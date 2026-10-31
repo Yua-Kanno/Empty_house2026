@@ -30,11 +30,12 @@ from reportlab.platypus import (
 # reportlab組み込みのCIDフォント(HeiseiKakuGo-W5等)はフォントを埋め込まず
 # 「閲覧環境に日本語フォントがある」前提になり、環境によっては文字が表示されない
 # (枠線だけ出る)ことがあるため、TTFを直接埋め込む方式にする。
-# フォントファイルは japanize-matplotlib パッケージに同梱されているIPAexゴシックを使う
-# (`pip install japanize-matplotlib` が必要。OSに依存せず確実に動くため採用)。
-import japanize_matplotlib
-
-_FONT_PATH = os.path.join(os.path.dirname(japanize_matplotlib.__file__), "fonts", "ipaexg.ttf")
+# フォントファイルはこのディレクトリに同梱しているIPAexゴシック(ipaexg.ttf)を使う。
+# 以前はjapanize-matplotlib経由で同フォントを取得していたが、それだとmatplotlib一式が
+# 道連れでimportされてしまい(本来PDF生成にmatplotlibは不要)、Renderの小さいメモリ枠の
+# インスタンスで他の処理(Gemini画像生成等)と同時に動かした際にメモリ不足で
+# ワーカーがSIGKILLされる原因になっていたため、直接このファイルを読むように変更した。
+_FONT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ipaexg.ttf")
 pdfmetrics.registerFont(TTFont("NotoSansJP", _FONT_PATH))       # 本文用ゴシック
 pdfmetrics.registerFont(TTFont("NotoSansJP-Bold", _FONT_PATH))  # 見出し用(太字ウェイトが無いため同フォントを流用)
 

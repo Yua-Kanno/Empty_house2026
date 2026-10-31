@@ -3,7 +3,6 @@ flask-cors
 reportlab
 gunicorn
 setuptools
-japanize-matplotlib
 python-dotenv
 requests
 google-genai>=2.20.0
