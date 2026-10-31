@@ -78,18 +78,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 使い方ガイドモーダル：初回訪問時のみ自動表示し、一度閉じたら
-// localStorageに記録して次回以降は出さない(ヘッダーの「使い方」ボタンでいつでも再表示可能)。
-const USAGE_GUIDE_SEEN_KEY = 'akiya_usage_guide_seen_v1';
+// 使い方ガイドモーダル：1枚ずつめくるステップ形式。初回訪問時のみ自動表示し、
+// 閉じる/スキップ/最後まで進めるとlocalStorageに記録して次回以降は出さない
+// (ヘッダーの「使い方」ボタンでいつでも最初から再表示可能)。
+const USAGE_GUIDE_SEEN_KEY = 'akiya_usage_guide_seen_v2';
+
+const USAGE_GUIDE_STEPS = [
+    {
+        icon: '📍',
+        title: '地図・物件の見方',
+        desc: 'エリアを絞り込んで地図上のピンや物件カードをクリックすると、その空き家の詳しい情報が表示されます。',
+    },
+    {
+        icon: '💰',
+        title: '補助金情報の見方',
+        desc: '選んだ物件で使える可能性のある補助金・支援制度を表示します。公式ページで内容を確認できるものだけを掲載しています。',
+    },
+    {
+        icon: '📊',
+        title: '収支シミュレーション',
+        desc: 'その空き家を活用した場合の収入・支出の見込みを、5年分のグラフで確認できます。',
+    },
+    {
+        icon: '🎨',
+        title: '活用イメージ生成（AI画像）',
+        desc: '「どんな用途で」「どんな雰囲気で」活用したいかを入力すると、その空き家に合わせたAI画像を生成します。※現在調整中の機能のため、生成に時間がかかったり失敗したりすることがあります。',
+    },
+];
 
 function initUsageGuideModal() {
     const modal = document.getElementById('usageGuideModal');
     const openBtn = document.getElementById('usageGuideOpenBtn');
     const closeBtn = document.getElementById('usageGuideCloseBtn');
-    const startBtn = document.getElementById('usageGuideStartBtn');
-    if (!modal) return;
+    const skipBtn = document.getElementById('usageGuideSkipBtn');
+    const backBtn = document.getElementById('usageGuideBackBtn');
+    const nextBtn = document.getElementById('usageGuideNextBtn');
+    const iconEl = document.getElementById('usageGuideStepIcon');
+    const titleEl = document.getElementById('usageGuideStepTitle');
+    const descEl = document.getElementById('usageGuideStepDesc');
+    const dotsEl = document.getElementById('usageGuideDots');
+    if (!modal || !dotsEl) return;
+
+    let currentStep = 0;
+
+    // ドットを生成(クリックで該当ステップへジャンプできる)
+    dotsEl.innerHTML = '';
+    USAGE_GUIDE_STEPS.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'usage-guide-dot';
+        dot.setAttribute('aria-label', `${i + 1}枚目へ`);
+        dot.addEventListener('click', () => renderStep(i));
+        dotsEl.appendChild(dot);
+    });
+
+    function renderStep(i) {
+        currentStep = Math.max(0, Math.min(i, USAGE_GUIDE_STEPS.length - 1));
+        const step = USAGE_GUIDE_STEPS[currentStep];
+        iconEl.textContent = step.icon;
+        titleEl.textContent = step.title;
+        descEl.textContent = step.desc;
+
+        Array.from(dotsEl.children).forEach((dot, i2) => {
+            dot.classList.toggle('usage-guide-dot--active', i2 === currentStep);
+        });
+
+        backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+        const isLast = currentStep === USAGE_GUIDE_STEPS.length - 1;
+        nextBtn.textContent = isLast ? 'はじめる' : '次へ';
+    }
 
     function openModal() {
+        renderStep(0);
         modal.style.display = 'flex';
     }
 
@@ -106,7 +166,17 @@ function initUsageGuideModal() {
 
     if (openBtn) openBtn.addEventListener('click', openModal);
     if (closeBtn) closeBtn.addEventListener('click', () => closeModal(true));
-    if (startBtn) startBtn.addEventListener('click', () => closeModal(true));
+    if (skipBtn) skipBtn.addEventListener('click', () => closeModal(true));
+    if (backBtn) backBtn.addEventListener('click', () => renderStep(currentStep - 1));
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentStep === USAGE_GUIDE_STEPS.length - 1) {
+                closeModal(true);
+            } else {
+                renderStep(currentStep + 1);
+            }
+        });
+    }
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(true);
     });

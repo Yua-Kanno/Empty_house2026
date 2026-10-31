@@ -151,3 +151,25 @@ option {
 @keyframes image-gen-spin {
     to { transform: rotate(360deg); }
 }
+
+/* 使い方ガイドモーダルのステップドット */
+.usage-guide-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--line);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.usage-guide-dot:hover {
+    background-color: #D1C9B8;
+}
+
+.usage-guide-dot--active {
+    background-color: var(--gold);
+    transform: scale(1.3);
+}
+

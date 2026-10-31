@@ -146,49 +146,33 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <!-- 使い方ガイドモーダル -->
+    <!-- 使い方ガイドモーダル(1枚ずつめくるステップ形式) -->
     <div id="usageGuideModal" style="display:none; z-index:999999;" class="fixed inset-0 bg-[#22344B]/50 backdrop-blur-sm items-center justify-center p-4">
-      <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-1">
-          <h3 class="text-base font-serif-jp font-bold text-[#22344B]">🏠 空き家AIプランナーの使い方</h3>
-          <button id="usageGuideCloseBtn" type="button" class="text-[#5C7A99] hover:text-[#22344B] text-xl leading-none">&times;</button>
-        </div>
-        <p class="text-xs text-[#5C7A99] mb-4">4つのステップで、空き家の情報を調べたり、活用イメージを膨らませたりできます。</p>
-
-        <div class="space-y-4">
-          <div class="flex gap-3">
-            <div class="shrink-0 w-9 h-9 rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-base">📍</div>
-            <div>
-              <p class="text-sm font-bold text-[#22344B] mb-0.5">1. 地図・物件の見方</p>
-              <p class="text-xs text-[#5C7A99] leading-relaxed">エリアを絞り込んで地図上のピンや物件カードをクリックすると、その空き家の詳しい情報が表示されます。</p>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="shrink-0 w-9 h-9 rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-base">💰</div>
-            <div>
-              <p class="text-sm font-bold text-[#22344B] mb-0.5">2. 補助金情報の見方</p>
-              <p class="text-xs text-[#5C7A99] leading-relaxed">選んだ物件で使える可能性のある補助金・支援制度を表示します。公式ページで内容を確認できるものだけを掲載しています。</p>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="shrink-0 w-9 h-9 rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-base">📊</div>
-            <div>
-              <p class="text-sm font-bold text-[#22344B] mb-0.5">3. 収支シミュレーション</p>
-              <p class="text-xs text-[#5C7A99] leading-relaxed">その空き家を活用した場合の収入・支出の見込みを、5年分のグラフで確認できます。</p>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="shrink-0 w-9 h-9 rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-base">🎨</div>
-            <div>
-              <p class="text-sm font-bold text-[#22344B] mb-0.5">4. 活用イメージ生成（AI画像）</p>
-              <p class="text-xs text-[#5C7A99] leading-relaxed">「どんな用途で」「どんな雰囲気で」活用したいかを入力すると、その空き家に合わせたAI画像を生成します。※現在調整中の機能のため、生成に時間がかかったり失敗したりすることがあります。</p>
-            </div>
+      <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-sm font-serif-jp font-bold text-[#22344B]">🏠 使い方ガイド</h3>
+          <div class="flex items-center gap-3">
+            <button id="usageGuideSkipBtn" type="button" class="text-xs text-[#5C7A99] hover:text-[#22344B] underline">スキップ</button>
+            <button id="usageGuideCloseBtn" type="button" class="text-[#5C7A99] hover:text-[#22344B] text-xl leading-none">&times;</button>
           </div>
         </div>
 
-        <button id="usageGuideStartBtn" type="button" class="w-full mt-5 bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-2.5 rounded-lg shadow-sm transition text-sm">
-          はじめる
-        </button>
+        <div class="text-center py-3">
+          <div id="usageGuideStepIcon" class="w-16 h-16 mx-auto rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-3xl mb-4">📍</div>
+          <p id="usageGuideStepTitle" class="text-sm font-bold text-[#22344B] mb-2">地図・物件の見方</p>
+          <p id="usageGuideStepDesc" class="text-xs text-[#5C7A99] leading-relaxed px-1">エリアを絞り込んで...</p>
+        </div>
+
+        <div id="usageGuideDots" class="flex justify-center gap-2 mt-4 mb-5"></div>
+
+        <div class="flex items-center gap-3">
+          <button id="usageGuideBackBtn" type="button" class="text-xs text-[#5C7A99] hover:text-[#22344B] border border-[#EFE9DD] px-3 py-2 rounded-lg transition" style="visibility:hidden;">
+            戻る
+          </button>
+          <button id="usageGuideNextBtn" type="button" class="flex-1 bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-2 rounded-lg shadow-sm transition text-sm">
+            次へ
+          </button>
+        </div>
       </div>
     </div>
 
