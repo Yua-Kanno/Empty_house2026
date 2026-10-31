@@ -89,9 +89,22 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
 
     try:
         from google import genai  # 遅延import(APIキー無し環境でもモジュール自体は読み込めるように)
+        from google.genai import types as genai_types
 
-        client = genai.Client(api_key=api_key)
+        # SDKのデフォルトは429(レート制限)等を最大5回・最長60秒リトライし続ける設定になっている。
+        # Renderの無料枠はgunicornのワーカータイムアウトがあり、リトライで粘っている間に
+        # ワーカーごと強制終了され、ユーザーには「反応なし」のまま固まって見えてしまう。
+        # ここではリトライを無し(1回のみ)に絞り、全体のHTTPタイムアウトも短くして、
+        # ダメなら数秒〜十数秒で諦めて分かりやすいエラーを返すようにする。
+        client = genai.Client(
+            api_key=api_key,
+            http_options=genai_types.HttpOptions(
+                timeout=25000,  # ミリ秒。gunicornのタイムアウトより十分短く設定。
+                retry_options=genai_types.HttpRetryOptions(attempts=1),  # リトライ無し。
+            ),
+        )
         model = os.environ.get("GEMINI_IMAGE_MODEL", _DEFAULT_IMAGE_MODEL)
+
         interaction = client.interactions.create(model=model, input=full_prompt)
 
         image = getattr(interaction, "output_image", None)
@@ -106,4 +119,11 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
             "prompt_used": full_prompt,
         }
     except Exception as e:  # noqa: BLE001
-        return {"error": f"画像生成中にエラーが発生しました: {e}", "prompt_used": full_prompt}
+        message = str(e)
+        if "429" in message or "Too Many Requests" in message:
+            friendly = "現在リクエストが混み合っています(レート制限)。1分ほど待ってからもう一度お試しください。"
+        elif "403" in message or "Forbidden" in message:
+            friendly = "画像生成への権限がありません(APIキーの設定をご確認ください)。"
+        else:
+            friendly = f"画像生成中にエラーが発生しました: {message}"
+        return {"error": friendly, "prompt_used": full_prompt}
