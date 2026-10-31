@@ -20,7 +20,7 @@ import signal
 from typing import Any
 
 _DEFAULT_IMAGE_MODEL = "gemini-3.1-flash-image"
-_HARD_TIMEOUT_SECONDS = 20  # この秒数を過ぎたら問答無用で諦める(gunicornのタイムアウトより十分短い)
+_HARD_TIMEOUT_SECONDS = 90  # この秒数を過ぎたら問答無用で諦める(gunicornのタイムアウト120秒より十分短い。画像生成自体に数十秒かかることがあるため余裕を持たせる)
 
 
 class _HardTimeout(Exception):
@@ -109,7 +109,7 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
         client = genai.Client(
             api_key=api_key,
             http_options=genai_types.HttpOptions(
-                timeout=25000,  # ミリ秒。gunicornのタイムアウトより十分短く設定。
+                timeout=85000,  # ミリ秒。signal.alarmの強制タイムアウト(90秒)より少し短く設定。
                 retry_options=genai_types.HttpRetryOptions(attempts=1),  # リトライ無し。
             ),
         )
