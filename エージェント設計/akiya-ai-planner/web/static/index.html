@@ -172,6 +172,7 @@
     border-radius: 3px 9px 9px 9px;
   }
   .card.subsidy { border-left: 3px solid var(--accent); }
+  .card.subsidy.empty { border-left: 3px dashed var(--border); opacity: 0.85; }
   .card.continue-chat { border-left: 3px solid var(--accent); }
   .card.cost, .card.income { border-left: 3px solid var(--clay); }
   .card.expandable { cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
@@ -346,11 +347,36 @@
   }
 
   // 補助金カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
+  // 公式ページURL(source_url)が確認できているものだけをここに渡す想定(呼び出し側でフィルタ済み)。
   function buildSubsidyCard(s) {
     const card = el("div", "card subsidy");
-    card.appendChild(el("div", "card-title", s.title));
-    card.appendChild(el("div", "card-row", `${s.provider} / 上限${s.max_amount_man_yen}万円 / ${s.subsidy_rate}`));
+    card.appendChild(el("div", "card-title", s.subsidy_name || "補助金・支援制度"));
+    const area = [s.prefecture, s.municipality].filter(Boolean).join(" ");
+    const amount = s.max_amount != null ? `上限${s.max_amount}万円` : null;
+    const metaBits = [area, amount, s.rate].filter(Boolean);
+    if (metaBits.length > 0) card.appendChild(el("div", "card-row", metaBits.join(" / ")));
     if (s.conditions) card.appendChild(el("div", "card-row", s.conditions));
+    if (s.source_url) {
+      const link = el("a", "card-toggle", "🔗 公式ページで確認する");
+      link.href = s.source_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      card.appendChild(link);
+    }
+    return card;
+  }
+
+  // 公式ページURL(source_url)が確認できている補助金だけを残す。
+  // 確かな情報がある制度だけを表示し、無いものはカードごと出さない(呼び出し側で「記載なし」に切り替える)。
+  function withVerifiedSource(subsidies) {
+    return (subsidies || []).filter((s) => !!s && !!s.source_url);
+  }
+
+  // 確認できる補助金情報が無かった時に表示する「記載なし」カード。
+  function buildNoSubsidyCard() {
+    const card = el("div", "card subsidy empty");
+    card.appendChild(el("div", "card-title", "補助金情報: 記載なし"));
+    card.appendChild(el("div", "card-row", "公式ページで確認できる補助金・支援制度の情報は見つかりませんでした。"));
     return card;
   }
 
@@ -365,13 +391,19 @@
   }
 
   // 診断フォームの一発マッチに紐づく補助金・支援制度をチャットのカードとして表示する。
+  // 公式ページURLで確認できたものだけを表示し、無ければ「記載なし」カードを出す。
   function renderSubsidyCards(container, subsidies) {
     if (!subsidies || subsidies.length === 0) return;
+    const verified = withVerifiedSource(subsidies);
     const wrap = el("div", "cards");
-    for (const s of subsidies) {
-      wrap.appendChild(buildSubsidyCard(s));
+    if (verified.length > 0) {
+      for (const s of verified) {
+        wrap.appendChild(buildSubsidyCard(s));
+      }
+    } else {
+      wrap.appendChild(buildNoSubsidyCard());
     }
-    if (wrap.children.length > 0) container.appendChild(wrap);
+    container.appendChild(wrap);
   }
 
   // 診断の一発マッチ結果が気に入らなかった時に、そのままAIとの会話に進めるようにするボタン。
@@ -421,8 +453,13 @@
         wrap.appendChild(card);
       }
       if (tc.name === "search_subsidies" && tc.result && tc.result.results) {
-        for (const s of tc.result.results) {
-          wrap.appendChild(buildSubsidyCard(s));
+        const verified = withVerifiedSource(tc.result.results);
+        if (verified.length > 0) {
+          for (const s of verified) {
+            wrap.appendChild(buildSubsidyCard(s));
+          }
+        } else if (tc.result.results.length > 0) {
+          wrap.appendChild(buildNoSubsidyCard());
         }
       }
       if (tc.name === "generate_shop_image" && tc.result) {
@@ -558,9 +595,12 @@
       renderAkiyaCards(bubbleContainer, quickMatchResults);
 
       if (quickMatchSubsidies.length > 0) {
+        const verifiedQuickMatchSubsidies = withVerifiedSource(quickMatchSubsidies);
         const subsidyBubbleContainer = appendMessage(
           "agent",
-          "このエリアだと、こんな補助金・支援制度も使えるかもしれません。"
+          verifiedQuickMatchSubsidies.length > 0
+            ? "このエリアだと、こんな補助金・支援制度も使えるかもしれません。"
+            : "このエリアの補助金・支援制度について確認しましたが、公式ページで確認できる情報は見つかりませんでした。"
         ).parentElement;
         renderSubsidyCards(subsidyBubbleContainer, quickMatchSubsidies);
       }
