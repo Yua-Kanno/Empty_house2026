@@ -70,12 +70,57 @@ document.addEventListener("DOMContentLoaded", () => {
     initMap();
     fetchProperties();
     initImageGenModal();
+    initUsageGuideModal();
 
     const prefSelect = document.getElementById('prefSelect');
     if (prefSelect) {
         prefSelect.addEventListener('change', (e) => filterProperties(e.target.value));
     }
 });
+
+// 使い方ガイドモーダル：初回訪問時のみ自動表示し、一度閉じたら
+// localStorageに記録して次回以降は出さない(ヘッダーの「使い方」ボタンでいつでも再表示可能)。
+const USAGE_GUIDE_SEEN_KEY = 'akiya_usage_guide_seen_v1';
+
+function initUsageGuideModal() {
+    const modal = document.getElementById('usageGuideModal');
+    const openBtn = document.getElementById('usageGuideOpenBtn');
+    const closeBtn = document.getElementById('usageGuideCloseBtn');
+    const startBtn = document.getElementById('usageGuideStartBtn');
+    if (!modal) return;
+
+    function openModal() {
+        modal.style.display = 'flex';
+    }
+
+    function closeModal(markSeen) {
+        modal.style.display = 'none';
+        if (markSeen) {
+            try {
+                localStorage.setItem(USAGE_GUIDE_SEEN_KEY, '1');
+            } catch (e) {
+                // localStorageが使えない環境でも致命的にはしない
+            }
+        }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', () => closeModal(true));
+    if (startBtn) startBtn.addEventListener('click', () => closeModal(true));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(true);
+    });
+
+    let alreadySeen = false;
+    try {
+        alreadySeen = localStorage.getItem(USAGE_GUIDE_SEEN_KEY) === '1';
+    } catch (e) {
+        alreadySeen = false;
+    }
+    if (!alreadySeen) {
+        openModal();
+    }
+}
 
 function initMap() {
     map = L.map('map', {
