@@ -88,6 +88,9 @@
                         <span id="detailUsage" class="font-bold text-[#22344B]">-</span>
                     </div>
                 </div>
+                <button id="generateImageBtn" type="button" class="w-full mt-3 pt-3 border-t border-[#EFE9DD] bg-transparent hover:bg-[#EFE9DD] text-[#22344B] font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-2 text-xs">
+                    <span>🎨</span> この空き家の活用イメージを生成する
+                </button>
             </div>
         </section>
 
@@ -140,6 +143,69 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <!-- 活用イメージ生成モーダル -->
+    <div id="imageGenModal" style="display:none;" class="fixed inset-0 bg-[#22344B]/50 backdrop-blur-sm items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-serif-jp font-bold text-[#22344B]">🎨 活用イメージを生成</h3>
+          <button id="imageGenCloseBtn" type="button" class="text-[#5C7A99] hover:text-[#22344B] text-xl leading-none">&times;</button>
+        </div>
+        <p id="imageGenHouseName" class="text-xs text-[#5C7A99] mb-3">-</p>
+
+        <div id="imageGenForm" class="space-y-3">
+          <div>
+            <label class="text-xs font-bold text-[#22344B] block mb-1">どんな用途で使いたいですか？</label>
+            <input id="imageGenUseType" list="imageGenUseTypeOptions" type="text" placeholder="例: カフェ、ゲストハウス、アトリエ、二拠点居住..." class="input-field w-full p-2 text-sm bg-[#FBF9F4] border border-[#EFE9DD] rounded focus:outline-none">
+            <datalist id="imageGenUseTypeOptions">
+              <option value="カフェ"></option>
+              <option value="ゲストハウス・民泊"></option>
+              <option value="シェアハウス"></option>
+              <option value="古民家カフェ"></option>
+              <option value="アトリエ・工房"></option>
+              <option value="ギャラリー"></option>
+              <option value="コワーキングスペース"></option>
+              <option value="二拠点居住用の別荘"></option>
+              <option value="セカンドハウス"></option>
+              <option value="民泊併用の自宅"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-[#22344B] block mb-1">雰囲気・テイスト（任意）</label>
+            <input id="imageGenMood" list="imageGenMoodOptions" type="text" placeholder="例: 北欧風ナチュラル、和モダン、レトロ可愛い..." class="input-field w-full p-2 text-sm bg-[#FBF9F4] border border-[#EFE9DD] rounded focus:outline-none">
+            <datalist id="imageGenMoodOptions">
+              <option value="北欧風ナチュラル"></option>
+              <option value="和モダン"></option>
+              <option value="レトロ可愛い"></option>
+              <option value="ミニマル・シンプル"></option>
+              <option value="古民家風・落ち着いた雰囲気"></option>
+              <option value="ポップでカラフル"></option>
+            </datalist>
+          </div>
+          <button id="imageGenSubmitBtn" type="button" class="w-full bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-2.5 rounded-lg shadow-sm transition text-sm">
+            生成する
+          </button>
+        </div>
+
+        <div id="imageGenLoading" style="display:none;" class="py-10 text-center">
+          <div class="image-gen-spinner mx-auto mb-3"></div>
+          <p class="text-xs text-[#5C7A99]">画像を生成しています…（20〜30秒ほどかかります）</p>
+        </div>
+
+        <div id="imageGenResult" style="display:none;">
+          <img id="imageGenResultImg" class="w-full rounded-lg border border-[#EFE9DD] mb-3" alt="活用イメージ">
+          <div class="flex gap-2">
+            <a id="imageGenDownloadLink" download="akiya-image.png" class="flex-1 text-center bg-[#5F7350] hover:bg-[#4a5a3e] text-white text-xs font-bold py-2 rounded-lg transition">💾 画像を保存</a>
+            <button id="imageGenRetryBtn" type="button" class="flex-1 bg-[#FBF9F4] hover:bg-[#EFE9DD] text-[#22344B] text-xs font-bold py-2 rounded-lg border border-[#EFE9DD] transition">🔁 別パターンを試す</button>
+          </div>
+        </div>
+
+        <div id="imageGenError" style="display:none;" class="py-4 text-center">
+          <p class="text-xs text-rose-700" id="imageGenErrorText">画像を生成できませんでした。</p>
+          <button id="imageGenErrorRetryBtn" type="button" class="mt-2 text-xs text-[#5C7A99] underline">もう一度試す</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Main JS -->
     <script src="script.js"></script>
 </body>

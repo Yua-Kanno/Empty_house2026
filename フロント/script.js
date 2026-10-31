@@ -2,6 +2,7 @@ let map, chartInstance;
 let propertyData = [];
 let selectedMarker = null;
 let defaultMarkersGroup = null;
+let currentHouse = null; // 「活用イメージを生成」モーダルから使う、現在選択中の物件
 
 const API_BASE_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:8080' : '';
 const CHAT_URL = "https://empty-house2026.onrender.com/diagnosis";
@@ -68,6 +69,7 @@ const AMENITY_CONFIG = {
 document.addEventListener("DOMContentLoaded", () => {
     initMap();
     fetchProperties();
+    initImageGenModal();
 
     const prefSelect = document.getElementById('prefSelect');
     if (prefSelect) {
@@ -292,6 +294,8 @@ function updateSelection(selectedId) {
     const house = propertyData.find(h => String(h.global_id) === String(selectedId));
     if (!house) return;
 
+    currentHouse = house;
+
     document.querySelectorAll('.prop-card').forEach(card => {
         if (String(card.dataset.id) === String(selectedId)) {
             card.classList.add('active');
@@ -325,6 +329,7 @@ function updateSelection(selectedId) {
 }
 
 function clearDetail() {
+    currentHouse = null;
     document.getElementById('detailName').textContent = '物件を選択してください';
     document.getElementById('detailCost').textContent = '-';
     document.getElementById('detailUsage').textContent = '-';
@@ -637,6 +642,96 @@ function classifyAmenityElement(tags) {
     if (tags.railway === 'station') return 'station';
     if (tags.amenity === 'hospital') return 'hospital';
     return null;
+}
+
+// 空き家の「活用イメージ」生成モーダル(選んだ物件 x 用途 x 雰囲気で画像を生成する)。
+function initImageGenModal() {
+    const modal = document.getElementById('imageGenModal');
+    const openBtn = document.getElementById('generateImageBtn');
+    if (!modal || !openBtn) return;
+
+    const closeBtn = document.getElementById('imageGenCloseBtn');
+    const submitBtn = document.getElementById('imageGenSubmitBtn');
+    const retryBtn = document.getElementById('imageGenRetryBtn');
+    const errorRetryBtn = document.getElementById('imageGenErrorRetryBtn');
+    const formEl = document.getElementById('imageGenForm');
+    const loadingEl = document.getElementById('imageGenLoading');
+    const resultEl = document.getElementById('imageGenResult');
+    const errorEl = document.getElementById('imageGenError');
+    const houseNameEl = document.getElementById('imageGenHouseName');
+    const useTypeInput = document.getElementById('imageGenUseType');
+    const moodInput = document.getElementById('imageGenMood');
+
+    function showStep(step) {
+        formEl.style.display = step === 'form' ? 'block' : 'none';
+        loadingEl.style.display = step === 'loading' ? 'block' : 'none';
+        resultEl.style.display = step === 'result' ? 'block' : 'none';
+        errorEl.style.display = step === 'error' ? 'block' : 'none';
+    }
+
+    function openModal() {
+        if (!currentHouse) {
+            alert('物件を選択してください');
+            return;
+        }
+        houseNameEl.textContent = currentHouse.name || currentHouse.title || '選択中の物件';
+        useTypeInput.value = '';
+        moodInput.value = '';
+        showStep('form');
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    async function submitGenerate() {
+        const useType = (useTypeInput.value || '').trim();
+        if (!useType) {
+            alert('どんな用途で使いたいか入力してください');
+            return;
+        }
+        if (!currentHouse) {
+            closeModal();
+            return;
+        }
+        const mood = (moodInput.value || '').trim();
+        showStep('loading');
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/generate-house-image`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: currentHouse.global_id, use_type: useType, mood }),
+            });
+            const data = await res.json();
+            if (!res.ok || data.error || !data.image_base64) {
+                document.getElementById('imageGenErrorText').textContent =
+                    (data && data.error) || '画像を生成できませんでした。';
+                showStep('error');
+                return;
+            }
+            const dataUrl = `data:${data.mime_type || 'image/png'};base64,${data.image_base64}`;
+            document.getElementById('imageGenResultImg').src = dataUrl;
+            const downloadLink = document.getElementById('imageGenDownloadLink');
+            downloadLink.href = dataUrl;
+            downloadLink.download = `${currentHouse.name || currentHouse.title || 'akiya'}_${useType}.png`;
+            showStep('result');
+        } catch (err) {
+            document.getElementById('imageGenErrorText').textContent =
+                '通信エラーが発生しました。もう一度お試しください。';
+            showStep('error');
+        }
+    }
+
+    openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    if (submitBtn) submitBtn.addEventListener('click', submitGenerate);
+    if (retryBtn) retryBtn.addEventListener('click', () => showStep('form'));
+    if (errorRetryBtn) errorRetryBtn.addEventListener('click', () => showStep('form'));
 }
 
 function downloadPDF() {

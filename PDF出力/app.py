@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from flask import Flask, Response, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import generate_proposal
+import image_gen
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(CURRENT_DIR)
@@ -246,6 +247,36 @@ def get_place_photo():
         print(f"Places photo error: {e}")
         return '', 502
     return Response(response.content, mimetype=response.headers.get('Content-Type', 'image/jpeg'))
+
+
+# 空き家の「活用イメージ」画像生成API(Geminiの画像生成モデルをサーバー側で呼び出す)。
+# 選んだ物件の実データ(構造・築年・間取り等)と、ユーザーが指定した用途・雰囲気を
+# プロンプトに組み込むことで、物件ごと・用途ごとに異なる画像を生成する。
+@app.route('/api/generate-house-image', methods=['POST'])
+def generate_house_image_api():
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        house_id = data.get('id')
+        use_type = (data.get('use_type') or '').strip()
+        mood = (data.get('mood') or '').strip() or None
+
+        if not house_id or not use_type:
+            return jsonify({"error": "id と use_type は必須です。"}), 400
+
+        properties = load_properties_from_database()
+        target = next((p for p in properties if str(p.get('global_id')) == str(house_id)), None)
+        if target is None:
+            return jsonify({"error": "指定された物件が見つかりませんでした。"}), 404
+
+        result = image_gen.generate_house_image(target, use_type, mood)
+        if "error" in result:
+            return jsonify(result), 502
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 
 # PDF生成API
