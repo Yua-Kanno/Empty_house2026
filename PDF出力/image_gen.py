@@ -16,9 +16,19 @@ B担当側の都合でPDF出力アプリとチャットアプリ(akiya-ai-planne
 from __future__ import annotations
 
 import os
+import signal
 from typing import Any
 
 _DEFAULT_IMAGE_MODEL = "gemini-3.1-flash-image"
+_HARD_TIMEOUT_SECONDS = 20  # この秒数を過ぎたら問答無用で諦める(gunicornのタイムアウトより十分短い)
+
+
+class _HardTimeout(Exception):
+    """signal.alarmによる強制タイムアウト用の例外。"""
+
+
+def _raise_hard_timeout(signum, frame):  # noqa: ARG001
+    raise _HardTimeout("画像生成の応答がタイムアウトしました。")
 
 
 def _describe_house(house: dict[str, Any]) -> str:
@@ -105,7 +115,20 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
         )
         model = os.environ.get("GEMINI_IMAGE_MODEL", _DEFAULT_IMAGE_MODEL)
 
-        interaction = client.interactions.create(model=model, input=full_prompt)
+        # google-genai SDKのhttp_options.timeoutが環境によっては効かず、呼び出しが
+        # 長時間ブロックしてgunicornのワーカーごとSIGKILLされる(=無反応のまま固まる)
+        # ことが確認できたため、signal.alarmでプロセスレベルの強制タイムアウトを設ける。
+        # (gunicornの同期ワーカーはリクエストごとにメインスレッドで処理するため安全に使える)
+        has_alarm = hasattr(signal, "SIGALRM")
+        if has_alarm:
+            previous_handler = signal.signal(signal.SIGALRM, _raise_hard_timeout)
+            signal.alarm(_HARD_TIMEOUT_SECONDS)
+        try:
+            interaction = client.interactions.create(model=model, input=full_prompt)
+        finally:
+            if has_alarm:
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, previous_handler)
 
         image = getattr(interaction, "output_image", None)
         if image is not None and getattr(image, "data", None):
@@ -116,6 +139,11 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
             }
         return {
             "error": "画像を生成できませんでした(モデルから画像が返されませんでした)。",
+            "prompt_used": full_prompt,
+        }
+    except _HardTimeout:
+        return {
+            "error": "画像生成が時間内に完了しませんでした(タイムアウト)。しばらく待ってからもう一度お試しください。",
             "prompt_used": full_prompt,
         }
     except Exception as e:  # noqa: BLE001
