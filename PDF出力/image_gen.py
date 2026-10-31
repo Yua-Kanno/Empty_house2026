@@ -17,7 +17,14 @@ from __future__ import annotations
 
 import os
 import signal
+import sys
+import time
 from typing import Any
+
+
+def _log(message: str) -> None:
+    """Renderのログにタイムスタンプ付きで即座に出す(gunicornのバッファリング対策でflush)。"""
+    print(f"[image_gen] {time.strftime('%H:%M:%S')} {message}", file=sys.stderr, flush=True)
 
 _DEFAULT_IMAGE_MODEL = "gemini-3.1-flash-image"
 _HARD_TIMEOUT_SECONDS = 90  # この秒数を過ぎたら問答無用で諦める(gunicornのタイムアウト120秒より十分短い。画像生成自体に数十秒かかることがあるため余裕を持たせる)
@@ -81,6 +88,8 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
         成功時: {"image_base64": str, "mime_type": str, "prompt_used": str}
         失敗時: {"error": str, "prompt_used": str}
     """
+    _log(f"generate_house_image呼び出し house_id={house.get('global_id') or house.get('id')} use_type={use_type} mood={mood}")
+
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return {"error": "GEMINI_API_KEY が設定されていないため、画像を生成できません。"}
@@ -123,8 +132,11 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
         if has_alarm:
             previous_handler = signal.signal(signal.SIGALRM, _raise_hard_timeout)
             signal.alarm(_HARD_TIMEOUT_SECONDS)
+        _log(f"client.interactions.create() 呼び出し開始 model={model}")
+        _t0 = time.monotonic()
         try:
             interaction = client.interactions.create(model=model, input=full_prompt)
+            _log(f"client.interactions.create() 呼び出し完了 経過={time.monotonic() - _t0:.1f}秒")
         finally:
             if has_alarm:
                 signal.alarm(0)
@@ -132,6 +144,7 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
 
         image = getattr(interaction, "output_image", None)
         if image is not None and getattr(image, "data", None):
+            _log("画像データ取得成功、レスポンス返却")
             return {
                 "image_base64": image.data,
                 "mime_type": getattr(image, "mime_type", None) or "image/png",
@@ -142,11 +155,13 @@ def generate_house_image(house: dict[str, Any], use_type: str, mood: str | None 
             "prompt_used": full_prompt,
         }
     except _HardTimeout:
+        _log(f"強制タイムアウト発火({_HARD_TIMEOUT_SECONDS}秒経過)")
         return {
             "error": "画像生成が時間内に完了しませんでした(タイムアウト)。しばらく待ってからもう一度お試しください。",
             "prompt_used": full_prompt,
         }
     except Exception as e:  # noqa: BLE001
+        _log(f"例外発生: {type(e).__name__}: {e}")
         message = str(e)
         if "429" in message or "Too Many Requests" in message:
             friendly = "現在リクエストが混み合っています(レート制限)。1分ほど待ってからもう一度お試しください。"
