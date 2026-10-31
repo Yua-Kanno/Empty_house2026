@@ -3011,7 +3011,7 @@
     "max_amount": 500000,
     "rate": "1/2",
     "conditions": "町が指定する危険空き家等の解体・撤去・処分費が対象。",
-    "source_url": null
+    "source_url": "https://www.pref.yamanashi.jp/documents/65976/akiyaseido_r5.pdf"
   },
   {
     "id": 275,
@@ -4419,7 +4419,7 @@
     "max_amount": 2000000,
     "rate": "対象経費の3分の2以内",
     "conditions": "移住希望者と賃貸借契約を結んだ空き家所有者が、その空き家を改修する場合が対象。",
-    "source_url": null
+    "source_url": "https://www1.g-reiki.net/minamiboso/reiki_honbun/r361RG00000976.html"
   },
   {
     "id": 403,
