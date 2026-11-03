@@ -18,6 +18,9 @@
     --accent-soft: #e6efe1;
     --clay: #b0603d;
     --clay-soft: #f3e3d8;
+    --gold: #bb9339;
+    --gold-deep: #8a6b1d;
+    --gold-soft: #fbf1da;
     --border: #dcdad3;
     --user-bubble: #3c6e52;
     --user-bubble-text: #fdfbf5;
@@ -171,21 +174,28 @@
     padding: 2px 8px;
     border-radius: 3px 9px 9px 9px;
   }
+  @keyframes osusume-glow {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(187,147,57,0.14), 0 3px 10px rgba(187,147,57,0.22); }
+    50% { box-shadow: 0 0 0 6px rgba(187,147,57,0.22), 0 4px 16px rgba(187,147,57,0.38); }
+  }
   .card.akiya.top-pick {
-    border: 1.5px solid var(--clay);
-    background: linear-gradient(180deg, #fff8ef 0%, var(--panel) 55%);
-    box-shadow: 0 2px 6px rgba(176,96,61,0.18);
+    border: 2px solid var(--gold);
+    background: linear-gradient(180deg, var(--gold-soft) 0%, var(--panel) 55%);
+    animation: osusume-glow 2.6s ease-in-out infinite;
   }
   .osusume-badge {
-    display: inline-block;
-    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
     font-weight: 700;
-    color: #7a4128;
-    background: var(--clay-soft);
-    border: 1px solid var(--clay);
-    padding: 2px 10px;
-    border-radius: 3px 10px 10px 10px;
-    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+    padding: 4px 13px;
+    border-radius: 3px 12px 12px 12px;
+    margin-bottom: 7px;
+    box-shadow: 0 1px 3px rgba(138,107,29,0.4);
   }
   .card.subsidy { border-left: 3px solid var(--accent); }
   .card.subsidy.empty { border-left: 3px dashed var(--border); opacity: 0.85; }
