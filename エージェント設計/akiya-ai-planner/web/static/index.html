@@ -171,6 +171,22 @@
     padding: 2px 8px;
     border-radius: 3px 9px 9px 9px;
   }
+  .card.akiya.top-pick {
+    border: 1.5px solid var(--clay);
+    background: linear-gradient(180deg, #fff8ef 0%, var(--panel) 55%);
+    box-shadow: 0 2px 6px rgba(176,96,61,0.18);
+  }
+  .osusume-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #7a4128;
+    background: var(--clay-soft);
+    border: 1px solid var(--clay);
+    padding: 2px 10px;
+    border-radius: 3px 10px 10px 10px;
+    margin-bottom: 6px;
+  }
   .card.subsidy { border-left: 3px solid var(--accent); }
   .card.subsidy.empty { border-left: 3px dashed var(--border); opacity: 0.85; }
   .card.continue-chat { border-left: 3px solid var(--accent); }
@@ -303,11 +319,18 @@
   }
 
   // 空き家カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
-  function buildAkiyaCard(p) {
-    const card = el("div", "card akiya expandable");
+  function buildAkiyaCard(p, isTopPick) {
+    const card = el("div", "card akiya expandable" + (isTopPick ? " top-pick" : ""));
 
-    // 診断のクイックマッチ結果には、なぜこの物件がマッチしたかの理由タグ(エリア一致・予算内など)が
-    // 付いてくることがある。あれば見出しの上に小さなタグとして表示する。
+    // 診断の答え(性格・住みたい環境・エリア・予算など)と特によく合っている1〜2件には、
+    // 「✨おすすめ✨」バッジを付けて目立たせる(pickTopPickIdsで判定)。
+    if (isTopPick) {
+      card.appendChild(el("div", "osusume-badge", "✨おすすめ✨"));
+    }
+
+    // 診断のクイックマッチ結果・Gemini経由の検索結果のどちらにも、なぜこの物件がマッチしたかの
+    // 理由タグ(エリア一致・予算内・性格/環境の一致など)が付いてくることがある。
+    // あれば見出しの上に小さなタグとして表示する。
     if (p.match_reasons && p.match_reasons.length > 0) {
       const tagRow = el("div", "match-tags");
       for (const reason of p.match_reasons) {
@@ -344,6 +367,41 @@
     }
 
     return card;
+  }
+
+  // 複数の空き家候補の中から、診断の答え(性格・住みたい環境・用途など)と特によく合っている
+  // (match_scoreが最も高い)1〜2件を「おすすめ」として選ぶ。エリア・予算などのハード条件
+  // だけしか一致しておらずスコアが0(=特に際立った一致なし)の場合は、誰も「おすすめ」にしない。
+  function pickTopPickIds(results) {
+    const withScore = (results || []).filter((p) => typeof p.match_score === "number");
+    if (withScore.length === 0) return new Set();
+    const maxScore = Math.max(...withScore.map((p) => p.match_score));
+    if (maxScore <= 0) return new Set();
+    const topIds = new Set();
+    for (const p of results) {
+      if (topIds.size >= 2) break;
+      if (p.match_score === maxScore) topIds.add(p.id);
+    }
+    return topIds;
+  }
+
+  // Gemini経由の検索結果(search_akiyaツール呼び出し)には、診断フォームの一発マッチのような
+  // match_reasonsが付いてこない。そのツール呼び出し時の引数(area・予算・用途など)と、
+  // 物件のmatched_traits(性格・住みたい環境の一致項目)から、同じ形式のタグを組み立てる。
+  function buildMatchReasonsFromToolArgs(p, args) {
+    const reasons = [];
+    if (args && args.area) reasons.push(`エリア「${args.area}」に一致`);
+    const price = p.price_man_yen;
+    if (args && args.max_budget_man_yen != null && price != null && price <= args.max_budget_man_yen) {
+      reasons.push("予算内");
+    }
+    if (args && args.use_type && p.features && p.features.includes(args.use_type)) {
+      reasons.push(`${args.use_type}向け`);
+    }
+    for (const trait of (p.matched_traits || [])) {
+      reasons.push(`「${trait}」に合う`);
+    }
+    return reasons;
   }
 
   // 補助金カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
@@ -383,9 +441,10 @@
   // 診断フォームの一発マッチ結果(Geminiを介さない)をチャットのカードとして表示する。
   function renderAkiyaCards(container, results) {
     if (!results || results.length === 0) return;
+    const topPickIds = pickTopPickIds(results);
     const wrap = el("div", "cards");
     for (const p of results) {
-      wrap.appendChild(buildAkiyaCard(p));
+      wrap.appendChild(buildAkiyaCard(p, topPickIds.has(p.id)));
     }
     if (wrap.children.length > 0) container.appendChild(wrap);
   }
@@ -430,8 +489,10 @@
 
     for (const tc of toolCalls) {
       if (tc.name === "search_akiya" && tc.result && tc.result.results) {
+        const topPickIds = pickTopPickIds(tc.result.results);
         for (const p of tc.result.results) {
-          wrap.appendChild(buildAkiyaCard(p));
+          if (!p.match_reasons) p.match_reasons = buildMatchReasonsFromToolArgs(p, tc.args);
+          wrap.appendChild(buildAkiyaCard(p, topPickIds.has(p.id)));
         }
       }
       if (tc.name === "estimate_renovation_cost" && tc.result) {
