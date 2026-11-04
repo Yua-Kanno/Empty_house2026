@@ -187,7 +187,20 @@ function initUsageGuideModal() {
     } catch (e) {
         alreadySeen = false;
     }
-    if (!alreadySeen) {
+
+    // チャット側から「この物件をマップで見る」等のリンクで物件を指定して直接入ってきた場合
+    // (?property_id=... や ?property_ids=...)は、まだ何も見ていない本来のトップページでは
+    // ないので、ここでは自動表示しない(見たことにもしないので、後で本当のトップページに
+    // アクセスした時にはちゃんと表示される)。ヘッダーの「❓ 使い方」ボタンからはいつでも見られる。
+    let cameFromPropertyLink = false;
+    try {
+        const params = new URLSearchParams(window.location.search);
+        cameFromPropertyLink = !!(params.get('property_id') || params.get('property_ids'));
+    } catch (e) {
+        cameFromPropertyLink = false;
+    }
+
+    if (!alreadySeen && !cameFromPropertyLink) {
         openModal();
     }
 }
