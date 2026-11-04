@@ -486,8 +486,10 @@ async function updateStreetView(lat, lng) {
     const wrap = document.getElementById('houseStreetViewWrap');
     const img = document.getElementById('houseStreetViewImg');
     const placeholder = document.getElementById('houseStreetViewPlaceholder');
+    const idle = document.getElementById('houseStreetViewIdle');
     const requestId = ++streetViewRequestId;
 
+    if (idle) idle.style.display = 'none';
     if (wrap) wrap.style.display = 'none';
     if (placeholder) placeholder.style.display = 'none';
 
@@ -519,6 +521,8 @@ function clearDetail() {
     if (streetViewWrap) streetViewWrap.style.display = 'none';
     const streetViewPlaceholder = document.getElementById('houseStreetViewPlaceholder');
     if (streetViewPlaceholder) streetViewPlaceholder.style.display = 'none';
+    const streetViewIdle = document.getElementById('houseStreetViewIdle');
+    if (streetViewIdle) streetViewIdle.style.display = 'block';
     
     const subsidyList = document.getElementById('subsidyList');
     if (subsidyList) subsidyList.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';

@@ -81,16 +81,6 @@
                     <span id="detailAddress" class="text-xs text-[#5C7A99]">所在地: -</span>
                 </div>
                 <h3 class="text-base font-serif-jp font-bold text-[#22344B] mb-2" id="detailName">物件を選択してください</h3>
-
-                <!-- 空き家の場所のストリートビュー写真(実物件の写真データが無いため、場所の様子の参考として表示) -->
-                <div id="houseStreetViewWrap" class="mb-3" style="display:none;">
-                    <img id="houseStreetViewImg" class="w-full h-[150px] object-cover rounded-lg border border-[#EFE9DD]" alt="物件周辺のストリートビュー">
-                    <p class="text-[10px] text-[#5C7A99] mt-1">📷 Googleストリートビュー(周辺の様子です。建物そのものが写っているとは限りません)</p>
-                </div>
-                <div id="houseStreetViewPlaceholder" class="mb-3 p-3 bg-white rounded-lg border border-dashed border-[#EFE9DD] text-center text-[11px] text-[#5C7A99]" style="display:none;">
-                    🏞️ この場所のストリートビューは見つかりませんでした
-                </div>
-
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="p-2 bg-white rounded border border-[#EFE9DD]">
                         <span class="text-[#5C7A99] block text-[10px]">改修コスト目安</span>
@@ -119,14 +109,32 @@
                 </div>
             </div>
 
-            <!-- 利用できる補助金 -->
-            <div class="panel p-4 flex-1 bg-white rounded-lg border border-[#EFE9DD] shadow-sm flex flex-col">
+            <!-- 利用できる補助金(件数が少ない時に枠だけ余って間延びしないよう、
+                 flex-1をやめて中身の高さに合わせる。最大高さも少し低くした) -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm flex flex-col">
                 <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B] mb-3">
                     <span>💰</span> 利用できる補助金
                 </h2>
-                <div id="subsidyList" class="space-y-2 overflow-y-auto max-h-[220px] flex-1 pr-1">
+                <div id="subsidyList" class="space-y-2 overflow-y-auto max-h-[160px] pr-1">
                     <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
                 </div>
+            </div>
+
+            <!-- 空き家の場所の様子(ストリートビュー)。実物件の写真データが無いため、
+                 場所の参考イメージとして表示する(選択中物件カードだと見つけにくかったため、
+                 補助金枠を縮めてできたスペースにここで表示するようにした) -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B] mb-3">
+                    <span>📷</span> 場所の様子(ストリートビュー)
+                </h2>
+                <div id="houseStreetViewWrap" style="display:none;">
+                    <img id="houseStreetViewImg" class="w-full h-[160px] object-cover rounded-lg border border-[#EFE9DD]" alt="物件周辺のストリートビュー">
+                    <p class="text-[10px] text-[#5C7A99] mt-1">周辺の様子です。建物そのものが写っているとは限りません</p>
+                </div>
+                <div id="houseStreetViewPlaceholder" class="p-3 bg-[#FBF9F4] rounded-lg border border-dashed border-[#EFE9DD] text-center text-[11px] text-[#5C7A99]" style="display:none;">
+                    🏞️ この場所のストリートビューは見つかりませんでした
+                </div>
+                <p id="houseStreetViewIdle" class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
             </div>
 
             <!-- 周辺の観光・景観スポット -->
