@@ -1,3 +1,4 @@
+import math
 import os
 import sqlite3
 from io import BytesIO
@@ -106,6 +107,16 @@ def load_subsidies_from_database(municipality):
     return [dict(row) for row in rows]
 
 
+def _haversine_distance_m(lat1, lng1, lat2, lng2):
+    """2点間の距離をメートルで返す(球面近似、簡易版)。空き家からスポットまでの距離表示に使う。"""
+    r = 6371000.0  # 地球の半径(m)
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lng2 - lng1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    return r * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
 def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
     """空き家の緯度経度から近い観光・景観スポットをGoogle Places API (New)で検索する。
 
@@ -161,13 +172,21 @@ def fetch_nearby_sightseeing_spots(lat, lng, radius_m=3000, max_results=8):
                 "https://www.google.com/maps/search/?api=1&query="
                 f"{quote(name)}+{location.get('latitude')},{location.get('longitude')}"
             )
+        spot_lat = location.get("latitude")
+        spot_lng = location.get("longitude")
+        distance_m = (
+            round(_haversine_distance_m(lat, lng, spot_lat, spot_lng))
+            if spot_lat is not None and spot_lng is not None
+            else None
+        )
         spots.append({
             "name": name,
             "rating": place.get("rating"),
             "user_rating_count": place.get("userRatingCount"),
             "address": place.get("formattedAddress"),
-            "lat": location.get("latitude"),
-            "lng": location.get("longitude"),
+            "lat": spot_lat,
+            "lng": spot_lng,
+            "distance_m": distance_m,
             "types": place.get("types", []),
             "photo_url": f"/api/place-photo?name={quote(photo_name, safe='')}" if photo_name else None,
             "maps_url": maps_url,
@@ -245,6 +264,66 @@ def get_place_photo():
         response.raise_for_status()
     except requests.RequestException as e:
         print(f"Places photo error: {e}")
+        return '', 502
+    return Response(response.content, mimetype=response.headers.get('Content-Type', 'image/jpeg'))
+
+
+# 空き家の場所のストリートビュー写真(メタデータ確認)API。
+# 実物件の写真データは収集していないため、代わりにその場所のGoogleストリートビューを使う。
+# 撮影範囲外の場所も多いため、まずmetadata APIで「その地点にストリートビュー画像があるか」
+# だけを確認する(metadata APIは画像取得と違って無料・クオータを消費しない)。
+# 無ければフロント側は「ストリートビューが見つかりませんでした」の表示に切り替える想定。
+@app.route('/api/street-view', methods=['GET'])
+def get_street_view():
+    lat = request.args.get('lat', type=float)
+    lng = request.args.get('lng', type=float)
+    if lat is None or lng is None:
+        return jsonify({"available": False, "note": "lat/lngが指定されていません。"}), 400
+    if not GOOGLE_PLACES_API_KEY:
+        return jsonify({"available": False, "note": "GOOGLE_PLACES_API_KEYが設定されていません。"})
+    try:
+        meta_res = requests.get(
+            "https://maps.googleapis.com/maps/api/streetview/metadata",
+            params={"location": f"{lat},{lng}", "key": GOOGLE_PLACES_API_KEY},
+            timeout=6,
+        )
+        meta = meta_res.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"Street View metadata error: {e}")
+        return jsonify({"available": False, "note": "Street View APIへの通信に失敗しました。"})
+
+    if meta.get("status") != "OK":
+        # "REQUEST_DENIED"(APIキーでStreet View Static APIが有効化されていない等)も
+        # ここに含まれる。エラーにはせず、フロント側は静かに「見つかりませんでした」を表示する。
+        return jsonify({"available": False, "note": meta.get("status")})
+
+    return jsonify({
+        "available": True,
+        "image_url": f"/api/street-view-image?lat={lat}&lng={lng}",
+    })
+
+
+# 上記で存在確認が取れた場合に実際の画像を取得するAPI(APIキーをブラウザに渡さないため中継する)。
+@app.route('/api/street-view-image', methods=['GET'])
+def get_street_view_image():
+    lat = request.args.get('lat', type=float)
+    lng = request.args.get('lng', type=float)
+    if lat is None or lng is None or not GOOGLE_PLACES_API_KEY:
+        return '', 404
+    try:
+        response = requests.get(
+            "https://maps.googleapis.com/maps/api/streetview",
+            params={
+                "size": "640x400",
+                "location": f"{lat},{lng}",
+                "fov": 80,
+                "key": GOOGLE_PLACES_API_KEY,
+            },
+            timeout=8,
+        )
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Street View image error: {e}")
         return '', 502
     return Response(response.content, mimetype=response.headers.get('Content-Type', 'image/jpeg'))
 

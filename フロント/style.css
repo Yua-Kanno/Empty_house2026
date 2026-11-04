@@ -100,26 +100,53 @@ option {
     cursor: pointer;
 }
 
-/* クラスタアイコン */
+/* クラスタアイコン(密集エリアでピンが重なる代わりに件数で丸く集約表示される部分)。
+   数字が見づらいとの声があったため、フォントサイズを上げて3段階とも色分けを明示的に
+   指定する(largeはライブラリのデフォルトCSSのみだと見た目がテーマと合わないオレンジ色
+   になっていたため、ここで専用の色を定義する)。 */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px !important;
+    font-weight: bold;
+}
+
 .marker-cluster-small {
-    background-color: rgba(176, 134, 42, 0.6) !important;
+    background-color: rgba(217, 180, 106, 0.55) !important;
 }
 .marker-cluster-small div {
-    background-color: rgba(176, 134, 42, 0.9) !important;
+    background-color: rgba(176, 134, 42, 0.92) !important;
     color: white !important;
-    font-weight: bold;
 }
 
 .marker-cluster-medium {
-    background-color: rgba(34, 52, 75, 0.6) !important;
+    background-color: rgba(122, 92, 40, 0.5) !important;
 }
 .marker-cluster-medium div {
-    background-color: rgba(34, 52, 75, 0.9) !important;
+    background-color: rgba(122, 92, 40, 0.92) !important;
     color: white !important;
-    font-weight: bold;
 }
 
-/* 周辺施設チェックボックス凡例 */
+.marker-cluster-large {
+    background-color: rgba(34, 52, 75, 0.5) !important;
+}
+.marker-cluster-large div {
+    background-color: rgba(34, 52, 75, 0.92) !important;
+    color: white !important;
+    font-size: 14px !important;
+}
+
+/* 周辺施設チェックボックス凡例・物件の価格帯凡例 */
 .amenity-legend {
     background: rgba(255, 255, 255, 0.92);
     padding: 8px 12px;
@@ -130,14 +157,43 @@ option {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    max-width: 180px;
 }
 
-.amenity-legend label {
+.amenity-legend label,
+.amenity-legend .legend-row {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.amenity-legend label.legend-row {
     cursor: pointer;
 }
+
+.legend-section-title {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--ink-soft);
+    margin-top: 2px;
+}
+
+.legend-divider {
+    border-top: 1px dashed var(--line);
+    margin: 4px 0;
+}
+
+/* 凡例の色スワッチ(丸)。地図上のピンの色と対応させて、凡例だけ見ても
+   どのピンが何を表すかひと目でわかるようにする。 */
+.legend-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
 /* 活用イメージ生成モーダルのローディングスピナー */
 .image-gen-spinner {
     width: 36px;

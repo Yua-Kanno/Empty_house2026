@@ -81,6 +81,16 @@
                     <span id="detailAddress" class="text-xs text-[#5C7A99]">所在地: -</span>
                 </div>
                 <h3 class="text-base font-serif-jp font-bold text-[#22344B] mb-2" id="detailName">物件を選択してください</h3>
+
+                <!-- 空き家の場所のストリートビュー写真(実物件の写真データが無いため、場所の様子の参考として表示) -->
+                <div id="houseStreetViewWrap" class="mb-3" style="display:none;">
+                    <img id="houseStreetViewImg" class="w-full h-[150px] object-cover rounded-lg border border-[#EFE9DD]" alt="物件周辺のストリートビュー">
+                    <p class="text-[10px] text-[#5C7A99] mt-1">📷 Googleストリートビュー(周辺の様子です。建物そのものが写っているとは限りません)</p>
+                </div>
+                <div id="houseStreetViewPlaceholder" class="mb-3 p-3 bg-white rounded-lg border border-dashed border-[#EFE9DD] text-center text-[11px] text-[#5C7A99]" style="display:none;">
+                    🏞️ この場所のストリートビューは見つかりませんでした
+                </div>
+
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     <div class="p-2 bg-white rounded border border-[#EFE9DD]">
                         <span class="text-[#5C7A99] block text-[10px]">改修コスト目安</span>

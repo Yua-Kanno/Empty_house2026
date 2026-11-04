@@ -28,18 +28,39 @@ const SELECTED_HOUSE_ICON = L.divIcon({
     popupAnchor: [0, -36],
 });
 
-// 通常の物件ピン（金）
-const UNSELECTED_HOUSE_ICON = L.divIcon({
-    html: `<div style="background:#B0862A;width:30px;height:30px;border-radius:50% 50% 50% 0;
-                transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
-                box-shadow:0 2px 4px rgba(0,0,0,0.2);border:2px solid white;">
-                <span style="transform:rotate(45deg);font-size:12px;color:white;">🏡</span>
-           </div>`,
-    className: '',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
-    popupAnchor: [0, -26],
-});
+// 通常の物件ピン。価格帯ごとに色を変えて、地図上でパッと見分けられるようにする
+// (全部同じ金色だと選択中かどうか以外で見分けがつかなかったため)。
+// 色は同じ暖色系の濃淡で揃えているので、周辺施設アイコン(緑・青・紫など)とは
+// 混ざらず、かつ「薄い→濃い」で価格の高低が感覚的に伝わるようにしている。
+const PRICE_TIERS = [
+    { key: 'unknown', label: '価格応相談・不明', color: '#9B9690', test: (price) => price === null || price === undefined },
+    { key: 'low', label: '〜300万円', color: '#D9B46A', test: (price) => price < 3000000 },
+    { key: 'mid', label: '300万〜800万円', color: '#B0862A', test: (price) => price < 8000000 },
+    { key: 'high', label: '800万円〜', color: '#7A5C28', test: () => true },
+];
+
+function getPriceTier(price) {
+    const p = (price === null || price === undefined) ? null : Number(price);
+    return PRICE_TIERS.find((tier) => tier.test(p)) || PRICE_TIERS[PRICE_TIERS.length - 1];
+}
+
+const _housePinIconCache = {};
+function getHousePinIcon(color) {
+    if (_housePinIconCache[color]) return _housePinIconCache[color];
+    const icon = L.divIcon({
+        html: `<div style="background:${color};width:30px;height:30px;border-radius:50% 50% 50% 0;
+                    transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+                    box-shadow:0 2px 4px rgba(0,0,0,0.2);border:2px solid white;">
+                    <span style="transform:rotate(45deg);font-size:12px;color:white;">🏡</span>
+               </div>`,
+        className: '',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -26],
+    });
+    _housePinIconCache[color] = icon;
+    return icon;
+}
 
 function createAmenityIcon(iconHtml, color) {
     return L.divIcon({
@@ -56,14 +77,14 @@ function createAmenityIcon(iconHtml, color) {
 }
 
 const AMENITY_CONFIG = {
-    school: { query: 'nwr["amenity"="school"]', icon: createAmenityIcon('🎓', '#B0862A'), symbol: '🎓', label: '学校' },
-    supermarket: { query: 'nwr["shop"="supermarket"]', icon: createAmenityIcon('🛒', '#5F7350'), symbol: '🛒', label: 'スーパー' },
-    station: { query: 'nwr["railway"="station"]', icon: createAmenityIcon('🚃', '#5C7A99'), symbol: '🚃', label: '駅' },
-    hospital: { query: 'nwr["amenity"="hospital"]', icon: createAmenityIcon('🏥', '#954C36'), symbol: '🏥', label: '病院' },
+    school: { query: 'nwr["amenity"="school"]', icon: createAmenityIcon('🎓', '#B0862A'), symbol: '🎓', label: '学校', color: '#B0862A' },
+    supermarket: { query: 'nwr["shop"="supermarket"]', icon: createAmenityIcon('🛒', '#5F7350'), symbol: '🛒', label: 'スーパー', color: '#5F7350' },
+    station: { query: 'nwr["railway"="station"]', icon: createAmenityIcon('🚃', '#5C7A99'), symbol: '🚃', label: '駅', color: '#5C7A99' },
+    hospital: { query: 'nwr["amenity"="hospital"]', icon: createAmenityIcon('🏥', '#954C36'), symbol: '🏥', label: '病院', color: '#954C36' },
     // 観光・景観スポットはOverpass(OSM)ではなくGoogle Places APIから取得するため
     // queryを持たない。initAmenityLayers/addAmenityLegendControlのレイヤー・凡例の
     // 仕組みだけ共用し、取得自体はupdateNearbySightseeingSpots()が行う。
-    sightseeing: { icon: createAmenityIcon('🏞️', '#7A5C99'), symbol: '🏞️', label: '観光・景観' },
+    sightseeing: { icon: createAmenityIcon('🏞️', '#7A5C99'), symbol: '🏞️', label: '観光・景観', color: '#7A5C99' },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -401,8 +422,9 @@ function plotMapMarkers(properties) {
     
     properties.forEach((house) => {
         const coords = getCoordinates(house);
-        const marker = L.marker(coords, { icon: UNSELECTED_HOUSE_ICON });
-        
+        const tier = getPriceTier(house.price);
+        const marker = L.marker(coords, { icon: getHousePinIcon(tier.color) });
+
         marker.on('click', () => {
             updateSelection(house.global_id);
         });
@@ -453,7 +475,37 @@ function updateSelection(selectedId) {
     map.flyTo(coords, 14, { animate: true, duration: 0.9 });
     updateNearbyAmenities(coords[0], coords[1]);
     updateNearbySightseeingSpots(coords[0], coords[1]);
+    updateStreetView(coords[0], coords[1]);
     updateChart(house);
+}
+
+// 空き家の実物件写真データは無いため、代わりにその場所のGoogleストリートビューを表示する
+// (サーバー側でmetadata確認済みのものだけ。無ければ「見つかりませんでした」表示)。
+let streetViewRequestId = 0;
+async function updateStreetView(lat, lng) {
+    const wrap = document.getElementById('houseStreetViewWrap');
+    const img = document.getElementById('houseStreetViewImg');
+    const placeholder = document.getElementById('houseStreetViewPlaceholder');
+    const requestId = ++streetViewRequestId;
+
+    if (wrap) wrap.style.display = 'none';
+    if (placeholder) placeholder.style.display = 'none';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/street-view?lat=${lat}&lng=${lng}`);
+        if (requestId !== streetViewRequestId) return;
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (data.available && data.image_url) {
+            if (img) img.src = `${API_BASE_URL}${data.image_url}`;
+            if (wrap) wrap.style.display = 'block';
+        } else if (placeholder) {
+            placeholder.style.display = 'block';
+        }
+    } catch (err) {
+        if (requestId !== streetViewRequestId) return;
+        if (placeholder) placeholder.style.display = 'block';
+    }
 }
 
 function clearDetail() {
@@ -462,6 +514,11 @@ function clearDetail() {
     document.getElementById('detailCost').textContent = '-';
     document.getElementById('detailUsage').textContent = '-';
     document.getElementById('detailAddress').textContent = '所在地: -';
+
+    const streetViewWrap = document.getElementById('houseStreetViewWrap');
+    if (streetViewWrap) streetViewWrap.style.display = 'none';
+    const streetViewPlaceholder = document.getElementById('houseStreetViewPlaceholder');
+    if (streetViewPlaceholder) streetViewPlaceholder.style.display = 'none';
     
     const subsidyList = document.getElementById('subsidyList');
     if (subsidyList) subsidyList.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
@@ -627,13 +684,32 @@ function addAmenityLegendControl() {
     const legend = L.control({ position: 'topright' });
     legend.onAdd = function () {
         const container = L.DomUtil.create('div', 'amenity-legend');
-        container.innerHTML = Object.entries(AMENITY_CONFIG).map(([key, cfg]) => `
-            <label>
-                <input type="checkbox" data-amenity="${key}" checked>
-                <span>${cfg.symbol}</span>
-                <span>${cfg.label}</span>
-            </label>
-        `).join('');
+
+        // 物件ピンの価格帯(色の意味)。チェックボックスではなく常時表示の凡例。
+        const priceLegendHtml = `
+            <div class="legend-section-title">物件の価格帯</div>
+            ${PRICE_TIERS.map((tier) => `
+                <div class="legend-row">
+                    <span class="legend-swatch" style="background:${tier.color};"></span>
+                    <span>${tier.label}</span>
+                </div>
+            `).join('')}
+        `;
+
+        // 周辺施設・観光スポットのアイコンの意味(色のスワッチ付き。これまでは絵文字だけで
+        // ピンの色との対応がわかりにくかったため、同じ色のスワッチを添えるようにした)。
+        const amenityLegendHtml = `
+            <div class="legend-section-title">周辺施設(表示/非表示)</div>
+            ${Object.entries(AMENITY_CONFIG).map(([key, cfg]) => `
+                <label class="legend-row">
+                    <input type="checkbox" data-amenity="${key}" checked>
+                    <span class="legend-swatch" style="background:${cfg.color};"></span>
+                    <span>${cfg.symbol} ${cfg.label}</span>
+                </label>
+            `).join('')}
+        `;
+
+        container.innerHTML = priceLegendHtml + '<div class="legend-divider"></div>' + amenityLegendHtml;
 
         L.DomEvent.disableClickPropagation(container);
         container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -694,6 +770,13 @@ async function fetchNearbyAmenities(lat, lng) {
 const SIGHTSEEING_RADIUS_M = 3000;
 let sightseeingRequestId = 0;
 
+// 空き家からスポットまでの距離(m)を「650m」「1.6km」のような見やすい表記にする。
+function formatDistance(distanceM) {
+    if (distanceM === null || distanceM === undefined) return null;
+    if (distanceM < 1000) return `${Math.round(distanceM)}m`;
+    return `${(distanceM / 1000).toFixed(1)}km`;
+}
+
 async function updateNearbySightseeingSpots(lat, lng) {
     const listEl = document.getElementById('sightseeingList');
     const statusEl = document.getElementById('sightseeingStatus');
@@ -720,11 +803,13 @@ async function updateNearbySightseeingSpots(lat, lng) {
 
         spots.forEach(spot => {
             if (spot.lat == null || spot.lng == null) return;
+            const distanceLabel = formatDistance(spot.distance_m);
             L.marker([spot.lat, spot.lng], { icon: AMENITY_CONFIG.sightseeing.icon })
                 .bindPopup(`
                     <b>${spot.name || '観光スポット'}</b><br>
                     ${spot.photo_url ? `<img src="${API_BASE_URL}${spot.photo_url}" style="width:160px;border-radius:4px;margin:4px 0;">` : ''}
                     ${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? `(${spot.user_rating_count}件)` : ''}` : ''}
+                    ${distanceLabel ? `<br>📍 空き家から約${distanceLabel}` : ''}
                 `)
                 .addTo(amenityLayers.sightseeing);
         });
@@ -738,12 +823,13 @@ async function updateNearbySightseeingSpots(lat, lng) {
                 const photoBlock = spot.maps_url
                     ? `<a href="${spot.maps_url}" target="_blank" rel="noopener noreferrer" title="Googleマップで見る">${photoInner}</a>`
                     : photoInner;
+                const distanceLabel = formatDistance(spot.distance_m);
                 return `
                     <div class="sight-card flex-shrink-0">
                         ${photoBlock}
                         <div class="p-2">
                             <p class="font-semibold text-[#22344B] text-xs truncate">${spot.name || '-'}</p>
-                            <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}</p>
+                            <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}${distanceLabel ? ` ・ 📍${distanceLabel}` : ''}</p>
                         </div>
                     </div>
                 `;
