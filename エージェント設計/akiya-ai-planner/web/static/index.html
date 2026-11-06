@@ -65,11 +65,20 @@
   }
   .header-row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    row-gap: 10px;
     max-width: 760px;
     margin: 0 auto;
+  }
+  .header-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
+    align-items: center;
   }
   .brand {
     display: flex;
@@ -298,6 +307,15 @@
   }
   .guest-limit-banner a { color: #7a4128; font-weight: 700; text-decoration: none; }
   .guest-limit-banner a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 16px 20px; }
+    .header-row { justify-content: center; text-align: center; }
+    .brand { text-align: left; }
+    .header-nav { justify-content: center; width: 100%; }
+    main { padding: 16px 12px; }
+    footer { padding: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -316,7 +334,7 @@
         <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します</p>
       </div>
     </div>
-    <div style="display:flex; gap:8px; flex-shrink:0; align-items:center;">
+    <div class="header-nav">
       <span id="akiyaStatusBar" class="akiya-status-bar"></span>
       <a class="nav-link" href="/">🏠 トップへ</a>
       <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
