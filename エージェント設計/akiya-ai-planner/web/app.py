@@ -132,6 +132,13 @@ def landing():
     return FileResponse(STATIC_DIR / "landing.html")
 
 
+@app.get("/login")
+def login_page():
+    # 簡易デモ用のログイン/ゲスト選択画面。認証はブラウザのsessionStorageのみで
+    # 行う(サーバー側にユーザーDBやパスワード検証は存在しない)プロトタイプ実装。
+    return FileResponse(STATIC_DIR / "login.html")
+
+
 @app.get("/diagnosis")
 def diagnosis():
     return FileResponse(STATIC_DIR / "diagnosis.html")

@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="ja">
 <head>
+<script>
+  // 簡易デモ用のログインガード。サーバー側の本格的な認証ではなく、
+  // ブラウザのsessionStorageに「ログイン済み/ゲスト」の状態を持つだけの
+  // プロトタイプ実装(タブを閉じるとリセットされる)。未ログインなら、
+  // トップ画面より前に必ずログイン画面を通らせるため/loginへ飛ばす。
+  (function () {
+    try {
+      if (!sessionStorage.getItem('akiya_auth')) {
+        location.replace('/login');
+      }
+    } catch (e) { /* storageが使えない環境ではガード無しで続行 */ }
+  })();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>診断 | 空き家AIプランナー</title>
@@ -64,6 +77,14 @@
     color: #7a4128;
     border-radius: 4px 12px 4px 12px;
   }
+  .akiya-status-bar {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-align: right;
+  }
+  .akiya-status-bar a { color: var(--accent-deep); font-weight: 700; text-decoration: none; }
+  .akiya-status-bar a:hover { text-decoration: underline; }
   .badge {
     display: inline-block;
     font-size: 12px;
@@ -156,6 +177,7 @@
     </svg>
     <span class="brand-title">空き家AIプランナー</span>
   </div>
+  <div id="akiyaStatusBar" class="akiya-status-bar"></div>
   <div class="top-nav">
     <a href="/">← トップへ戻る</a>
     <a class="skip-link-top" href="/chat">診断をスキップして自由にチャットする →</a>
@@ -235,6 +257,30 @@
 </div>
 
 <script>
+  function getAkiyaAuth() {
+    try { return JSON.parse(sessionStorage.getItem('akiya_auth') || 'null'); } catch (e) { return null; }
+  }
+
+  function akiyaLogout() {
+    try { sessionStorage.removeItem('akiya_auth'); } catch (e) { /* noop */ }
+    window.location.href = '/login';
+  }
+
+  function renderAkiyaStatusBar() {
+    const el = document.getElementById('akiyaStatusBar');
+    if (!el) return;
+    const auth = getAkiyaAuth();
+    if (!auth) return;
+    if (auth.mode === 'user') {
+      el.innerHTML = `👤 ${auth.name ? auth.name + 'さんとして' : ''}ログイン中　・　<a href="#" id="akiyaLogoutLink">ログアウト</a>`;
+    } else {
+      el.innerHTML = '🔓 ゲストモードでご利用中　・　<a href="/login">ログインする</a>';
+    }
+    const logoutLink = document.getElementById('akiyaLogoutLink');
+    if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); akiyaLogout(); });
+  }
+  renderAkiyaStatusBar();
+
   // チップ(複数選択・単一選択)のトグル処理
   document.querySelectorAll('[data-group]').forEach((group) => {
     const mode = group.dataset.mode === 'single' ? 'single' : 'multi';

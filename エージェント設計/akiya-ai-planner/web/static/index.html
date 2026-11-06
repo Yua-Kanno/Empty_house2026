@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="ja">
 <head>
+<script>
+  // 簡易デモ用のログインガード。サーバー側の本格的な認証ではなく、
+  // ブラウザのsessionStorageに「ログイン済み/ゲスト」の状態を持つだけの
+  // プロトタイプ実装(タブを閉じるとリセットされる)。未ログインなら、
+  // トップ画面より前に必ずログイン画面を通らせるため/loginへ飛ばす。
+  (function () {
+    try {
+      if (!sessionStorage.getItem('akiya_auth')) {
+        location.replace('/login');
+      }
+    } catch (e) { /* storageが使えない環境ではガード無しで続行 */ }
+  })();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>空き家AIプランナー</title>
@@ -263,6 +276,28 @@
 
   main::-webkit-scrollbar { width: 8px; }
   main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+
+  .akiya-status-bar {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .akiya-status-bar a { color: var(--accent-deep); font-weight: 700; text-decoration: none; }
+  .akiya-status-bar a:hover { text-decoration: underline; }
+
+  .guest-limit-banner {
+    display: none;
+    font-size: 11px;
+    color: var(--text);
+    text-align: center;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    background: var(--clay-soft);
+    border: 1px solid var(--border);
+    border-radius: 10px 10px 2px 10px;
+  }
+  .guest-limit-banner a { color: #7a4128; font-weight: 700; text-decoration: none; }
+  .guest-limit-banner a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -281,7 +316,8 @@
         <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します</p>
       </div>
     </div>
-    <div style="display:flex; gap:8px; flex-shrink:0;">
+    <div style="display:flex; gap:8px; flex-shrink:0; align-items:center;">
+      <span id="akiyaStatusBar" class="akiya-status-bar"></span>
       <a class="nav-link" href="/">🏠 トップへ</a>
       <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
     </div>
@@ -294,6 +330,7 @@
 <main id="chat-log"></main>
 
 <footer>
+  <div id="guestLimitBanner" class="guest-limit-banner"></div>
   <div class="input-row">
     <textarea id="input" placeholder="例: 千葉県でカフェを開きたい。予算は300万円くらい。" onkeydown="handleKeydown(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()"></textarea>
     <button id="send-btn" onclick="sendMessage()">送信</button>
@@ -305,11 +342,83 @@
   // このセッションだけの一時的なID(ページを再読み込みすると新しい会話になります)
   const sessionState = { id: null };
 
+  // ゲストモードで相談できる回数(この値を超えるとログインを促して送信をブロックする)。
+  // ページを再読み込みすると会話自体もリセットされるのに合わせ、この回数もリセットされる。
+  const GUEST_MESSAGE_LIMIT = 5;
+  let guestMessageCount = 0;
+
+  function getAkiyaAuth() {
+    try { return JSON.parse(sessionStorage.getItem('akiya_auth') || 'null'); } catch (e) { return null; }
+  }
+
+  function akiyaLogout() {
+    try { sessionStorage.removeItem('akiya_auth'); } catch (e) { /* noop */ }
+    window.location.href = '/login';
+  }
+
+  function showGuestLockNotice(message) {
+    const existing = document.getElementById('akiya-lock-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'akiya-lock-toast';
+    toast.style.cssText = 'position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#2f2e2b; color:#fff; padding:12px 18px; border-radius:10px 10px 10px 2px; font-size:13px; box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:9999; display:flex; align-items:center; gap:6px; white-space:nowrap;';
+    toast.textContent = message || '🔒 この機能はログインすると使えます';
+    const link = document.createElement('a');
+    link.href = '/login';
+    link.textContent = 'ログインする →';
+    link.style.cssText = 'color:#fff; text-decoration:underline; font-weight:700; margin-left:4px;';
+    toast.appendChild(link);
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 4000);
+  }
+
+  function renderAkiyaStatusBar() {
+    const el = document.getElementById('akiyaStatusBar');
+    if (!el) return;
+    const auth = getAkiyaAuth();
+    if (!auth) return;
+    if (auth.mode === 'user') {
+      el.innerHTML = `👤 ${auth.name ? auth.name + 'さんとして' : ''}ログイン中　・　<a href="#" id="akiyaLogoutLink">ログアウト</a>`;
+    } else {
+      el.innerHTML = '🔓 ゲストモード　・　<a href="/login">ログインする</a>';
+    }
+    const logoutLink = document.getElementById('akiyaLogoutLink');
+    if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); akiyaLogout(); });
+  }
+  renderAkiyaStatusBar();
+
+  function updateGuestLimitBanner() {
+    const banner = document.getElementById('guestLimitBanner');
+    if (!banner) return;
+    const auth = getAkiyaAuth();
+    if (!auth || auth.mode !== 'guest') {
+      banner.style.display = 'none';
+      return;
+    }
+    const remaining = GUEST_MESSAGE_LIMIT - guestMessageCount;
+    if (remaining <= 0) {
+      banner.innerHTML = '🔒 ゲストモードでの相談回数(5回)に達しました。続けて相談するには<a href="/login">ログイン</a>してください';
+    } else {
+      banner.innerHTML = `🔓 ゲストモードでご利用中：あと${remaining}回相談できます（<a href="/login">ログインすると無制限に</a>）`;
+    }
+    banner.style.display = 'block';
+  }
+  updateGuestLimitBanner();
+
   // フロント(マップ・グラフ・PDF出力画面、C担当作成)へのリンク先。
   // ローカルで両方のサーバーを立ち上げている間は http://localhost:8080/ でOK。
   // フロントを別途デプロイしたら、そのURLに書き換えてください。
   const FRONTEND_URL = "https://empty-house2026-1.onrender.com/";
-  document.getElementById("frontend-link").href = FRONTEND_URL;
+  const frontendLink = document.getElementById("frontend-link");
+  frontendLink.href = FRONTEND_URL;
+  frontendLink.addEventListener("click", (e) => {
+    // ゲストモードではマップ・PDF出力の閲覧を制限する。
+    const auth = getAkiyaAuth();
+    if (!auth || auth.mode !== "user") {
+      e.preventDefault();
+      showGuestLockNotice('🔒 マップ・PDF出力の閲覧にはログインが必要です');
+    }
+  });
 
   function el(tag, className, text) {
     const e = document.createElement(tag);
@@ -372,6 +481,11 @@
 
     if (p.id) {
       card.addEventListener("click", () => {
+        const auth = getAkiyaAuth();
+        if (!auth || auth.mode !== "user") {
+          showGuestLockNotice('🔒 マップ・PDF出力の閲覧にはログインが必要です');
+          return;
+        }
         window.open(`${FRONTEND_URL}?property_id=${p.id}`, "_blank");
       });
     }
@@ -560,9 +674,22 @@
     const text = (presetText !== undefined ? presetText : input.value).trim();
     if (!text) return;
 
+    const auth = getAkiyaAuth();
+    const isGuest = !!(auth && auth.mode === "guest");
+    if (isGuest && guestMessageCount >= GUEST_MESSAGE_LIMIT) {
+      updateGuestLimitBanner();
+      showGuestLockNotice('🔒 ゲストモードでの相談回数（5回）に達しました');
+      return;
+    }
+
     appendMessage("user", text);
     input.value = "";
     btn.disabled = true;
+
+    if (isGuest) {
+      guestMessageCount += 1;
+      updateGuestLimitBanner();
+    }
 
     const log = document.getElementById("chat-log");
     const loadingRow = el("div", "msg-row agent loading");

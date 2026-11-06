@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ログイン | 空き家AIプランナー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eeece8;
+    --panel: #fbfaf8;
+    --text: #2f2e2b;
+    --muted: #85827a;
+    --accent: #3c6e52;
+    --accent-deep: #294c39;
+    --accent-soft: #e6efe1;
+    --clay: #b0603d;
+    --clay-soft: #f3e3d8;
+    --border: #dcdad3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+      radial-gradient(ellipse 620px 420px at 8% -8%, rgba(70,68,62,0.07), transparent 60%),
+      radial-gradient(ellipse 520px 420px at 108% 12%, rgba(70,68,62,0.05), transparent 60%),
+      radial-gradient(ellipse 700px 520px at 50% 118%, rgba(70,68,62,0.06), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  h1, .badge { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
+  .brand-mark {
+    width: 52px;
+    height: 52px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 14px 4px 14px 4px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .lead {
+    margin: 0 0 26px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    max-width: 320px;
+    line-height: 1.7;
+  }
+  .panel {
+    width: 100%;
+    max-width: 360px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px 24px 24px 24px;
+    padding: 28px 26px;
+    box-shadow: 0 1px 3px rgba(48,42,32,0.06);
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .field input {
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+  }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .login-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 11px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px 10px 2px 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .login-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .guest-btn {
+    width: 100%;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif;
+    color: #7a4128;
+    background: var(--clay-soft);
+    border: 1px solid var(--border);
+    border-radius: 2px 10px 10px 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .guest-btn:hover { border-color: var(--clay); transform: translateY(-1px); }
+  .guest-note {
+    margin: 10px 0 0;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .error-msg {
+    display: none;
+    font-size: 12px;
+    color: #a13f2b;
+    background: var(--clay-soft);
+    border: 1px solid var(--clay);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+  }
+  footer {
+    margin-top: 26px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    max-width: 340px;
+  }
+</style>
+</head>
+<body>
+  <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 40 V29.5 C20 28.7 20.7 28 21.5 28 H26 C26.8 28 27.5 28.7 27.5 29.5 V40" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31 15 C33 12.5 33 10 31.5 6.5" stroke="var(--clay)" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="31.5" cy="6" r="1.6" fill="var(--clay)"/>
+  </svg>
+  <span class="badge">VORN Challenge 2026</span>
+  <h1>空き家AIプランナー</h1>
+  <p class="lead">ログインすると、マップ・PDF出力の閲覧やAIとの相談がすべて使えるようになります。</p>
+
+  <div class="panel">
+    <p class="error-msg" id="loginError">メールアドレスとパスワードを入力してください。</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">メールアドレス</label>
+        <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="loginPassword">パスワード</label>
+        <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <button type="submit" class="login-btn">ログイン</button>
+    </form>
+
+    <div class="divider">または</div>
+
+    <button type="button" class="guest-btn" id="guestBtn">ゲストとして始める</button>
+    <p class="guest-note">ゲストモードでは、マップ・PDF出力の閲覧やAIとの相談回数の一部が制限されます。</p>
+  </div>
+
+  <footer>※本デモはVORN Challenge 2026向けのプロトタイプです。入力内容はこの端末内にのみ一時的に保持され、サーバーには保存・認証されません。</footer>
+
+<script>
+  function setAkiyaAuthAndGo(authObj) {
+    try { sessionStorage.setItem('akiya_auth', JSON.stringify(authObj)); } catch (e) { /* storage利用不可でも続行 */ }
+    window.location.href = '/';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    if (!email || !password) {
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+    const name = email.split('@')[0] || email;
+    setAkiyaAuthAndGo({ mode: 'user', name: name });
+  });
+
+  document.getElementById('guestBtn').addEventListener('click', function () {
+    setAkiyaAuthAndGo({ mode: 'guest' });
+  });
+</script>
+</body>
+</html>

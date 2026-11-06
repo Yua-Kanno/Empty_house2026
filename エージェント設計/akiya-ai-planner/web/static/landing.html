@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="ja">
 <head>
+<script>
+  // 簡易デモ用のログインガード。サーバー側の本格的な認証ではなく、
+  // ブラウザのsessionStorageに「ログイン済み/ゲスト」の状態を持つだけの
+  // プロトタイプ実装(タブを閉じるとリセットされる)。未ログインなら、
+  // トップ画面より前に必ずログイン画面を通らせるため/loginへ飛ばす。
+  (function () {
+    try {
+      if (!sessionStorage.getItem('akiya_auth')) {
+        location.replace('/login');
+      }
+    } catch (e) { /* storageが使えない環境ではガード無しで続行 */ }
+  })();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>空き家AIプランナー</title>
@@ -109,9 +122,18 @@
     font-size: 11px;
     color: var(--muted);
   }
+  .akiya-status-bar {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .akiya-status-bar a { color: var(--accent-deep); font-weight: 700; text-decoration: none; }
+  .akiya-status-bar a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
+  <div id="akiyaStatusBar" class="akiya-status-bar"></div>
   <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -139,11 +161,60 @@
   <footer>チャットと地図画面は行き来できます</footer>
 
 <script>
+  function getAkiyaAuth() {
+    try { return JSON.parse(sessionStorage.getItem('akiya_auth') || 'null'); } catch (e) { return null; }
+  }
+
+  function akiyaLogout() {
+    try { sessionStorage.removeItem('akiya_auth'); } catch (e) { /* noop */ }
+    window.location.href = '/login';
+  }
+
+  function showGuestLockNotice(message) {
+    const existing = document.getElementById('akiya-lock-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'akiya-lock-toast';
+    toast.style.cssText = 'position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#2f2e2b; color:#fff; padding:12px 18px; border-radius:10px 10px 10px 2px; font-size:13px; box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:9999; display:flex; align-items:center; gap:6px; white-space:nowrap;';
+    toast.textContent = message || '🔒 この機能はログインすると使えます';
+    const link = document.createElement('a');
+    link.href = '/login';
+    link.textContent = 'ログインする →';
+    link.style.cssText = 'color:#fff; text-decoration:underline; font-weight:700; margin-left:4px;';
+    toast.appendChild(link);
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 4000);
+  }
+
+  function renderAkiyaStatusBar() {
+    const el = document.getElementById('akiyaStatusBar');
+    if (!el) return;
+    const auth = getAkiyaAuth();
+    if (!auth) return;
+    if (auth.mode === 'user') {
+      el.innerHTML = `👤 ${auth.name ? auth.name + 'さんとして' : ''}ログイン中　・　<a href="#" id="akiyaLogoutLink">ログアウト</a>`;
+    } else {
+      el.innerHTML = '🔓 ゲストモードでご利用中　・　<a href="/login">ログインする</a>';
+    }
+    const logoutLink = document.getElementById('akiyaLogoutLink');
+    if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); akiyaLogout(); });
+  }
+  renderAkiyaStatusBar();
+
   // 地図(フロント、C担当作成)へのリンク先。
   // ローカルでフロント側のサーバー(PDF出力/app.py)も立ち上げている間は http://localhost:8080/ でOK。
   // フロントを別途デプロイしたら、そのURLに書き換えてください。
   const FRONTEND_URL = "https://empty-house2026-1.onrender.com/";
-  document.getElementById("map-card").href = FRONTEND_URL;
+  const mapCard = document.getElementById("map-card");
+  mapCard.href = FRONTEND_URL;
+  mapCard.addEventListener("click", (e) => {
+    // ゲストモードでは「地図で調べる」(マップ・PDF出力)の利用を制限する。
+    const auth = getAkiyaAuth();
+    if (!auth || auth.mode !== "user") {
+      e.preventDefault();
+      showGuestLockNotice('🔒 マップ・PDF出力の閲覧にはログインが必要です');
+    }
+  });
 </script>
 </body>
 </html>
