@@ -38,7 +38,7 @@
       var(--bg);
     background-attachment: fixed;
   }
-  h1, .badge { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
+  h1, .badge, .auth-tab { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
   .brand-mark {
     width: 52px;
     height: 52px;
@@ -79,6 +79,30 @@
     padding: 28px 26px;
     box-shadow: 0 1px 3px rgba(48,42,32,0.06);
   }
+  .auth-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .auth-tab.active {
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border-color: var(--accent);
+  }
+  .auth-form { display: none; }
+  .auth-form.active { display: block; }
   .field { margin-bottom: 16px; }
   .field label {
     display: block;
@@ -177,11 +201,16 @@
   </svg>
   <span class="badge">VORN Challenge 2026</span>
   <h1>空き家AIプランナー</h1>
-  <p class="lead">ログインすると、マップ・PDF出力の閲覧やAIとの相談がすべて使えるようになります。</p>
+  <p class="lead">ログイン、または新規登録してご利用ください。マップ・PDF出力の閲覧やAIとの相談がすべて使えるようになります。</p>
 
   <div class="panel">
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" id="tabLoginBtn">ログイン</button>
+      <button type="button" class="auth-tab" id="tabSignupBtn">新規登録</button>
+    </div>
+
     <p class="error-msg" id="loginError">メールアドレスとパスワードを入力してください。</p>
-    <form id="loginForm">
+    <form id="loginForm" class="auth-form active">
       <div class="field">
         <label for="loginEmail">メールアドレス</label>
         <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="username" />
@@ -191,6 +220,27 @@
         <input type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" />
       </div>
       <button type="submit" class="login-btn">ログイン</button>
+    </form>
+
+    <p class="error-msg" id="signupError">お名前・メールアドレス・パスワードを入力してください（パスワードは確認用と一致させてください）。</p>
+    <form id="signupForm" class="auth-form">
+      <div class="field">
+        <label for="signupName">お名前</label>
+        <input type="text" id="signupName" name="name" placeholder="山田 太郎" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="signupEmail">メールアドレス</label>
+        <input type="email" id="signupEmail" name="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="signupPassword">パスワード</label>
+        <input type="password" id="signupPassword" name="password" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label for="signupPasswordConfirm">パスワード（確認）</label>
+        <input type="password" id="signupPasswordConfirm" name="passwordConfirm" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+      <button type="submit" class="login-btn">登録してはじめる</button>
     </form>
 
     <div class="divider">または</div>
@@ -207,17 +257,59 @@
     window.location.href = '/';
   }
 
-  document.getElementById('loginForm').addEventListener('submit', function (e) {
+  // ログイン/新規登録のタブ切り替え
+  const tabLoginBtn = document.getElementById('tabLoginBtn');
+  const tabSignupBtn = document.getElementById('tabSignupBtn');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const loginError = document.getElementById('loginError');
+  const signupError = document.getElementById('signupError');
+
+  function showLoginTab() {
+    tabLoginBtn.classList.add('active');
+    tabSignupBtn.classList.remove('active');
+    loginForm.classList.add('active');
+    signupForm.classList.remove('active');
+    signupError.style.display = 'none';
+  }
+
+  function showSignupTab() {
+    tabSignupBtn.classList.add('active');
+    tabLoginBtn.classList.remove('active');
+    signupForm.classList.add('active');
+    loginForm.classList.remove('active');
+    loginError.style.display = 'none';
+  }
+
+  tabLoginBtn.addEventListener('click', showLoginTab);
+  tabSignupBtn.addEventListener('click', showSignupTab);
+
+  loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errorEl = document.getElementById('loginError');
     if (!email || !password) {
-      errorEl.style.display = 'block';
+      loginError.style.display = 'block';
       return;
     }
-    errorEl.style.display = 'none';
+    loginError.style.display = 'none';
     const name = email.split('@')[0] || email;
+    setAkiyaAuthAndGo({ mode: 'user', name: name });
+  });
+
+  signupForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+    if (!name || !email || !password || password !== passwordConfirm) {
+      signupError.style.display = 'block';
+      return;
+    }
+    signupError.style.display = 'none';
+    // デモ用のため、ここで実際にアカウントを保存するわけではなく、
+    // 入力された名前でそのままログイン状態にして進める。
     setAkiyaAuthAndGo({ mode: 'user', name: name });
   });
 
