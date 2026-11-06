@@ -183,6 +183,35 @@ option {
     margin: 4px 0;
 }
 
+/* ハザード情報パネルの各行。リスクあり/区域外/確認不可で色分けし、
+   デメリット面の情報であることが一目でわかるようにする。 */
+.hazard-item {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+}
+
+.hazard-item-risk {
+    background: #FBEFEA;
+    border-color: #E8C7B8;
+    color: #954C36;
+    font-weight: 500;
+}
+
+.hazard-item-safe {
+    background: #EFF5EC;
+    border-color: #CFE3C9;
+    color: #5F7350;
+}
+
+.hazard-item-unknown {
+    background: #F5F2EB;
+    border-color: var(--line);
+    color: var(--ink-soft);
+}
+
 /* 凡例の色スワッチ(丸)。地図上のピンの色と対応させて、凡例だけ見ても
    どのピンが何を表すかひと目でわかるようにする。 */
 .legend-swatch {

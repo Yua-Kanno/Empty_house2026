@@ -87,6 +87,50 @@ const AMENITY_CONFIG = {
     sightseeing: { icon: createAmenityIcon('🏞️', '#7A5C99'), symbol: '🏞️', label: '観光・景観', color: '#7A5C99' },
 };
 
+// ハザード情報(国土交通省「ハザードマップポータルサイト」の重ねるハザードマップ
+// タイルデータ。APIキー不要・商用非商用問わず利用可能で、リアルタイムに取得して
+// 自サイトに組み込むことが想定されている公開タイル)。
+// 1) 地図に重ねて表示するON/OFFレイヤー(凡例から切り替え。初期状態はOFF)。
+// 2) 選択中の物件のピンポイントがそれぞれのハザードエリアに入っているかを、
+//    タイル画像をcanvasに描画してピクセルの透明度を調べることで簡易判定し、
+//    「ハザード情報」パネルに表示する(詳しくはupdateHazardInfo参照)。
+// データが存在しない座標は404(JSON)が返る仕様で、これは「その区域の指定なし」
+// として扱う。あくまで参考情報であり、正式なハザードマップは自治体の発表を
+// 確認するよう画面にも注記している。
+const HAZARD_ATTRIBUTION = '<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>(国土交通省)';
+const HAZARD_PIXEL_CHECK_ZOOM = 16;
+const HAZARD_LAYERS = {
+    flood: {
+        label: '洪水浸水想定区域',
+        color: '#4F7FB0',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png'],
+        riskLabel: '洪水浸水想定区域に含まれる可能性があります',
+    },
+    sediment: {
+        label: '土砂災害警戒区域',
+        color: '#A8632E',
+        tileUrlTemplates: [
+            'https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png',
+            'https://disaportaldata.gsi.go.jp/raster/05_kyukeishakeikaikuiki/{z}/{x}/{y}.png',
+        ],
+        riskLabel: '土砂災害警戒区域(土石流・急傾斜地)に含まれる可能性があります',
+    },
+    tsunami: {
+        label: '津波浸水想定',
+        color: '#5C4A99',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png'],
+        riskLabel: '津波浸水想定区域に含まれる可能性があります',
+    },
+    hightide: {
+        label: '高潮浸水想定区域',
+        color: '#3F8E86',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/03_hightide_l2_shinsuishin_data/{z}/{x}/{y}.png'],
+        riskLabel: '高潮浸水想定区域に含まれる可能性があります',
+    },
+};
+const hazardOverlayLayers = {};
+let hazardRequestId = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
     initMap();
     fetchProperties();
@@ -263,6 +307,7 @@ function initMap() {
 
     initAmenityLayers();
     addAmenityLegendControl();
+    initHazardLayers();
 
     // マップの高さはflexレイアウトで決まる(枠の余白いっぱいまで広げる)ため、
     // 初期レイアウト確定後とウィンドウリサイズ時にLeafletへサイズ再計算させる。
@@ -495,6 +540,7 @@ function updateSelection(selectedId) {
     updateNearbyAmenities(coords[0], coords[1]);
     updateNearbySightseeingSpots(coords[0], coords[1]);
     updateStreetView(coords[0], coords[1]);
+    updateHazardInfo(coords[0], coords[1]);
     updateChart(house);
 }
 
@@ -529,6 +575,100 @@ async function updateStreetView(lat, lng) {
     }
 }
 
+// 緯度経度から「どのタイル(z/x/y)の、その中の何ピクセル目か」を求める標準的な
+// Webメルカトル(スリッピーマップ)の変換式。ハザードタイルは256pxのPNGなので、
+// タイルそのものを取得してcanvasに描画し、該当ピクセルの透明度を調べれば、
+// 「その地点がハザードエリア内(=不透明に塗られている)かどうか」が簡易判定できる。
+function lngLatToPixelInTile(lat, lng, z, tileSize = 256) {
+    const latRad = lat * Math.PI / 180;
+    const n = Math.pow(2, z);
+    const worldX = (lng + 180) / 360 * n * tileSize;
+    const worldY = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n * tileSize;
+    const tileX = Math.floor(worldX / tileSize);
+    const tileY = Math.floor(worldY / tileSize);
+    const px = Math.floor(worldX - tileX * tileSize);
+    const py = Math.floor(worldY - tileY * tileSize);
+    return { tileX, tileY, px, py };
+}
+
+// 指定したタイル画像を取得し、座標に対応する1ピクセルの透明度を調べる。
+// このポータルのタイルは「データが存在しない区域は404(JSONエラー)が返る」という
+// 仕様になっているため、404は「ハザード指定なし」として扱う(通信エラーとは区別する)。
+async function fetchHazardPixelState(url, px, py) {
+    try {
+        const res = await fetch(url);
+        if (res.status === 404) return 'no-data';
+        if (!res.ok) return 'error';
+        const blob = await res.blob();
+        const bitmap = await createImageBitmap(blob);
+        const canvas = document.createElement('canvas');
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(bitmap, 0, 0);
+        const pixel = ctx.getImageData(px, py, 1, 1).data;
+        return pixel[3] > 10 ? 'risk' : 'no-data';
+    } catch (err) {
+        return 'error';
+    }
+}
+
+// 1つのハザード種別(例: 土砂災害は複数タイルの重ね合わせ)について、指定座標が
+// 該当するかを調べる。複数タイルのうち1つでも「risk」ならriskを返す。
+async function checkHazardAtPoint(lat, lng, hazardKey) {
+    const cfg = HAZARD_LAYERS[hazardKey];
+    const { tileX, tileY, px, py } = lngLatToPixelInTile(lat, lng, HAZARD_PIXEL_CHECK_ZOOM);
+    let sawError = false;
+    for (const template of cfg.tileUrlTemplates) {
+        const url = template
+            .replace('{z}', HAZARD_PIXEL_CHECK_ZOOM)
+            .replace('{x}', tileX)
+            .replace('{y}', tileY);
+        const state = await fetchHazardPixelState(url, px, py);
+        if (state === 'risk') return 'risk';
+        if (state === 'error') sawError = true;
+    }
+    return sawError ? 'error' : 'no-data';
+}
+
+// 選択中物件の座標について、4種類のハザードすべてを判定し「ハザード情報」パネルに
+// 表示する。メリットだけでなくデメリットも見せることで、住んだ後の将来まで考えて
+// もらうための機能(ユーザーからの要望)。
+async function updateHazardInfo(lat, lng) {
+    const statusEl = document.getElementById('hazardStatus');
+    const listEl = document.getElementById('hazardInfoList');
+    const requestId = ++hazardRequestId;
+
+    if (statusEl) statusEl.textContent = '確認中...';
+    if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">確認中...</p>';
+
+    const keys = Object.keys(HAZARD_LAYERS);
+    const results = await Promise.all(keys.map(key => checkHazardAtPoint(lat, lng, key)));
+    if (requestId !== hazardRequestId) return;
+
+    const riskCount = results.filter(r => r === 'risk').length;
+    if (statusEl) {
+        statusEl.textContent = riskCount > 0 ? `⚠️ ${riskCount}件該当` : '指定区域なし';
+    }
+
+    if (listEl) {
+        listEl.innerHTML = keys.map((key, i) => {
+            const cfg = HAZARD_LAYERS[key];
+            const state = results[i];
+            let cls = 'hazard-item-unknown';
+            let text = `${cfg.label}: 確認できませんでした(通信エラー)`;
+            if (state === 'risk') {
+                cls = 'hazard-item-risk';
+                text = `⚠️ ${cfg.riskLabel}`;
+            } else if (state === 'no-data') {
+                cls = 'hazard-item-safe';
+                text = `${cfg.label}: 指定区域外の可能性があります`;
+            }
+            return `<div class="hazard-item ${cls}">${text}</div>`;
+        }).join('');
+    }
+}
+
 function clearDetail() {
     currentHouse = null;
     document.getElementById('detailName').textContent = '物件を選択してください';
@@ -553,6 +693,12 @@ function clearDetail() {
     if (sightseeingStatusEl) sightseeingStatusEl.textContent = '物件を選択してください';
     const sightseeingListEl = document.getElementById('sightseeingList');
     if (sightseeingListEl) sightseeingListEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
+
+    hazardRequestId++;
+    const hazardStatusEl = document.getElementById('hazardStatus');
+    if (hazardStatusEl) hazardStatusEl.textContent = '物件を選択してください';
+    const hazardListEl = document.getElementById('hazardInfoList');
+    if (hazardListEl) hazardListEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
 
     document.querySelectorAll('.prop-card').forEach(card => card.classList.remove('active'));
 
@@ -703,6 +849,21 @@ function initAmenityLayers() {
     });
 }
 
+// ハザードレイヤーをLeafletのレイヤーグループとして用意する(初期状態では地図に
+// 追加しない=OFF。凡例のチェックボックスでON/OFFを切り替える)。土砂災害のように
+// 複数のタイルを重ねて1つのハザード種別として扱うものもあるため、layerGroupにする。
+function initHazardLayers() {
+    Object.entries(HAZARD_LAYERS).forEach(([key, cfg]) => {
+        const sublayers = cfg.tileUrlTemplates.map(url => L.tileLayer(url, {
+            opacity: 0.55,
+            maxNativeZoom: 17,
+            maxZoom: 19,
+            attribution: HAZARD_ATTRIBUTION,
+        }));
+        hazardOverlayLayers[key] = L.layerGroup(sublayers);
+    });
+}
+
 function addAmenityLegendControl() {
     const legend = L.control({ position: 'topright' });
     legend.onAdd = function () {
@@ -732,14 +893,34 @@ function addAmenityLegendControl() {
             `).join('')}
         `;
 
-        container.innerHTML = priceLegendHtml + '<div class="legend-divider"></div>' + amenityLegendHtml;
+        // ハザード情報レイヤー。デメリット面の情報なので、最初から地図を埋めてしまわないよう
+        // 初期状態はすべて非表示(チェックなし)にしておき、見たい人が自分でONにする形にする。
+        const hazardLegendHtml = `
+            <div class="legend-section-title">ハザード情報(地図に重ねて表示)</div>
+            ${Object.entries(HAZARD_LAYERS).map(([key, cfg]) => `
+                <label class="legend-row">
+                    <input type="checkbox" data-hazard="${key}">
+                    <span class="legend-swatch" style="background:${cfg.color};"></span>
+                    <span>${cfg.label}</span>
+                </label>
+            `).join('')}
+        `;
+
+        container.innerHTML = priceLegendHtml + '<div class="legend-divider"></div>' + amenityLegendHtml
+            + '<div class="legend-divider"></div>' + hazardLegendHtml;
 
         L.DomEvent.disableClickPropagation(container);
         container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
-                const key = e.target.dataset.amenity;
-                if (e.target.checked) map.addLayer(amenityLayers[key]);
-                else map.removeLayer(amenityLayers[key]);
+                if (e.target.dataset.amenity) {
+                    const key = e.target.dataset.amenity;
+                    if (e.target.checked) map.addLayer(amenityLayers[key]);
+                    else map.removeLayer(amenityLayers[key]);
+                } else if (e.target.dataset.hazard) {
+                    const key = e.target.dataset.hazard;
+                    if (e.target.checked) map.addLayer(hazardOverlayLayers[key]);
+                    else map.removeLayer(hazardOverlayLayers[key]);
+                }
             });
         });
         return container;

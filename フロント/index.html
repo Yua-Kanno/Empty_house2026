@@ -120,6 +120,27 @@
                 </div>
             </div>
 
+            <!-- ハザード情報。メリットだけでなくデメリット(水害・土砂災害などのリスク)も
+                 見せることで、住んだ後の将来まで考えてもらうための枠(ユーザーからの要望)。
+                 国土交通省ハザードマップポータルサイトの公開タイルを使い、選択中物件の
+                 座標が各ハザードエリアに入っているかを簡易判定して表示する。 -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <div class="mb-2 flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B]">
+                        <span>⚠️</span> ハザード情報
+                    </h2>
+                    <div id="hazardStatus" class="status-badge text-xs font-medium text-[#5C7A99]">
+                        物件を選択してください
+                    </div>
+                </div>
+                <div id="hazardInfoList" class="space-y-2">
+                    <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
+                </div>
+                <p class="text-[10px] text-[#5C7A99] mt-2">
+                    出典: <a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>(国土交通省)。簡易判定による参考情報です。正式なハザードマップは自治体の発表をご確認ください。
+                </p>
+            </div>
+
             <!-- 空き家の場所の様子(ストリートビュー)。実物件の写真データが無いため、
                  場所の参考イメージとして表示する(選択中物件カードだと見つけにくかったため、
                  補助金枠を縮めてできたスペースにここで表示するようにした) -->
