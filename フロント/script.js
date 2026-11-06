@@ -263,6 +263,15 @@ function initMap() {
 
     initAmenityLayers();
     addAmenityLegendControl();
+
+    // マップの高さはflexレイアウトで決まる(枠の余白いっぱいまで広げる)ため、
+    // 初期レイアウト確定後とウィンドウリサイズ時にLeafletへサイズ再計算させる。
+    // これをしないと、コンテナの見た目の高さとLeaflet内部の計算がズレて
+    // タイルが灰色のまま欠けて見えることがある。
+    setTimeout(() => { if (map) map.invalidateSize(); }, 0);
+    window.addEventListener('resize', () => {
+        if (map) map.invalidateSize();
+    });
 }
 
 async function fetchProperties() {
@@ -322,7 +331,10 @@ async function fetchProperties() {
         } else if (targetHouse) {
             const pref = guessPrefecture(targetHouse);
             if (pref && prefSelect) prefSelect.value = pref;
-            filterProperties(pref || 'none');
+            // チャットから「この物件をマップで見る」で来た直後は、エリア全体への
+            // 瞬間移動を挟まず、updateSelection()のflyToだけで初期表示(全国/東京付近)
+            // から選択物件まで一息に滑らかにズームさせる(Googleマップ風の見た目)。
+            filterProperties(pref || 'none', { skipFit: true });
             updateSelection(targetHouse.global_id);
         } else {
             filterProperties('none');
@@ -335,11 +347,18 @@ async function fetchProperties() {
     }
 }
 
-function filterProperties(pref) {
+function filterProperties(pref, opts) {
+    // skipFit: true の場合、絞り込みに合わせた地図の瞬間移動(fitBounds)を行わない。
+    // チャットから物件を1件指定して開いた直後は、この瞬間移動と直後の
+    // updateSelection()のflyToが連続して走ってしまい、アニメーションが
+    // 二重に競合してガクッとした動きに見えるため、呼び出し側でskipFitを
+    // 指定してflyToだけの1回のズームに見せる。
+    const skipFit = !!(opts && opts.skipFit);
+
     if (pref === 'none') {
         renderPropertyCards([]);
         plotMapMarkers(propertyData);
-        fitMapToVisibleProperties(propertyData);
+        if (!skipFit) fitMapToVisibleProperties(propertyData);
         clearDetail();
         return;
     }
@@ -351,7 +370,7 @@ function filterProperties(pref) {
 
     renderPropertyCards(filtered);
     plotMapMarkers(filtered);
-    fitMapToVisibleProperties(filtered);
+    if (!skipFit) fitMapToVisibleProperties(filtered);
     clearDetail();
 }
 
