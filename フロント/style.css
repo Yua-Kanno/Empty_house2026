@@ -3,8 +3,37 @@
     --ink: #22344B;
     --ink-soft: #5C7A99;
     --gold: #B0862A;
+    --gold-dark: #957122;
     --line: #EFE9DD;
+    --sand: #F5F2EB;
+    --deco: #E9D9A8;
 }
+
+/* ===== 季節テーマ(body[data-season]で切り替え。season.jsが日付から自動設定) ===== */
+body[data-season="spring"] {
+    --paper: #FCF3F6; --ink: #3A2F3C; --ink-soft: #8A6A7C;
+    --gold: #B9557A; --gold-dark: #9A4263; --line: #F0DAE2; --sand: #F9E9EF; --deco: #F6C6D6;
+}
+body[data-season="summer"] {
+    --paper: #EFF8F7; --ink: #1F3A44; --ink-soft: #4F7F8B;
+    --gold: #1F7A8C; --gold-dark: #176373; --line: #D0E7E9; --sand: #E1F2F3; --deco: #A9DCE2;
+}
+body[data-season="autumn"] {
+    --paper: #F7F0E5; --ink: #3A2A1E; --ink-soft: #85644A;
+    --gold: #A4502A; --gold-dark: #863F1F; --line: #E8D7C1; --sand: #F3E6D2; --deco: #E9B98A;
+}
+body[data-season="winter"] {
+    --paper: #EFF3F8; --ink: #22344B; --ink-soft: #5C7A99;
+    --gold: #3F5F86; --gold-dark: #314C6D; --line: #D5DEE9; --sand: #E4EBF4; --deco: #BCD0E6;
+}
+body { transition: background-color 0.6s ease, color 0.6s ease; }
+header { position: relative; }
+header::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--deco), var(--gold));
+}
+/* 季節のアニメーション(花びら・蛍・落ち葉・雪)。クリックは素通しします */
+#season-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2000; }
 
 body {
     background-color: var(--paper);
@@ -20,7 +49,7 @@ body {
 
 #propertyCardList::-webkit-scrollbar-thumb,
 #subsidyList::-webkit-scrollbar-thumb {
-    background-color: #D1C9B8;
+    background-color: var(--deco);
     border-radius: 3px;
 }
 
@@ -46,7 +75,7 @@ body {
 
 .prop-card.active {
     border-color: var(--gold);
-    background-color: #FFFDF9;
+    background-color: var(--paper);
     box-shadow: 0 0 0 2px var(--gold);
 }
 
@@ -58,10 +87,10 @@ body {
 
 /* クラスタアイコン */
 .marker-cluster-small {
-    background-color: rgba(176, 134, 42, 0.6) !important;
+    background-color: color-mix(in srgb, var(--gold) 60%, transparent) !important;
 }
 .marker-cluster-small div {
-    background-color: rgba(176, 134, 42, 0.9) !important;
+    background-color: var(--gold) !important;
     color: white !important;
     font-weight: bold;
 }

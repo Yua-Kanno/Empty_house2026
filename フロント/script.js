@@ -15,10 +15,10 @@ let amenityRequestId = 0;
 
 // 選択中の物件ピン（青）
 const SELECTED_HOUSE_ICON = L.divIcon({
-    html: `<div style="background:linear-gradient(135deg,#22344B,#5C7A99);width:44px;height:44px;border-radius:50% 50% 50% 0;
+    html: `<div style="background:linear-gradient(135deg,var(--ink),var(--ink-soft));width:44px;height:44px;border-radius:50% 50% 50% 0;
                 transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
                 box-shadow:0 0 0 3px rgba(251,249,244,.95),0 8px 16px rgba(34,52,75,.35);
-                border:2px solid #FBF9F4;">
+                border:2px solid var(--paper);">
                 <span style="transform:rotate(45deg);font-size:18px;">🏠</span>
            </div>`,
     className: '',
@@ -29,7 +29,7 @@ const SELECTED_HOUSE_ICON = L.divIcon({
 
 // 通常の物件ピン（金）
 const UNSELECTED_HOUSE_ICON = L.divIcon({
-    html: `<div style="background:#B0862A;width:30px;height:30px;border-radius:50% 50% 50% 0;
+    html: `<div style="background:var(--gold);width:30px;height:30px;border-radius:50% 50% 50% 0;
                 transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
                 box-shadow:0 2px 4px rgba(0,0,0,0.2);border:2px solid white;">
                 <span style="transform:rotate(45deg);font-size:12px;color:white;">🏡</span>
@@ -200,7 +200,7 @@ function renderPropertyCards(properties) {
         card.dataset.id = id;
         
         card.innerHTML = `
-            <p class="font-bold text-xs text-[#22344B] truncate mb-2">${name}</p>
+            <p class="font-bold text-xs text-[color:var(--ink)] truncate mb-2">${name}</p>
             <div class="flex flex-wrap gap-1">
                 ${tags.map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded font-medium ${t.bg}">${t.label}</span>`).join('')}
             </div>
@@ -385,9 +385,9 @@ async function fetchSubsidies(municipality) {
 
         subsidyList.innerHTML = subsidies.map(subsidy => `
             <div class="subsidy-card p-2.5 text-xs">
-                <p class="font-semibold text-[#22344B]">${subsidy.subsidy_name}</p>
-                <p class="mt-0.5 text-[11px] text-[#5C7A99]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
-                <p class="text-[11px] text-[#5C7A99]">補助率: ${subsidy.rate}</p>
+                <p class="font-semibold text-[color:var(--ink)]">${subsidy.subsidy_name}</p>
+                <p class="mt-0.5 text-[11px] text-[color:var(--ink-soft)]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
+                <p class="text-[11px] text-[color:var(--ink-soft)]">補助率: ${subsidy.rate}</p>
             </div>
         `).join('');
     } catch (err) {
@@ -429,7 +429,7 @@ function updateChart(house) {
             responsive: true, 
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true, grid: { color: '#EFE9DD' } },
+                y: { beginAtZero: true, grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#EFE9DD' } },
                 x: { grid: { display: false } }
             }
         }

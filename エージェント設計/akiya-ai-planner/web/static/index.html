@@ -16,7 +16,43 @@
     --user-bubble: #3c6e52;
     --user-bubble-text: #ffffff;
     --agent-bubble: #f0ede4;
+    --deco: #cfe3d4;
   }
+  /* ===== 季節テーマ(body[data-season]で切り替え) ===== */
+  body[data-season="spring"] {
+    --bg: #fbf3f6; --accent: #b9557a; --accent-soft: #fbe6ee; --border: #efd9e0;
+    --user-bubble: #b9557a; --agent-bubble: #fbeef2; --deco: #f6c6d6; --muted: #8a737c;
+  }
+  body[data-season="summer"] {
+    --bg: #eef7f6; --accent: #1f7a8c; --accent-soft: #dff1f3; --border: #cfe6e8;
+    --user-bubble: #1f7a8c; --agent-bubble: #e2f2f3; --deco: #a9dce2; --muted: #66838a;
+  }
+  body[data-season="autumn"] {
+    --bg: #f6efe4; --accent: #a4502a; --accent-soft: #f6e3d3; --border: #e6d6c0;
+    --user-bubble: #a4502a; --agent-bubble: #f3e6d2; --deco: #e9b98a; --muted: #85705c;
+  }
+  body[data-season="winter"] {
+    --bg: #eef2f7; --accent: #3f5f86; --accent-soft: #e1e9f3; --border: #d3dce8;
+    --user-bubble: #3f5f86; --agent-bubble: #e6ecf4; --deco: #bcd0e6; --muted: #6a7a8d;
+  }
+  body { transition: background-color 0.6s ease, color 0.6s ease; }
+  header, footer, .bubble, .card, .nav-link, button, textarea { transition: background-color 0.6s ease, border-color 0.6s ease, color 0.6s ease; }
+  header, footer, main { position: relative; z-index: 1; }
+  header { background: color-mix(in srgb, var(--panel) 88%, var(--deco)); }
+  header::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--deco), var(--accent));
+  }
+  #season-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .season-switch { display: flex; gap: 4px; background: var(--accent-soft); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+  .season-btn {
+    background: transparent; color: var(--accent); border: none; border-radius: 999px;
+    padding: 5px 11px; font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .season-btn:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .season-btn.active { background: var(--accent); color: #fff; }
+  .header-actions { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+  @media (max-width: 720px) { .header-row { flex-direction: column; align-items: flex-start; } .header-actions { justify-content: flex-start; } }
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -163,14 +199,15 @@
   .loading .bubble { color: var(--muted); font-style: italic; }
 </style>
 </head>
-<body>
+<body data-season="autumn">
+<canvas id="season-canvas" aria-hidden="true"></canvas>
 <header>
   <div class="header-row">
     <div>
-      <h1>空き家AIプランナー</h1>
+      <h1><span id="season-icon">🍁</span> 空き家AIプランナー</h1>
       <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します(対応エリア: 千葉県・東京都西多摩地域・埼玉県羽生市)</p>
     </div>
-    <div style="display:flex; gap:8px; flex-shrink:0;">
+    <div class="header-actions">
       <a class="nav-link" href="/">🏠 トップへ</a>
       <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
     </div>
@@ -351,6 +388,121 @@
       sendMessage();
     }
   }
+
+
+  // ===== 季節テーマ(春夏秋冬) =====
+  // 今日の日付から季節を自動判定(3-5月=春 / 6-8月=夏 / 9-11月=秋 / 12-2月=冬)。
+  const SEASONS = {
+    spring: { icon: "🌸" }, summer: { icon: "🌻" }, autumn: { icon: "🍁" }, winter: { icon: "⛄" },
+  };
+  function currentSeasonByDate() {
+    const m = new Date().getMonth() + 1;
+    if (m >= 3 && m <= 5) return "spring";
+    if (m >= 6 && m <= 8) return "summer";
+    if (m >= 9 && m <= 11) return "autumn";
+    return "winter";
+  }
+  let season = currentSeasonByDate();
+  try { localStorage.removeItem("akiya-season"); } catch (e) {}  // 以前のボタン選択の保存値を破棄
+
+  const canvas = document.getElementById("season-canvas");
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let particles = [];
+  let W = 0, H = 0;
+
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rebuildParticles();
+  }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  function makeParticle(initial) {
+    const p = { x: rand(0, W), y: initial ? rand(0, H) : rand(-40, -5), phase: rand(0, Math.PI * 2) };
+    if (season === "spring") {            // 桜の花びら
+      Object.assign(p, { size: rand(5, 9), vy: rand(0.5, 1.2), sway: rand(0.4, 1.1), rot: rand(0, 6.28), vr: rand(-0.03, 0.03) });
+    } else if (season === "summer") {     // 蛍・きらめき
+      Object.assign(p, { y: rand(0, H), size: rand(1.8, 3.8), vx: rand(-0.25, 0.25), vy: rand(-0.3, 0.15), speed: rand(0.01, 0.025) });
+    } else if (season === "autumn") {     // 落ち葉
+      const colors = ["#d9822b", "#c0502d", "#b5651d", "#e0a030", "#9c4a1a"];
+      Object.assign(p, { size: rand(7, 12), vy: rand(0.7, 1.6), sway: rand(0.6, 1.4), rot: rand(0, 6.28), vr: rand(-0.04, 0.04), color: colors[Math.floor(Math.random() * colors.length)] });
+    } else {                              // 雪
+      Object.assign(p, { size: rand(3, 8), vy: rand(0.5, 1.4), sway: rand(0.2, 0.7) });
+    }
+    return p;
+  }
+  function rebuildParticles() {
+    const n = Math.max(18, Math.min(60, Math.round((W * H) / 22000)));
+    particles = Array.from({ length: n }, () => makeParticle(true));
+  }
+
+  function drawParticle(p, t) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    if (season === "spring") {
+      ctx.rotate(p.rot);
+      ctx.fillStyle = "rgba(244,165,190,0.8)";
+      ctx.beginPath(); ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(255,225,235,0.9)";
+      ctx.beginPath(); ctx.ellipse(-p.size * 0.2, 0, p.size * 0.4, p.size * 0.2, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (season === "summer") {
+      const a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(t * p.speed * 60 + p.phase));
+      ctx.shadowColor = "rgba(255,214,80," + a + ")"; ctx.shadowBlur = 14;
+      ctx.fillStyle = "rgba(255,226,110," + a + ")";
+      ctx.beginPath(); ctx.arc(0, 0, p.size, 0, Math.PI * 2); ctx.fill();
+    } else if (season === "autumn") {
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color; ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.moveTo(0, -p.size);
+      ctx.quadraticCurveTo(p.size * 0.9, -p.size * 0.1, 0, p.size);
+      ctx.quadraticCurveTo(-p.size * 0.9, -p.size * 0.1, 0, -p.size);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(90,40,10,0.45)"; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.lineTo(0, p.size); ctx.stroke();
+    } else {
+      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      ctx.strokeStyle = "rgba(130,165,205,0.55)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(0, 0, p.size, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function tick(t) {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      if (season === "summer") {
+        p.x += p.vx + Math.sin(t / 900 + p.phase) * 0.3;
+        p.y += p.vy;
+        if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+        if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+      } else {
+        p.y += p.vy;
+        p.x += Math.sin(t / 1000 + p.phase) * p.sway;
+        if (p.rot !== undefined) p.rot += p.vr;
+        if (p.y > H + 20) particles[i] = makeParticle(false);
+      }
+      drawParticle(p, t / 1000);
+    }
+    if (!document.hidden) requestAnimationFrame(tick);
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !reduceMotion) requestAnimationFrame(tick); });
+
+  function applySeason(name) {
+    season = name;
+    document.body.setAttribute("data-season", name);
+    document.getElementById("season-icon").textContent = SEASONS[name].icon;
+        rebuildParticles();
+    if (reduceMotion) ctx.clearRect(0, 0, W, H);
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  applySeason(season);
+  if (!reduceMotion) requestAnimationFrame(tick);
 
   // 診断フォーム(/diagnosis)から遷移してきた場合は、その回答をもとにした文章を
   // 最初のユーザー発言として自動送信し、チャットをスタートする。
