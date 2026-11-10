@@ -78,12 +78,13 @@ function initMap() {
         scrollWheelZoom: true,
     }).setView([35.689, 139.691], 10);
 
-    // 背景地図: 色数を抑えた淡いデザイン(CARTO Positron)。ピンや周辺施設の色が目立つ。
-    // 元の標準地図に戻したい場合は、下の2行を次のように書き換える:
-    //   'https://tile.openstreetmap.org/{z}/{x}/{y}.png' / attribution: '&copy; OpenStreetMap contributors'
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
+    // 背景地図: 国土地理院「淡色地図」。色数が少なく、ピンや浸水想定区域の色が目立つ。
+    // APIキー不要。出典の表示だけで使える(地図右下に表示される「地理院タイル」)。
+    // 元の標準地図(OpenStreetMap)に戻したいときは、次の2か所を書き換える:
+    //   URL → 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' / attribution → '&copy; OpenStreetMap contributors'
+    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+        attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>(国土地理院)',
+        maxNativeZoom: 18,
         maxZoom: 19,
     }).addTo(map);
 
