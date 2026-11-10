@@ -1,840 +1,173 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>
-  // 簡易デモ用のログインガード。サーバー側の本格的な認証ではなく、
-  // ブラウザのsessionStorageに「ログイン済み/ゲスト」の状態を持つだけの
-  // プロトタイプ実装(タブを閉じるとリセットされる)。未ログインなら、
-  // トップ画面より前に必ずログイン画面を通らせるため/loginへ飛ばす。
-  (function () {
-    try {
-      if (!sessionStorage.getItem('akiya_auth')) {
-        location.replace('/login');
-      }
-    } catch (e) { /* storageが使えない環境ではガード無しで続行 */ }
-  })();
-</script>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>空き家AIプランナー</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #eeece8;
-    --panel: #fbfaf8;
-    --text: #2f2e2b;
-    --muted: #85827a;
-    --accent: #3c6e52;
-    --accent-deep: #294c39;
-    --accent-soft: #e6efe1;
-    --clay: #b0603d;
-    --clay-soft: #f3e3d8;
-    --gold: #bb9339;
-    --gold-deep: #8a6b1d;
-    --gold-soft: #fbf1da;
-    --border: #dcdad3;
-    --user-bubble: #3c6e52;
-    --user-bubble-text: #fdfbf5;
-    --agent-bubble: #fffaf0;
-  }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    background:
-      radial-gradient(ellipse 620px 420px at 8% -8%, rgba(70,68,62,0.07), transparent 60%),
-      radial-gradient(ellipse 520px 420px at 108% 12%, rgba(70,68,62,0.05), transparent 60%),
-      radial-gradient(ellipse 700px 520px at 50% 118%, rgba(70,68,62,0.06), transparent 60%),
-      var(--bg);
-    background-attachment: fixed;
-  }
-  h1, .brand-mark, button, .nav-link { font-family: "Zen Maru Gothic", "Noto Sans JP", sans-serif; }
-
-  header {
-    padding: 16px 24px 26px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    box-shadow: 0 1px 0 rgba(48,42,32,0.03);
-  }
-  .header-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    row-gap: 10px;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-  .header-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    flex-shrink: 0;
-    align-items: center;
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .brand-mark {
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    color: var(--accent);
-  }
-  header h1 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-  }
-  header p {
-    margin: 4px 0 0;
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .nav-link {
-    flex-shrink: 0;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--accent-deep);
-    background: var(--accent-soft);
-    border: 1px solid var(--border);
-    border-radius: 14px 4px 14px 4px;
-    padding: 6px 13px;
-    text-decoration: none;
-    white-space: nowrap;
-    display: inline-block;
-    transition: transform 0.15s ease, border-color 0.15s ease;
-  }
-  .nav-link:hover { border-color: var(--accent); transform: translateY(-1px) rotate(-0.6deg); }
-  .nav-link:nth-of-type(2) {
-    background: var(--clay-soft);
-    color: #7a4128;
-    border-radius: 4px 14px 4px 14px;
-  }
-
-  .torn-divider {
-    display: block;
-    width: 100%;
-    height: 14px;
-    margin-top: -1px;
-  }
-
-  main {
-    flex: 1;
-    overflow-y: auto;
-    padding: 22px 20px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 760px;
-    width: 100%;
-    margin: 0 auto;
-  }
-  .msg-row {
-    display: flex;
-  }
-  .msg-row.user { justify-content: flex-end; }
-  .msg-row.agent { flex-direction: column; }
-  .bubble {
-    max-width: 78%;
-    padding: 11px 15px;
-    line-height: 1.7;
-    font-size: 14px;
-    white-space: pre-wrap;
-    box-shadow: 0 1px 2px rgba(48,42,32,0.06);
-  }
-  .msg-row.user .bubble {
-    background: var(--user-bubble);
-    color: var(--user-bubble-text);
-    border-radius: 20px 20px 4px 20px;
-  }
-  .msg-row.agent .bubble {
-    background: var(--agent-bubble);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 4px 20px 20px 20px;
-  }
-  .tool-tag {
-    font-size: 11px;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-top: 9px;
-  }
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px 14px 14px 14px;
-    padding: 11px 13px;
-    font-size: 13px;
-    box-shadow: 0 1px 2px rgba(48,42,32,0.05);
-  }
-  .card-title { font-weight: 700; margin-bottom: 4px; }
-  .card-row { color: var(--muted); font-size: 12px; }
-  .match-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
-  .match-tag {
-    display: inline-block;
-    background: var(--accent-soft);
-    color: var(--accent-deep);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 3px 9px 9px 9px;
-  }
-  @keyframes osusume-glow {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(187,147,57,0.14), 0 3px 10px rgba(187,147,57,0.22); }
-    50% { box-shadow: 0 0 0 6px rgba(187,147,57,0.22), 0 4px 16px rgba(187,147,57,0.38); }
-  }
-  .card.akiya.top-pick {
-    border: 2px solid var(--gold);
-    background: linear-gradient(180deg, var(--gold-soft) 0%, var(--panel) 55%);
-    animation: osusume-glow 2.6s ease-in-out infinite;
-  }
-  .osusume-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: #fff;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
-    padding: 4px 13px;
-    border-radius: 3px 12px 12px 12px;
-    margin-bottom: 7px;
-    box-shadow: 0 1px 3px rgba(138,107,29,0.4);
-  }
-  .card.subsidy { border-left: 3px solid var(--accent); }
-  .card.subsidy.empty { border-left: 3px dashed var(--border); opacity: 0.85; }
-  .card.continue-chat { border-left: 3px solid var(--accent); }
-  .card.cost, .card.income { border-left: 3px solid var(--clay); }
-  .card.expandable { cursor: pointer; transition: transform 0.15s ease, border-color 0.15s ease; }
-  .card.expandable:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .card-toggle { font-size: 11px; color: var(--accent); margin-top: 6px; }
-  .card-detail { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 2px; }
-  .card-detail[hidden] { display: none; }
-  .card.shop-image { border-left: 3px solid #6b5ca0; }
-  .card.shop-image img {
-    width: 100%;
-    border-radius: 4px 12px 12px 12px;
-    margin-top: 6px;
-    display: block;
-  }
-  .card.shop-image .card-note { font-size: 11px; color: var(--muted); margin-top: 6px; }
-
-  footer {
-    border-top: 1px solid var(--border);
-    background: var(--panel);
-    padding: 16px 20px 18px;
-  }
-  .input-row {
-    max-width: 760px;
-    margin: 0 auto;
-    display: flex;
-    gap: 9px;
-    align-items: flex-end;
-  }
-  textarea {
-    flex: 1;
-    resize: none;
-    border: 1px solid var(--border);
-    border-radius: 16px 16px 4px 16px;
-    padding: 11px 14px;
-    font-size: 14px;
-    font-family: inherit;
-    height: 46px;
-    background: var(--bg);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-  textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
-  }
-  button {
-    background: var(--accent);
-    color: var(--user-bubble-text);
-    border: none;
-    border-radius: 16px 16px 16px 4px;
-    padding: 0 22px;
-    height: 46px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
-  }
-  button:hover:not(:disabled) { background: var(--accent-deep); transform: translateY(-1px); }
-  button:disabled { opacity: 0.5; cursor: default; }
-  .hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
-  .loading .bubble { color: var(--muted); font-style: italic; }
-
-  main::-webkit-scrollbar { width: 8px; }
-  main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
-
-  .akiya-status-bar {
-    font-size: 11px;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  .akiya-status-bar a { color: var(--accent-deep); font-weight: 700; text-decoration: none; }
-  .akiya-status-bar a:hover { text-decoration: underline; }
-
-  .guest-limit-banner {
-    display: none;
-    font-size: 11px;
-    color: var(--text);
-    text-align: center;
-    padding: 6px 10px;
-    margin-bottom: 8px;
-    background: var(--clay-soft);
-    border: 1px solid var(--border);
-    border-radius: 10px 10px 2px 10px;
-  }
-  .guest-limit-banner a { color: #7a4128; font-weight: 700; text-decoration: none; }
-  .guest-limit-banner a:hover { text-decoration: underline; }
-
-  @media (max-width: 600px) {
-    header { padding: 14px 16px 20px; }
-    .header-row { justify-content: center; text-align: center; }
-    .brand { text-align: left; }
-    .header-nav { justify-content: center; width: 100%; }
-    main { padding: 16px 12px; }
-    footer { padding: 12px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空き家AIプランナー</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<header>
-  <div class="header-row">
-    <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 24 L23.5 8 L41 24.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M11.5 20.5 V39 C11.5 39.8 12.2 40.5 13 40.5 H33.5 C34.3 40.5 35 39.8 35 39 V20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M20 40 V29.5 C20 28.7 20.7 28 21.5 28 H26 C26.8 28 27.5 28.7 27.5 29.5 V40" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M31 15 C33 12.5 33 10 31.5 6.5" stroke="var(--clay)" stroke-width="2.2" stroke-linecap="round"/>
-        <circle cx="31.5" cy="6" r="1.6" fill="var(--clay)"/>
-      </svg>
-      <div>
-        <h1>空き家AIプランナー</h1>
-        <p>チャットで希望を伝えると、空き家候補・改修コスト・収支・補助金をまとめて提案します</p>
-      </div>
-    </div>
-    <div class="header-nav">
-      <span id="akiyaStatusBar" class="akiya-status-bar"></span>
-      <a class="nav-link" href="/">🏠 トップへ</a>
-      <a class="nav-link" id="frontend-link" href="http://localhost:8080/" target="_blank" rel="noopener">🗺️ マップ・PDF出力を見る</a>
-    </div>
-  </div>
-  <svg class="torn-divider" viewBox="0 0 760 14" preserveAspectRatio="none">
-    <path d="M0,4 Q19,0 38,5 T76,4 T114,6 T152,3 T190,5 T228,4 T266,6 T304,3 T342,5 T380,4 T418,6 T456,3 T494,5 T532,4 T570,6 T608,3 T646,5 T684,4 T722,6 T760,4 V14 H0 Z" fill="var(--bg)"/>
-  </svg>
-</header>
+<body class="bg-[color:var(--paper)] text-[color:var(--ink)] min-h-screen flex flex-col font-sans">
 
-<main id="chat-log"></main>
+    <!-- ヘッダー -->
+    <header class="bg-white border-b border-[color:var(--line)] px-6 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl" id="season-icon">🏠</span>
+            <h1 class="text-xl font-bold font-serif-jp tracking-wide">空き家AIプランナー</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="season-fx-toggle" type="button" class="text-xs bg-[color:var(--paper)] hover:bg-[color:var(--line)] text-[color:var(--ink)] border border-[color:var(--line)] px-3 py-1.5 rounded-full font-medium transition" aria-pressed="true">
+                ✨ 季節の演出: ON
+            </button>
+            <a id="chat-link" href="#" target="_blank" class="text-xs bg-[color:var(--paper)] hover:bg-[color:var(--line)] text-[color:var(--ink)] border border-[color:var(--line)] px-3 py-1.5 rounded-full font-medium transition">
+                💬 AIに相談する
+            </a>
+            <span class="text-xs text-[color:var(--ink-soft)] font-medium">VORN Challenge 2026</span>
+        </div>
+    </header>
 
-<footer>
-  <div id="guestLimitBanner" class="guest-limit-banner"></div>
-  <div class="input-row">
-    <textarea id="input" placeholder="例: 千葉県でカフェを開きたい。予算は300万円くらい。" onkeydown="handleKeydown(event)" oncompositionstart="handleCompositionStart()" oncompositionend="handleCompositionEnd()"></textarea>
-    <button id="send-btn" onclick="sendMessage()">送信</button>
-  </div>
-  <div class="hint">Enterで送信 / Shift+Enterで改行</div>
-</footer>
+    <!-- メインコンテンツ -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- 左カラム：検索・マップ・物件カード -->
+        <section class="space-y-4 flex flex-col">
+            <!-- エリア選択フィルター -->
+            <div class="panel p-3 flex items-center gap-3 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <label for="prefSelect" class="text-xs font-bold text-[color:var(--ink)] whitespace-nowrap flex items-center gap-1">
+                    <span>🔍</span> エリア絞り込み:
+                </label>
+                <select id="prefSelect" class="input-field w-full p-2 text-sm font-medium bg-[color:var(--paper)] border border-[color:var(--line)] rounded focus:outline-none">
+                    <option value="none">エリアを選択してください</option>
+                </select>
+            </div>
 
-<script>
-  // このセッションだけの一時的なID(ページを再読み込みすると新しい会話になります)
-  const sessionState = { id: null };
+            <!-- 候補物件マップ -->
+            <div class="panel p-4 flex-1 flex flex-col relative bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <div class="mb-2 flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)]">
+                        <span>📍</span> 候補物件マップ
+                    </h2>
+                    <div id="amenityStatus" class="status-badge text-xs font-medium text-[color:var(--ink-soft)]">
+                        物件を選択してください
+                    </div>
+                </div>
+                <div id="map" class="w-full h-[360px] rounded border border-[color:var(--line)]"></div>
+                <p class="text-[10px] leading-relaxed text-[color:var(--ink-soft)] mt-2">
+                    🗺️ 地図右上のボタンで、洪水・高潮・津波の浸水想定区域を重ねて見られます。
+                    ※国の公開データによる参考情報です。色のついていない場所でも被害が出ることがあります。
+                    購入・移住の前に、必ず市区町村の公式ハザードマップをご確認ください。
+                    <a class="underline" href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener noreferrer">ハザードマップポータルサイト(国土交通省)</a>
+                </p>
+            </div>
 
-  // ゲストモードで相談できる回数(この値を超えるとログインを促して送信をブロックする)。
-  // ページを再読み込みすると会話自体もリセットされるのに合わせ、この回数もリセットされる。
-  const GUEST_MESSAGE_LIMIT = 5;
-  let guestMessageCount = 0;
+            <!-- 周辺環境バッジ付き物件カードリスト -->
+            <div class="panel p-3 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-xs font-bold text-[color:var(--ink)]">物件一覧（周辺環境バッジ付き）</p>
+                    <span class="text-[10px] text-[color:var(--ink-soft)]">カードクリックで地図移動</span>
+                </div>
+                <div id="propertyCardList" class="flex gap-3 overflow-x-auto pb-2 min-h-[95px]">
+                    <!-- JSでカードが自動生成されます -->
+                </div>
+            </div>
 
-  function getAkiyaAuth() {
-    try { return JSON.parse(sessionStorage.getItem('akiya_auth') || 'null'); } catch (e) { return null; }
-  }
+            <!-- 選択中物件の要約カード -->
+            <div id="houseDetailCard" class="panel p-4 bg-[color:var(--sand)] rounded-lg border border-[color:var(--line)]">
+                <div class="flex items-center justify-between border-b border-[color:var(--line)] pb-2 mb-2">
+                    <span class="text-xs font-bold text-[color:var(--gold)] uppercase tracking-wider">SELECTED PROPERTY</span>
+                    <span id="detailAddress" class="text-xs text-[color:var(--ink-soft)]">所在地: -</span>
+                </div>
+                <h3 class="text-base font-serif-jp font-bold text-[color:var(--ink)] mb-2" id="detailName">物件を選択してください</h3>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="p-2 bg-white rounded border border-[color:var(--line)]">
+                        <span class="text-[color:var(--ink-soft)] block text-[10px]">改修コスト目安</span>
+                        <span id="detailCost" class="font-bold text-[color:var(--ink)]">-</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-[color:var(--line)]">
+                        <span class="text-[color:var(--ink-soft)] block text-[10px]">想定用途</span>
+                        <span id="detailUsage" class="font-bold text-[color:var(--ink)]">-</span>
+                    </div>
+                </div>
+            </div>
 
-  function akiyaLogout() {
-    try { sessionStorage.removeItem('akiya_auth'); } catch (e) { /* noop */ }
-    window.location.href = '/login';
-  }
+            <!-- 四季の暮らしプレビュー -->
+            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)]">
+                        <span>🌸</span> 四季の暮らしプレビュー
+                    </h2>
+                    <button id="seasonPreviewReset" type="button" class="text-[10px] text-[color:var(--ink-soft)] underline">今日の季節に戻す</button>
+                </div>
+                <div class="grid grid-cols-4 gap-2 mb-3">
+                    <button type="button" class="season-tab" data-season="spring">🌸 春</button>
+                    <button type="button" class="season-tab" data-season="summer">🌻 夏</button>
+                    <button type="button" class="season-tab" data-season="autumn">🍁 秋</button>
+                    <button type="button" class="season-tab" data-season="winter">⛄ 冬</button>
+                </div>
+                <div id="seasonPreviewBody" class="min-h-[88px]"></div>
+            </div>
+        </section>
 
-  function showGuestLockNotice(message) {
-    const existing = document.getElementById('akiya-lock-toast');
-    if (existing) existing.remove();
-    const toast = document.createElement('div');
-    toast.id = 'akiya-lock-toast';
-    toast.style.cssText = 'position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:#2f2e2b; color:#fff; padding:12px 18px; border-radius:10px 10px 10px 2px; font-size:13px; box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:9999; display:flex; align-items:center; gap:6px; white-space:nowrap;';
-    toast.textContent = message || '🔒 この機能はログインすると使えます';
-    const link = document.createElement('a');
-    link.href = '/login';
-    link.textContent = 'ログインする →';
-    link.style.cssText = 'color:#fff; text-decoration:underline; font-weight:700; margin-left:4px;';
-    toast.appendChild(link);
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.remove(); }, 4000);
-  }
+        <!-- 右カラム：収支・補助金・PDF出力 -->
+        <section class="space-y-4 flex flex-col">
+            <!-- 収支シミュレーション -->
+            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-3">
+                    <span>📊</span> 収支シミュレーション (5年)
+                </h2>
+                <div class="h-[220px] relative">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
 
-  function renderAkiyaStatusBar() {
-    const el = document.getElementById('akiyaStatusBar');
-    if (!el) return;
-    const auth = getAkiyaAuth();
-    if (!auth) return;
-    if (auth.mode === 'user') {
-      el.innerHTML = `👤 ${auth.name ? auth.name + 'さんとして' : ''}ログイン中　・　<a href="#" id="akiyaLogoutLink">ログアウト</a>`;
-    } else {
-      el.innerHTML = '🔓 ゲストモード　・　<a href="/login">ログインする</a>';
-    }
-    const logoutLink = document.getElementById('akiyaLogoutLink');
-    if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); akiyaLogout(); });
-  }
-  renderAkiyaStatusBar();
+            <!-- 周辺の魅力レーダーチャート -->
+            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-2">
+                    <span>🌿</span> 周辺の魅力 (半径1km)
+                </h2>
+                <div id="appealRadarWrap" class="h-[240px] relative hidden">
+                    <canvas id="appealRadar"></canvas>
+                </div>
+                <p id="appealSummary" class="text-xs leading-relaxed text-[color:var(--ink)] mt-2">物件を選択してください</p>
+                <p class="text-[10px] text-[color:var(--ink-soft)] mt-1">※地図データ(OpenStreetMap)の施設数をもとにした目安です。5点=十分にそろっている目安。</p>
+            </div>
 
-  function updateGuestLimitBanner() {
-    const banner = document.getElementById('guestLimitBanner');
-    if (!banner) return;
-    const auth = getAkiyaAuth();
-    if (!auth || auth.mode !== 'guest') {
-      banner.style.display = 'none';
-      return;
-    }
-    const remaining = GUEST_MESSAGE_LIMIT - guestMessageCount;
-    if (remaining <= 0) {
-      banner.innerHTML = '🔒 ゲストモードでの相談回数(5回)に達しました。続けて相談するには<a href="/login">ログイン</a>してください';
-    } else {
-      banner.innerHTML = `🔓 ゲストモードでご利用中：あと${remaining}回相談できます（<a href="/login">ログインすると無制限に</a>）`;
-    }
-    banner.style.display = 'block';
-  }
-  updateGuestLimitBanner();
+            <!-- 利用できる補助金 -->
+            <div class="panel p-4 flex-1 bg-white rounded-lg border border-[color:var(--line)] shadow-sm flex flex-col">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-3">
+                    <span>💰</span> 利用できる補助金
+                </h2>
+                <div id="subsidyList" class="space-y-2 overflow-y-auto max-h-[220px] flex-1 pr-1">
+                    <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
+                </div>
+            </div>
 
-  // フロント(マップ・グラフ・PDF出力画面、C担当作成)へのリンク先。
-  // ローカルで両方のサーバーを立ち上げている間は http://localhost:8080/ でOK。
-  // フロントを別途デプロイしたら、そのURLに書き換えてください。
-  const FRONTEND_URL = "https://empty-house2026-1.onrender.com/";
-  const frontendLink = document.getElementById("frontend-link");
-  frontendLink.href = FRONTEND_URL;
-  frontendLink.addEventListener("click", (e) => {
-    // ゲストモードではマップ・PDF出力の閲覧を制限する。
-    const auth = getAkiyaAuth();
-    if (!auth || auth.mode !== "user") {
-      e.preventDefault();
-      showGuestLockNotice('🔒 マップ・PDF出力の閲覧にはログインが必要です');
-    }
-  });
+            <!-- 提案書ダウンロードボタン -->
+            <button onclick="downloadPDF()" class="w-full bg-[color:var(--gold)] hover:bg-[color:var(--gold-dark)] text-white font-bold py-3.5 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2 text-sm">
+                <span>📄</span> 提案書(PDF)を出力・ダウンロード
+            </button>
+        </section>
 
-  function el(tag, className, text) {
-    const e = document.createElement(tag);
-    if (className) e.className = className;
-    if (text !== undefined) e.textContent = text;
-    return e;
-  }
+    </main>
 
-  function appendMessage(role, text) {
-    const log = document.getElementById("chat-log");
-    const row = el("div", `msg-row ${role}`);
-    const bubble = el("div", "bubble", text);
-    row.appendChild(bubble);
-    log.appendChild(row);
-    log.scrollTop = log.scrollHeight;
-    return bubble;
-  }
-
-  // 空き家カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
-  function buildAkiyaCard(p, isTopPick) {
-    const card = el("div", "card akiya expandable" + (isTopPick ? " top-pick" : ""));
-
-    // 診断の答え(性格・住みたい環境・エリア・予算など)と特によく合っている1〜2件には、
-    // 「✨おすすめ✨」バッジを付けて目立たせる(pickTopPickIdsで判定)。
-    if (isTopPick) {
-      card.appendChild(el("div", "osusume-badge", "✨おすすめ✨"));
-    }
-
-    // 診断のクイックマッチ結果・Gemini経由の検索結果のどちらにも、なぜこの物件がマッチしたかの
-    // 理由タグ(エリア一致・予算内・性格/環境の一致など)が付いてくることがある。
-    // あれば見出しの上に小さなタグとして表示する。
-    if (p.match_reasons && p.match_reasons.length > 0) {
-      const tagRow = el("div", "match-tags");
-      for (const reason of p.match_reasons) {
-        tagRow.appendChild(el("span", "match-tag", reason));
-      }
-      card.appendChild(tagRow);
-    }
-
-    const priceText = (p.price_man_yen === null || p.price_man_yen === undefined) ? "価格応相談" : `${p.price_man_yen}万円`;
-    card.appendChild(el("div", "card-title", `${p.title || p.municipality || p.area}(${priceText})`));
-    if (p.area) card.appendChild(el("div", "card-row", `📍 ${p.area}`));
-    card.appendChild(el("div", "card-row",
-      `延床${p.building_area_sqm}㎡ / ${p.structure} / ${p.layout}${p.floors ? ` / ${p.floors}階建` : ""}`));
-
-    // 築年数・土地面積・改修費目安など、わかる範囲で補足情報を1行にまとめる。
-    const extraBits = [];
-    if (p.built_year && p.built_year !== "-" && p.built_year !== "不詳") extraBits.push(`築${p.built_year}`);
-    if (p.land_area_sqm) extraBits.push(`土地${p.land_area_sqm}㎡`);
-    if (p.renovation_cost_est_man_yen !== null && p.renovation_cost_est_man_yen !== undefined) {
-      extraBits.push(`改修費目安 約${p.renovation_cost_est_man_yen}万円`);
-    }
-    if (extraBits.length > 0) card.appendChild(el("div", "card-row", extraBits.join(" / ")));
-
-    if (p.features) card.appendChild(el("div", "card-row", p.features));
-
-    // クリックすると、この物件を選択した状態でフロント(マップ・グラフ・PDF出力画面)を新しいタブで開く。
-    const toggle = el("div", "card-toggle", "🗺️ マップ・PDF出力で見る");
-    card.appendChild(toggle);
-
-    if (p.id) {
-      card.addEventListener("click", () => {
-        const auth = getAkiyaAuth();
-        if (!auth || auth.mode !== "user") {
-          showGuestLockNotice('🔒 マップ・PDF出力の閲覧にはログインが必要です');
-          return;
-        }
-        window.open(`${FRONTEND_URL}?property_id=${p.id}`, "_blank");
-      });
-    }
-
-    return card;
-  }
-
-  // 複数の空き家候補の中から、診断の答え(性格・住みたい環境・用途など)と特によく合っている
-  // (match_scoreが最も高い)1〜2件を「おすすめ」として選ぶ。エリア・予算などのハード条件
-  // だけしか一致しておらずスコアが0(=特に際立った一致なし)の場合は、誰も「おすすめ」にしない。
-  function pickTopPickIds(results) {
-    const withScore = (results || []).filter((p) => typeof p.match_score === "number");
-    if (withScore.length === 0) return new Set();
-    const maxScore = Math.max(...withScore.map((p) => p.match_score));
-    if (maxScore <= 0) return new Set();
-    const topIds = new Set();
-    for (const p of results) {
-      if (topIds.size >= 2) break;
-      if (p.match_score === maxScore) topIds.add(p.id);
-    }
-    return topIds;
-  }
-
-  // Gemini経由の検索結果(search_akiyaツール呼び出し)には、診断フォームの一発マッチのような
-  // match_reasonsが付いてこない。そのツール呼び出し時の引数(area・予算・用途など)と、
-  // 物件のmatched_traits(性格・住みたい環境の一致項目)から、同じ形式のタグを組み立てる。
-  function buildMatchReasonsFromToolArgs(p, args) {
-    const reasons = [];
-    if (args && args.area) reasons.push(`エリア「${args.area}」に一致`);
-    const price = p.price_man_yen;
-    if (args && args.max_budget_man_yen != null && price != null && price <= args.max_budget_man_yen) {
-      reasons.push("予算内");
-    }
-    if (args && args.use_type && p.features && p.features.includes(args.use_type)) {
-      reasons.push(`${args.use_type}向け`);
-    }
-    for (const trait of (p.matched_traits || [])) {
-      reasons.push(`「${trait}」に合う`);
-    }
-    return reasons;
-  }
-
-  // 補助金カード1件分のDOMを組み立てる(検索結果のツール呼び出し・診断の一発マッチ結果の両方から使う共通処理)。
-  // 公式ページURL(source_url)が確認できているものだけをここに渡す想定(呼び出し側でフィルタ済み)。
-  function buildSubsidyCard(s) {
-    const card = el("div", "card subsidy");
-    card.appendChild(el("div", "card-title", s.subsidy_name || "補助金・支援制度"));
-    const area = [s.prefecture, s.municipality].filter(Boolean).join(" ");
-    const amount = s.max_amount != null ? `上限${s.max_amount}万円` : null;
-    const metaBits = [area, amount, s.rate].filter(Boolean);
-    if (metaBits.length > 0) card.appendChild(el("div", "card-row", metaBits.join(" / ")));
-    if (s.conditions) card.appendChild(el("div", "card-row", s.conditions));
-    if (s.source_url) {
-      const link = el("a", "card-toggle", "🔗 公式ページで確認する");
-      link.href = s.source_url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      card.appendChild(link);
-    }
-    return card;
-  }
-
-  // 公式ページURL(source_url)が確認できている補助金だけを残す。
-  // 確かな情報がある制度だけを表示し、無いものはカードごと出さない(呼び出し側で「記載なし」に切り替える)。
-  function withVerifiedSource(subsidies) {
-    return (subsidies || []).filter((s) => !!s && !!s.source_url);
-  }
-
-  // 確認できる補助金情報が無かった時に表示する「記載なし」カード。
-  function buildNoSubsidyCard() {
-    const card = el("div", "card subsidy empty");
-    card.appendChild(el("div", "card-title", "補助金情報: 記載なし"));
-    card.appendChild(el("div", "card-row", "公式ページで確認できる補助金・支援制度の情報は見つかりませんでした。"));
-    return card;
-  }
-
-  // 診断フォームの一発マッチ結果(Geminiを介さない)をチャットのカードとして表示する。
-  function renderAkiyaCards(container, results) {
-    if (!results || results.length === 0) return;
-    const topPickIds = pickTopPickIds(results);
-    const wrap = el("div", "cards");
-    for (const p of results) {
-      wrap.appendChild(buildAkiyaCard(p, topPickIds.has(p.id)));
-    }
-    if (wrap.children.length > 0) container.appendChild(wrap);
-  }
-
-  // 診断フォームの一発マッチに紐づく補助金・支援制度をチャットのカードとして表示する。
-  // 公式ページURLで確認できたものだけを表示し、無ければ「記載なし」カードを出す。
-  function renderSubsidyCards(container, subsidies) {
-    if (!subsidies || subsidies.length === 0) return;
-    const verified = withVerifiedSource(subsidies);
-    const wrap = el("div", "cards");
-    if (verified.length > 0) {
-      for (const s of verified) {
-        wrap.appendChild(buildSubsidyCard(s));
-      }
-    } else {
-      wrap.appendChild(buildNoSubsidyCard());
-    }
-    container.appendChild(wrap);
-  }
-
-  // 診断の一発マッチ結果が気に入らなかった時に、そのままAIとの会話に進めるようにするボタン。
-  // クリックすると診断の回答内容を最初のメッセージとして/api/chatに送り、Geminiとの
-  // 通常の会話(検索・提案)にフォールバックする。
-  function renderContinueChatPrompt(container, summaryText) {
-    const wrap = el("div", "cards");
-    const card = el("div", "card continue-chat expandable");
-    card.appendChild(el("div", "card-title", "🤖 気に入る物件がなければ"));
-    card.appendChild(el("div", "card-row", "AIに相談して、ほかの候補を探してもらう"));
-    card.addEventListener("click", () => {
-      wrap.remove();
-      sendMessage(
-        `${summaryText} さっき提案してもらった物件はどれも気に入らなかったので、ほかの候補を提案してください。`
-      );
-    });
-    wrap.appendChild(card);
-    container.appendChild(wrap);
-  }
-
-  function renderToolResults(container, toolCalls) {
-    if (!toolCalls || toolCalls.length === 0) return;
-    const wrap = el("div", "cards");
-
-    for (const tc of toolCalls) {
-      if (tc.name === "search_akiya" && tc.result && tc.result.results) {
-        const topPickIds = pickTopPickIds(tc.result.results);
-        for (const p of tc.result.results) {
-          if (!p.match_reasons) p.match_reasons = buildMatchReasonsFromToolArgs(p, tc.args);
-          wrap.appendChild(buildAkiyaCard(p, topPickIds.has(p.id)));
-        }
-      }
-      if (tc.name === "estimate_renovation_cost" && tc.result) {
-        const r = tc.result;
-        const card = el("div", "card cost");
-        card.appendChild(el("div", "card-title", `改修コスト概算: 約${r.estimated_cost_man_yen}万円`));
-        if (r.cost_range_man_yen) {
-          card.appendChild(el("div", "card-row", `想定レンジ: ${r.cost_range_man_yen.min}〜${r.cost_range_man_yen.max}万円`));
-        }
-        wrap.appendChild(card);
-      }
-      if (tc.name === "simulate_income" && tc.result) {
-        const r = tc.result;
-        const card = el("div", "card income");
-        card.appendChild(el("div", "card-title", `月次収支概算: 利益 約${r.monthly_profit_man_yen}万円/月`));
-        card.appendChild(el("div", "card-row",
-          `売上 約${r.monthly_revenue_man_yen}万円 / コスト 約${r.monthly_cost_man_yen}万円`
-          + (r.payback_period_years ? ` / 投資回収 約${r.payback_period_years}年` : "")));
-        wrap.appendChild(card);
-      }
-      if (tc.name === "search_subsidies" && tc.result && tc.result.results) {
-        const verified = withVerifiedSource(tc.result.results);
-        if (verified.length > 0) {
-          for (const s of verified) {
-            wrap.appendChild(buildSubsidyCard(s));
-          }
-        } else if (tc.result.results.length > 0) {
-          wrap.appendChild(buildNoSubsidyCard());
-        }
-      }
-      if (tc.name === "generate_shop_image" && tc.result) {
-        const r = tc.result;
-        const card = el("div", "card shop-image");
-        if (r.image_base64) {
-          card.appendChild(el("div", "card-title", "🎨 AIが生成したイメージ"));
-          const img = document.createElement("img");
-          img.src = `data:${r.mime_type || "image/png"};base64,${r.image_base64}`;
-          img.alt = "AIが生成した店舗・ロゴのイメージ画像";
-          card.appendChild(img);
-          card.appendChild(el("div", "card-note", "※AIによるイメージ案です。実際のデザインを保証するものではありません。"));
-        } else {
-          card.appendChild(el("div", "card-title", "🎨 画像を生成できませんでした"));
-          if (r.error) card.appendChild(el("div", "card-row", r.error));
-        }
-        wrap.appendChild(card);
-      }
-    }
-
-    if (wrap.children.length > 0) container.appendChild(wrap);
-  }
-
-  async function sendMessage(presetText) {
-    const input = document.getElementById("input");
-    const btn = document.getElementById("send-btn");
-    const text = (presetText !== undefined ? presetText : input.value).trim();
-    if (!text) return;
-
-    const auth = getAkiyaAuth();
-    const isGuest = !!(auth && auth.mode === "guest");
-    if (isGuest && guestMessageCount >= GUEST_MESSAGE_LIMIT) {
-      updateGuestLimitBanner();
-      showGuestLockNotice('🔒 ゲストモードでの相談回数（5回）に達しました');
-      return;
-    }
-
-    appendMessage("user", text);
-    input.value = "";
-    btn.disabled = true;
-
-    if (isGuest) {
-      guestMessageCount += 1;
-      updateGuestLimitBanner();
-    }
-
-    const log = document.getElementById("chat-log");
-    const loadingRow = el("div", "msg-row agent loading");
-    loadingRow.appendChild(el("div", "bubble", "考え中..."));
-    log.appendChild(loadingRow);
-    log.scrollTop = log.scrollHeight;
-
-    try {
-      const resp = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionState.id, message: text }),
-      });
-      loadingRow.remove();
-
-      if (!resp.ok) {
-        const errBody = await resp.json().catch(() => ({}));
-        appendMessage("agent", `エラーが発生しました: ${errBody.detail || resp.statusText}`);
-        return;
-      }
-
-      const data = await resp.json();
-      sessionState.id = data.session_id;
-      const bubbleContainer = appendMessage("agent", data.reply).parentElement;
-      renderToolResults(bubbleContainer, data.tool_calls);
-    } catch (err) {
-      loadingRow.remove();
-      appendMessage("agent", `通信エラーが発生しました: ${err}`);
-    } finally {
-      btn.disabled = false;
-      input.focus();
-    }
-  }
-
-  // 日本語入力(IME)変換中に確定のEnterで誤送信しないようにするためのフラグ。
-  // compositionstart〜compositionendの間は変換中とみなし、Enterでは送信しない。
-  let isComposing = false;
-
-  function handleCompositionStart() {
-    isComposing = true;
-  }
-
-  function handleCompositionEnd() {
-    isComposing = false;
-  }
-
-  function handleKeydown(e) {
-    // isComposing: 変換中かどうかの標準的な判定。
-    // keyCode === 229: 一部ブラウザでcompositionendの発火タイミングがずれるための保険。
-    if (e.key === "Enter" && !e.shiftKey && !isComposing && e.keyCode !== 229) {
-      e.preventDefault();
-      sendMessage();
-    }
-  }
-
-  // 診断フォーム(/diagnosis)から遷移してきた場合の処理。
-  // 1) 一発マッチできた場合(quickmatch=1): Geminiには問い合わせず、
-  //    診断フォーム側からsessionStorage経由で受け取った検索結果をそのままカード表示する。
-  //    (Gemini APIの呼び出し回数を消費しないため。)
-  // 2) マッチしなかった場合: 従来通り、回答内容を最初のユーザー発言として自動送信し、
-  //    Geminiとの会話をスタートする。
-  const params = new URLSearchParams(window.location.search);
-  const diagnosisText = params.get("diagnosis");
-  const isQuickMatch = params.get("quickmatch") === "1";
-
-  let quickMatchResults = [];
-  let quickMatchSubsidies = [];
-  let quickMatchSummary = "";
-  if (isQuickMatch) {
-    try {
-      quickMatchResults = JSON.parse(sessionStorage.getItem("quickMatchResults") || "[]");
-    } catch (err) {
-      quickMatchResults = [];
-    }
-    try {
-      quickMatchSubsidies = JSON.parse(sessionStorage.getItem("quickMatchSubsidies") || "[]");
-    } catch (err) {
-      quickMatchSubsidies = [];
-    }
-    quickMatchSummary = sessionStorage.getItem("quickMatchSummary") || "空き家の相談をしたいです。";
-    sessionStorage.removeItem("quickMatchResults");
-    sessionStorage.removeItem("quickMatchSubsidies");
-    sessionStorage.removeItem("quickMatchSummary");
-  }
-
-  if (isQuickMatch && quickMatchResults.length > 0) {
-    // 実際にはGeminiを呼ばず一瞬で結果が出せてしまうが、あえて「考え中...」を挟んで
-    // チャットらしい間を作ってから結果を表示する。
-    const log = document.getElementById("chat-log");
-    const loadingRow = el("div", "msg-row agent loading");
-    loadingRow.appendChild(el("div", "bubble", "考え中..."));
-    log.appendChild(loadingRow);
-    log.scrollTop = log.scrollHeight;
-
-    setTimeout(() => {
-      loadingRow.remove();
-      const bubbleContainer = appendMessage(
-        "agent",
-        "診断結果をもとに、こんな空き家が見つかりました!気になる物件をクリックすると、マップ・PDF出力画面で詳しく見られます。"
-      ).parentElement;
-      renderAkiyaCards(bubbleContainer, quickMatchResults);
-
-      if (quickMatchSubsidies.length > 0) {
-        const verifiedQuickMatchSubsidies = withVerifiedSource(quickMatchSubsidies);
-        const subsidyBubbleContainer = appendMessage(
-          "agent",
-          verifiedQuickMatchSubsidies.length > 0
-            ? "このエリアだと、こんな補助金・支援制度も使えるかもしれません。"
-            : "このエリアの補助金・支援制度について確認しましたが、公式ページで確認できる情報は見つかりませんでした。"
-        ).parentElement;
-        renderSubsidyCards(subsidyBubbleContainer, quickMatchSubsidies);
-      }
-
-      const continueBubbleContainer = appendMessage(
-        "agent",
-        "気になる物件はありましたか?"
-      ).parentElement;
-      renderContinueChatPrompt(continueBubbleContainer, quickMatchSummary);
-    }, 900);
-  } else if (diagnosisText) {
-    appendMessage("agent", "診断ありがとうございます!内容をもとに、合いそうな空き家を探しますね。");
-    sendMessage(diagnosisText);
-  } else {
-    appendMessage("agent", "こんにちは。移住や空き家活用について、気になっていることを教えてください。");
-  }
-</script>
-<!-- 季節のモーション(春夏秋冬) -->
-<script src="/static/season-motion.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <!-- Main JS -->
+    <script src="script.js"></script>
+    <!-- 周辺の魅力レーダー・四季の暮らしプレビュー -->
+    <script src="appeal.js"></script>
+    <!-- 季節テーマ(春夏秋冬) -->
+    <script src="season.js"></script>
 </body>
 </html>
