@@ -78,15 +78,25 @@ function initMap() {
         scrollWheelZoom: true,
     }).setView([35.689, 139.691], 10);
 
-    // 背景地図: 国土地理院「淡色地図」。色数が少なく、ピンや浸水想定区域の色が目立つ。
-    // APIキー不要。出典の表示だけで使える(地図右下に表示される「地理院タイル」)。
-    // 元の標準地図(OpenStreetMap)に戻したいときは、次の2か所を書き換える:
-    //   URL → 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' / attribution → '&copy; OpenStreetMap contributors'
-    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-        attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>(国土地理院)',
-        maxNativeZoom: 18,
-        maxZoom: 19,
-    }).addTo(map);
+    // 背景地図。下の BASE_MAP の値を書き換えるだけで切り替えられる。
+    //   'osm' … 元の標準地図(OpenStreetMap)。いちばん情報が多い
+    //   'gsi' … 国土地理院の淡色地図。色が少なくすっきり(出典表示のみで利用可、APIキー不要)
+    const BASE_MAP = 'osm';
+    const BASE_MAPS = {
+        osm: {
+            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            options: { attribution: '&copy; OpenStreetMap contributors', maxZoom: 19 },
+        },
+        gsi: {
+            url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+            options: {
+                attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>(国土地理院)',
+                maxNativeZoom: 18,
+                maxZoom: 19,
+            },
+        },
+    };
+    L.tileLayer(BASE_MAPS[BASE_MAP].url, BASE_MAPS[BASE_MAP].options).addTo(map);
 
     // ===== ハザードマップ(国土交通省 ハザードマップポータルサイトの公開タイル)=====
     // 全国どこでも同じ仕組みで重ねられ、国のデータが更新されれば自動で最新になります。
