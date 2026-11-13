@@ -1152,11 +1152,55 @@ function initImageGenModal() {
     if (errorRetryBtn) errorRetryBtn.addEventListener('click', () => showStep('form'));
 }
 
-function downloadPDF() {
+// いま選ばれている物件のID。一覧のカードが選ばれていればそれを、
+// 地図のピンなどで選んだ場合(カードが一覧にない場合)は、画面に表示中の物件(currentHouse)を使う。
+function getSelectedHouseId() {
     const activeCard = document.querySelector('.prop-card.active');
-    if (!activeCard) {
+    if (activeCard && activeCard.dataset.id) return activeCard.dataset.id;
+    if (typeof currentHouse !== 'undefined' && currentHouse && currentHouse.global_id) return currentHouse.global_id;
+    return null;
+}
+
+function downloadPDF() {
+    const houseId = getSelectedHouseId();
+    if (!houseId) {
         alert("物件を選択してください");
         return;
     }
-    window.location.href = `${API_BASE_URL}/api/generate-pdf?id=${activeCard.dataset.id}`;
+    window.location.href = `${API_BASE_URL}/api/generate-pdf?id=${houseId}`;
+}
+
+// 防災レポート(ハザード情報)のPDF。作成に数秒かかるため、待っている間はボタンを押せなくする。
+// エラーのときは、サーバーが返した理由(位置情報なしなど)を画面に出す。
+async function downloadHazardPDF() {
+    const houseId = getSelectedHouseId();
+    if (!houseId) {
+        alert("物件を選択してください");
+        return;
+    }
+    const btn = document.getElementById('hazardPdfBtn');
+    const originalHtml = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span>⏳</span> 作成中...(数秒かかります)'; }
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/generate-hazard-pdf?id=${houseId}`);
+        if (!res.ok) {
+            let message = '防災レポートを作成できませんでした。';
+            try { const data = await res.json(); if (data && data.error) message = data.error; } catch (e) { /* JSONでなければ既定の文言 */ }
+            alert(message);
+            return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hazard_report_${houseId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    } catch (err) {
+        alert('通信に失敗しました。時間をおいて、もう一度お試しください。');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = originalHtml; }
+    }
 }

@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from flask import Flask, Response, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import generate_proposal
+import hazard_report
+import shelters
 import image_gen
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -396,6 +398,54 @@ def generate_pdf_api():
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+# 近くの避難場所・避難所API(data/shelters/ のCSVを使う)
+@app.route('/api/shelters', methods=['GET'])
+def get_shelters():
+    try:
+        lat = request.args.get('lat', type=float)
+        lng = request.args.get('lng', type=float)
+        if lat is None or lng is None:
+            return jsonify({"error": "lat と lng を指定してください"}), 400
+        limit = min(request.args.get('limit', default=5, type=int), 20)
+        need = [k for k in request.args.get('need', '').split(',') if k]
+        return jsonify({
+            "available": shelters.has_data(),
+            "emergency": shelters.nearest(lat, lng, "emergency", limit=limit, need=need),
+            "designated": shelters.nearest(lat, lng, "designated", limit=limit),
+            "attribution": shelters.ATTRIBUTION,
+        })
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "避難所の情報を取得できませんでした"}), 500
+
+
+# 防災レポート(ハザード情報)PDF生成API
+@app.route('/api/generate-hazard-pdf', methods=['GET'])
+def generate_hazard_pdf_api():
+    try:
+        house_id = request.args.get('id', default=1, type=int)
+        properties = load_properties_from_database()
+        if 1 <= house_id <= len(properties):
+            target = properties[house_id - 1]
+        else:
+            target = properties[0]
+
+        pdf_buffer = hazard_report.build_hazard_report(target)
+        return send_file(
+            pdf_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'hazard_report_{target["uid"]}.pdf'
+        )
+    except ValueError as e:
+        # 位置情報がない物件など、利用者に伝えられる理由
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "防災レポートを作成できませんでした。時間をおいて、もう一度お試しください。"}), 500
 
 if __name__ == '__main__':
     init_database()
