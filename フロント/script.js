@@ -2,6 +2,7 @@ let map, chartInstance;
 let propertyData = [];
 let selectedMarker = null;
 let defaultMarkersGroup = null;
+let currentHouse = null; // 「活用イメージを生成」モーダルから使う、現在選択中の物件
 
 const API_BASE_URL = window.location.protocol === 'file:' ? 'http://127.0.0.1:8080' : '';
 const CHAT_URL = "https://empty-house2026.onrender.com/diagnosis";
@@ -15,10 +16,10 @@ let amenityRequestId = 0;
 
 // 選択中の物件ピン（青）
 const SELECTED_HOUSE_ICON = L.divIcon({
-    html: `<div style="background:linear-gradient(135deg,var(--ink),var(--ink-soft));width:44px;height:44px;border-radius:50% 50% 50% 0;
+    html: `<div style="background:linear-gradient(135deg,#22344B,#5C7A99);width:44px;height:44px;border-radius:50% 50% 50% 0;
                 transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
                 box-shadow:0 0 0 3px rgba(251,249,244,.95),0 8px 16px rgba(34,52,75,.35);
-                border:2px solid var(--paper);">
+                border:2px solid #FBF9F4;">
                 <span style="transform:rotate(45deg);font-size:18px;">🏠</span>
            </div>`,
     className: '',
@@ -27,18 +28,39 @@ const SELECTED_HOUSE_ICON = L.divIcon({
     popupAnchor: [0, -36],
 });
 
-// 通常の物件ピン（金）
-const UNSELECTED_HOUSE_ICON = L.divIcon({
-    html: `<div style="background:var(--gold);width:30px;height:30px;border-radius:50% 50% 50% 0;
-                transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
-                box-shadow:0 2px 4px rgba(0,0,0,0.2);border:2px solid white;">
-                <span style="transform:rotate(45deg);font-size:12px;color:white;">🏡</span>
-           </div>`,
-    className: '',
-    iconSize: [30, 30],
-    iconAnchor: [15, 30],
-    popupAnchor: [0, -26],
-});
+// 通常の物件ピン。価格帯ごとに色を変えて、地図上でパッと見分けられるようにする
+// (全部同じ金色だと選択中かどうか以外で見分けがつかなかったため)。
+// 色は同じ暖色系の濃淡で揃えているので、周辺施設アイコン(緑・青・紫など)とは
+// 混ざらず、かつ「薄い→濃い」で価格の高低が感覚的に伝わるようにしている。
+const PRICE_TIERS = [
+    { key: 'unknown', label: '価格応相談・不明', color: '#9B9690', test: (price) => price === null || price === undefined },
+    { key: 'low', label: '〜300万円', color: '#D9B46A', test: (price) => price < 3000000 },
+    { key: 'mid', label: '300万〜800万円', color: '#B0862A', test: (price) => price < 8000000 },
+    { key: 'high', label: '800万円〜', color: '#7A5C28', test: () => true },
+];
+
+function getPriceTier(price) {
+    const p = (price === null || price === undefined) ? null : Number(price);
+    return PRICE_TIERS.find((tier) => tier.test(p)) || PRICE_TIERS[PRICE_TIERS.length - 1];
+}
+
+const _housePinIconCache = {};
+function getHousePinIcon(color) {
+    if (_housePinIconCache[color]) return _housePinIconCache[color];
+    const icon = L.divIcon({
+        html: `<div style="background:${color};width:30px;height:30px;border-radius:50% 50% 50% 0;
+                    transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+                    box-shadow:0 2px 4px rgba(0,0,0,0.2);border:2px solid white;">
+                    <span style="transform:rotate(45deg);font-size:12px;color:white;">🏡</span>
+               </div>`,
+        className: '',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -26],
+    });
+    _housePinIconCache[color] = icon;
+    return icon;
+}
 
 function createAmenityIcon(iconHtml, color) {
     return L.divIcon({
@@ -55,21 +77,198 @@ function createAmenityIcon(iconHtml, color) {
 }
 
 const AMENITY_CONFIG = {
-    school: { query: 'nwr["amenity"="school"]', icon: createAmenityIcon('🎓', '#B0862A'), symbol: '🎓', label: '学校' },
-    supermarket: { query: 'nwr["shop"="supermarket"]', icon: createAmenityIcon('🛒', '#5F7350'), symbol: '🛒', label: 'スーパー' },
-    station: { query: 'nwr["railway"="station"]', icon: createAmenityIcon('🚃', '#5C7A99'), symbol: '🚃', label: '駅' },
-    hospital: { query: 'nwr["amenity"="hospital"]', icon: createAmenityIcon('🏥', '#954C36'), symbol: '🏥', label: '病院' },
+    school: { query: 'nwr["amenity"="school"]', icon: createAmenityIcon('🎓', '#B0862A'), symbol: '🎓', label: '学校', color: '#B0862A' },
+    supermarket: { query: 'nwr["shop"="supermarket"]', icon: createAmenityIcon('🛒', '#5F7350'), symbol: '🛒', label: 'スーパー', color: '#5F7350' },
+    station: { query: 'nwr["railway"="station"]', icon: createAmenityIcon('🚃', '#5C7A99'), symbol: '🚃', label: '駅', color: '#5C7A99' },
+    hospital: { query: 'nwr["amenity"="hospital"]', icon: createAmenityIcon('🏥', '#954C36'), symbol: '🏥', label: '病院', color: '#954C36' },
+    // 観光・景観スポットはOverpass(OSM)ではなくGoogle Places APIから取得するため
+    // queryを持たない。initAmenityLayers/addAmenityLegendControlのレイヤー・凡例の
+    // 仕組みだけ共用し、取得自体はupdateNearbySightseeingSpots()が行う。
+    sightseeing: { icon: createAmenityIcon('🏞️', '#7A5C99'), symbol: '🏞️', label: '観光・景観', color: '#7A5C99' },
 };
+
+// ハザード情報(国土交通省「ハザードマップポータルサイト」の重ねるハザードマップ
+// タイルデータ。APIキー不要・商用非商用問わず利用可能で、リアルタイムに取得して
+// 自サイトに組み込むことが想定されている公開タイル)。
+// 1) 地図に重ねて表示するON/OFFレイヤー(凡例から切り替え。初期状態はOFF)。
+// 2) 選択中の物件のピンポイントがそれぞれのハザードエリアに入っているかを、
+//    タイル画像をcanvasに描画してピクセルの透明度を調べることで簡易判定し、
+//    「ハザード情報」パネルに表示する(詳しくはupdateHazardInfo参照)。
+// データが存在しない座標は404(JSON)が返る仕様で、これは「その区域の指定なし」
+// として扱う。あくまで参考情報であり、正式なハザードマップは自治体の発表を
+// 確認するよう画面にも注記している。
+const HAZARD_ATTRIBUTION = '<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>(国土交通省)';
+const HAZARD_PIXEL_CHECK_ZOOM = 16;
+const HAZARD_LAYERS = {
+    flood: {
+        label: '洪水浸水想定区域',
+        color: '#4F7FB0',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png'],
+        riskLabel: '洪水浸水想定区域に含まれる可能性があります',
+    },
+    sediment: {
+        label: '土砂災害警戒区域',
+        color: '#A8632E',
+        tileUrlTemplates: [
+            'https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png',
+            'https://disaportaldata.gsi.go.jp/raster/05_kyukeishakeikaikuiki/{z}/{x}/{y}.png',
+        ],
+        riskLabel: '土砂災害警戒区域(土石流・急傾斜地)に含まれる可能性があります',
+    },
+    tsunami: {
+        label: '津波浸水想定',
+        color: '#5C4A99',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png'],
+        riskLabel: '津波浸水想定区域に含まれる可能性があります',
+    },
+    hightide: {
+        label: '高潮浸水想定区域',
+        color: '#3F8E86',
+        tileUrlTemplates: ['https://disaportaldata.gsi.go.jp/raster/03_hightide_l2_shinsuishin_data/{z}/{x}/{y}.png'],
+        riskLabel: '高潮浸水想定区域に含まれる可能性があります',
+    },
+};
+const hazardOverlayLayers = {};
+let hazardRequestId = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     initMap();
     fetchProperties();
+    initImageGenModal();
+    initUsageGuideModal();
 
     const prefSelect = document.getElementById('prefSelect');
     if (prefSelect) {
         prefSelect.addEventListener('change', (e) => filterProperties(e.target.value));
     }
 });
+
+// 使い方ガイドモーダル：1枚ずつめくるステップ形式。初回訪問時のみ自動表示し、
+// 閉じる/スキップ/最後まで進めるとlocalStorageに記録して次回以降は出さない
+// (ヘッダーの「使い方」ボタンでいつでも最初から再表示可能)。
+const USAGE_GUIDE_SEEN_KEY = 'akiya_usage_guide_seen_v2';
+
+const USAGE_GUIDE_STEPS = [
+    {
+        icon: '📍',
+        title: '地図・物件の見方',
+        desc: 'エリアを絞り込んで地図上のピンや物件カードをクリックすると、その空き家の詳しい情報が表示されます。',
+    },
+    {
+        icon: '💰',
+        title: '補助金情報の見方',
+        desc: '選んだ物件で使える可能性のある補助金・支援制度を表示します。公式ページで内容を確認できるものだけを掲載しています。',
+    },
+    {
+        icon: '📊',
+        title: '収支シミュレーション',
+        desc: 'その空き家を活用した場合の収入・支出の見込みを、5年分のグラフで確認できます。',
+    },
+    {
+        icon: '🎨',
+        title: '活用イメージ生成（AI画像）',
+        desc: '「どんな用途で」「どんな雰囲気で」活用したいかを入力すると、その空き家に合わせたAI画像を生成します。※現在調整中の機能のため、生成に時間がかかったり失敗したりすることがあります。',
+    },
+];
+
+function initUsageGuideModal() {
+    const modal = document.getElementById('usageGuideModal');
+    const openBtn = document.getElementById('usageGuideOpenBtn');
+    const closeBtn = document.getElementById('usageGuideCloseBtn');
+    const skipBtn = document.getElementById('usageGuideSkipBtn');
+    const backBtn = document.getElementById('usageGuideBackBtn');
+    const nextBtn = document.getElementById('usageGuideNextBtn');
+    const iconEl = document.getElementById('usageGuideStepIcon');
+    const titleEl = document.getElementById('usageGuideStepTitle');
+    const descEl = document.getElementById('usageGuideStepDesc');
+    const dotsEl = document.getElementById('usageGuideDots');
+    if (!modal || !dotsEl) return;
+
+    let currentStep = 0;
+
+    // ドットを生成(クリックで該当ステップへジャンプできる)
+    dotsEl.innerHTML = '';
+    USAGE_GUIDE_STEPS.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'usage-guide-dot';
+        dot.setAttribute('aria-label', `${i + 1}枚目へ`);
+        dot.addEventListener('click', () => renderStep(i));
+        dotsEl.appendChild(dot);
+    });
+
+    function renderStep(i) {
+        currentStep = Math.max(0, Math.min(i, USAGE_GUIDE_STEPS.length - 1));
+        const step = USAGE_GUIDE_STEPS[currentStep];
+        iconEl.textContent = step.icon;
+        titleEl.textContent = step.title;
+        descEl.textContent = step.desc;
+
+        Array.from(dotsEl.children).forEach((dot, i2) => {
+            dot.classList.toggle('usage-guide-dot--active', i2 === currentStep);
+        });
+
+        backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+        const isLast = currentStep === USAGE_GUIDE_STEPS.length - 1;
+        nextBtn.textContent = isLast ? 'はじめる' : '次へ';
+    }
+
+    function openModal() {
+        renderStep(0);
+        modal.style.display = 'flex';
+    }
+
+    function closeModal(markSeen) {
+        modal.style.display = 'none';
+        if (markSeen) {
+            try {
+                localStorage.setItem(USAGE_GUIDE_SEEN_KEY, '1');
+            } catch (e) {
+                // localStorageが使えない環境でも致命的にはしない
+            }
+        }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', () => closeModal(true));
+    if (skipBtn) skipBtn.addEventListener('click', () => closeModal(true));
+    if (backBtn) backBtn.addEventListener('click', () => renderStep(currentStep - 1));
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentStep === USAGE_GUIDE_STEPS.length - 1) {
+                closeModal(true);
+            } else {
+                renderStep(currentStep + 1);
+            }
+        });
+    }
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(true);
+    });
+
+    let alreadySeen = false;
+    try {
+        alreadySeen = localStorage.getItem(USAGE_GUIDE_SEEN_KEY) === '1';
+    } catch (e) {
+        alreadySeen = false;
+    }
+
+    // チャット側から「この物件をマップで見る」等のリンクで物件を指定して直接入ってきた場合
+    // (?property_id=... や ?property_ids=...)は、まだ何も見ていない本来のトップページでは
+    // ないので、ここでは自動表示しない(見たことにもしないので、後で本当のトップページに
+    // アクセスした時にはちゃんと表示される)。ヘッダーの「❓ 使い方」ボタンからはいつでも見られる。
+    let cameFromPropertyLink = false;
+    try {
+        const params = new URLSearchParams(window.location.search);
+        cameFromPropertyLink = !!(params.get('property_id') || params.get('property_ids'));
+    } catch (e) {
+        cameFromPropertyLink = false;
+    }
+
+    if (!alreadySeen && !cameFromPropertyLink) {
+        openModal();
+    }
+}
 
 function initMap() {
     map = L.map('map', {
@@ -78,54 +277,15 @@ function initMap() {
         scrollWheelZoom: true,
     }).setView([35.689, 139.691], 10);
 
-    // 背景地図。下の BASE_MAP の値を書き換えるだけで切り替えられる。
-    //   'osm' … 元の標準地図(OpenStreetMap)。いちばん情報が多い
-    //   'gsi' … 国土地理院の淡色地図。色が少なくすっきり(出典表示のみで利用可、APIキー不要)
-    const BASE_MAP = 'osm';
-    const BASE_MAPS = {
-        osm: {
-            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            options: { attribution: '&copy; OpenStreetMap contributors', maxZoom: 19 },
-        },
-        gsi: {
-            url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-            options: {
-                attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>(国土地理院)',
-                maxNativeZoom: 18,
-                maxZoom: 19,
-            },
-        },
-    };
-    L.tileLayer(BASE_MAPS[BASE_MAP].url, BASE_MAPS[BASE_MAP].options).addTo(map);
-
-    // ===== ハザードマップ(国土交通省 ハザードマップポータルサイトの公開タイル)=====
-    // 全国どこでも同じ仕組みで重ねられ、国のデータが更新されれば自動で最新になります。
-    // 地図右上のレイヤーボタンで ON/OFF できます(最初はすべてOFF)。
-    // 利用条件: https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html (出典表示つきで利用)
-    // 土砂災害警戒区域など、他の種類を足したいときは、下の hazardDefs に1行足します
-    // (レイヤー名のURLは、上の利用条件ページで公開されている一覧で確認してください)。
-    const HAZARD_BASE = 'https://disaportaldata.gsi.go.jp/raster/';
-    const HAZARD_ATTRIBUTION = '<a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html" target="_blank" rel="noopener">ハザードマップポータルサイト</a>';
-    const hazardDefs = [
-        ['🌊 洪水(想定最大規模)', '01_flood_l2_shinsuishin_data'],
-        ['🌊 洪水(計画規模)', '01_flood_l1_shinsuishin_newlegend_data'],
-        ['🌀 高潮', '03_hightide_l2_shinsuishin_data'],
-        ['🌊 津波', '04_tsunami_newlegend_data'],
-    ];
-    const hazardOverlays = {};
-    hazardDefs.forEach(([label, path]) => {
-        hazardOverlays[label] = L.tileLayer(`${HAZARD_BASE}${path}/{z}/{x}/{y}.png`, {
-            opacity: 0.6,
-            maxNativeZoom: 17,
-            maxZoom: 19,
-            attribution: HAZARD_ATTRIBUTION,
-        });
-    });
-    L.control.layers(null, hazardOverlays, { collapsed: true, position: 'topright' }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+    }).addTo(map);
 
     defaultMarkersGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
-        maxClusterRadius: 45
+        maxClusterRadius: 45,
+        disableClusteringAtZoom: 15
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -147,6 +307,16 @@ function initMap() {
 
     initAmenityLayers();
     addAmenityLegendControl();
+    initHazardLayers();
+
+    // マップの高さはflexレイアウトで決まる(枠の余白いっぱいまで広げる)ため、
+    // 初期レイアウト確定後とウィンドウリサイズ時にLeafletへサイズ再計算させる。
+    // これをしないと、コンテナの見た目の高さとLeaflet内部の計算がズレて
+    // タイルが灰色のまま欠けて見えることがある。
+    setTimeout(() => { if (map) map.invalidateSize(); }, 0);
+    window.addEventListener('resize', () => {
+        if (map) map.invalidateSize();
+    });
 }
 
 async function fetchProperties() {
@@ -160,24 +330,56 @@ async function fetchProperties() {
         
         if (prefSelect) {
             prefSelect.innerHTML = '<option value="none">エリアを選択してください</option>';
-            prefectures.forEach(prefecture => {
-                const option = document.createElement('option');
-                option.value = prefecture;
-                option.textContent = prefecture;
-                prefSelect.appendChild(option);
+
+            const regionMap = {
+                '北海道・東北': ['北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'],
+                '関東': ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'],
+                '中部': ['新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県'],
+                '近畿': ['三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'],
+                '中国・四国': ['鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県'],
+                '九州・沖縄': ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県']
+            };
+
+            Object.entries(regionMap).forEach(([regionName, prefList]) => {
+                const availablePrefs = prefList.filter(p => prefectures.includes(p));
+                if (availablePrefs.length > 0) {
+                    const group = document.createElement('optgroup');
+                    group.label = regionName;
+
+                    availablePrefs.forEach(prefecture => {
+                        const option = document.createElement('option');
+                        option.value = prefecture;
+                        option.textContent = prefecture;
+                        group.appendChild(option);
+                    });
+
+                    prefSelect.appendChild(group);
+                }
             });
         }
 
-        // 診断フォーム(/diagnosis)からの遷移(?property_id=123)の場合は、
-        // その物件のエリアを自動選択したうえで、詳細パネルを開いた状態で表示する。
         const params = new URLSearchParams(window.location.search);
+        const idsParam = params.get('property_ids');
+        const matchedIds = idsParam ? idsParam.split(',').map((s) => s.trim()).filter(Boolean) : [];
+        const matchedHouses = matchedIds.length
+            ? propertyData.filter((h) => matchedIds.includes(String(h.global_id)))
+            : [];
+
         const targetId = params.get('property_id');
         const targetHouse = targetId ? propertyData.find(h => String(h.global_id) === String(targetId)) : null;
 
-        if (targetHouse) {
+        if (matchedHouses.length > 0) {
+            renderPropertyCards(matchedHouses, true);
+            plotMapMarkers(matchedHouses);
+            fitMapToVisibleProperties(matchedHouses);
+            updateSelection(matchedHouses[0].global_id);
+        } else if (targetHouse) {
             const pref = guessPrefecture(targetHouse);
             if (pref && prefSelect) prefSelect.value = pref;
-            filterProperties(pref || 'none');
+            // チャットから「この物件をマップで見る」で来た直後は、エリア全体への
+            // 瞬間移動を挟まず、updateSelection()のflyToだけで初期表示(全国/東京付近)
+            // から選択物件まで一息に滑らかにズームさせる(Googleマップ風の見た目)。
+            filterProperties(pref || 'none', { skipFit: true });
             updateSelection(targetHouse.global_id);
         } else {
             filterProperties('none');
@@ -190,11 +392,18 @@ async function fetchProperties() {
     }
 }
 
-function filterProperties(pref) {
+function filterProperties(pref, opts) {
+    // skipFit: true の場合、絞り込みに合わせた地図の瞬間移動(fitBounds)を行わない。
+    // チャットから物件を1件指定して開いた直後は、この瞬間移動と直後の
+    // updateSelection()のflyToが連続して走ってしまい、アニメーションが
+    // 二重に競合してガクッとした動きに見えるため、呼び出し側でskipFitを
+    // 指定してflyToだけの1回のズームに見せる。
+    const skipFit = !!(opts && opts.skipFit);
+
     if (pref === 'none') {
         renderPropertyCards([]);
         plotMapMarkers(propertyData);
-        fitMapToVisibleProperties(propertyData);
+        if (!skipFit) fitMapToVisibleProperties(propertyData);
         clearDetail();
         return;
     }
@@ -206,11 +415,11 @@ function filterProperties(pref) {
 
     renderPropertyCards(filtered);
     plotMapMarkers(filtered);
-    fitMapToVisibleProperties(filtered);
+    if (!skipFit) fitMapToVisibleProperties(filtered);
     clearDetail();
 }
 
-function renderPropertyCards(properties) {
+function renderPropertyCards(properties, forceShow) {
     const container = document.getElementById('propertyCardList');
     if (!container) return;
     container.innerHTML = '';
@@ -218,8 +427,7 @@ function renderPropertyCards(properties) {
     const prefSelect = document.getElementById('prefSelect');
     const selectedPref = prefSelect ? prefSelect.value : 'none';
 
-    // エリア未選択（'none'）の時はメッセージのみ表示してカードを出さない
-    if (selectedPref === 'none') {
+    if (!forceShow && selectedPref === 'none') {
         container.innerHTML = '<p class="text-xs text-slate-500 py-3 font-medium">エリアを選択すると物件一覧が表示されます</p>';
         return;
     }
@@ -232,7 +440,6 @@ function renderPropertyCards(properties) {
     properties.forEach((house, index) => {
         const id = house.global_id;
         const name = house.name || house.title || '物件';
-
         const tags = house.tags || generateDefaultTags(index);
 
         const card = document.createElement('div');
@@ -240,7 +447,7 @@ function renderPropertyCards(properties) {
         card.dataset.id = id;
         
         card.innerHTML = `
-            <p class="font-bold text-xs text-[color:var(--ink)] truncate mb-2">${name}</p>
+            <p class="font-bold text-xs text-[#22344B] truncate mb-2">${name}</p>
             <div class="flex flex-wrap gap-1">
                 ${tags.map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded font-medium ${t.bg}">${t.label}</span>`).join('')}
             </div>
@@ -279,8 +486,9 @@ function plotMapMarkers(properties) {
     
     properties.forEach((house) => {
         const coords = getCoordinates(house);
-        const marker = L.marker(coords, { icon: UNSELECTED_HOUSE_ICON });
-        
+        const tier = getPriceTier(house.price);
+        const marker = L.marker(coords, { icon: getHousePinIcon(tier.color) });
+
         marker.on('click', () => {
             updateSelection(house.global_id);
         });
@@ -299,6 +507,8 @@ function updateSelection(selectedId) {
 
     const house = propertyData.find(h => String(h.global_id) === String(selectedId));
     if (!house) return;
+
+    currentHouse = house;
 
     document.querySelectorAll('.prop-card').forEach(card => {
         if (String(card.dataset.id) === String(selectedId)) {
@@ -328,22 +538,168 @@ function updateSelection(selectedId) {
 
     map.flyTo(coords, 14, { animate: true, duration: 0.9 });
     updateNearbyAmenities(coords[0], coords[1]);
+    updateNearbySightseeingSpots(coords[0], coords[1]);
+    updateStreetView(coords[0], coords[1]);
+    updateHazardInfo(coords[0], coords[1]);
     updateChart(house);
-    if (typeof window.onHouseSelected === 'function') window.onHouseSelected(house); // appeal.js(周辺レーダー・四季プレビュー)
+}
+
+// 空き家の実物件写真データは無いため、代わりにその場所のGoogleストリートビューを表示する
+// (サーバー側でmetadata確認済みのものだけ。無ければ「見つかりませんでした」表示)。
+let streetViewRequestId = 0;
+async function updateStreetView(lat, lng) {
+    const wrap = document.getElementById('houseStreetViewWrap');
+    const img = document.getElementById('houseStreetViewImg');
+    const placeholder = document.getElementById('houseStreetViewPlaceholder');
+    const idle = document.getElementById('houseStreetViewIdle');
+    const requestId = ++streetViewRequestId;
+
+    if (idle) idle.style.display = 'none';
+    if (wrap) wrap.style.display = 'none';
+    if (placeholder) placeholder.style.display = 'none';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/street-view?lat=${lat}&lng=${lng}`);
+        if (requestId !== streetViewRequestId) return;
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (data.available && data.image_url) {
+            if (img) img.src = `${API_BASE_URL}${data.image_url}`;
+            if (wrap) wrap.style.display = 'block';
+        } else if (placeholder) {
+            placeholder.style.display = 'block';
+        }
+    } catch (err) {
+        if (requestId !== streetViewRequestId) return;
+        if (placeholder) placeholder.style.display = 'block';
+    }
+}
+
+// 緯度経度から「どのタイル(z/x/y)の、その中の何ピクセル目か」を求める標準的な
+// Webメルカトル(スリッピーマップ)の変換式。ハザードタイルは256pxのPNGなので、
+// タイルそのものを取得してcanvasに描画し、該当ピクセルの透明度を調べれば、
+// 「その地点がハザードエリア内(=不透明に塗られている)かどうか」が簡易判定できる。
+function lngLatToPixelInTile(lat, lng, z, tileSize = 256) {
+    const latRad = lat * Math.PI / 180;
+    const n = Math.pow(2, z);
+    const worldX = (lng + 180) / 360 * n * tileSize;
+    const worldY = (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n * tileSize;
+    const tileX = Math.floor(worldX / tileSize);
+    const tileY = Math.floor(worldY / tileSize);
+    const px = Math.floor(worldX - tileX * tileSize);
+    const py = Math.floor(worldY - tileY * tileSize);
+    return { tileX, tileY, px, py };
+}
+
+// 指定したタイル画像を取得し、座標に対応する1ピクセルの透明度を調べる。
+// このポータルのタイルは「データが存在しない区域は404(JSONエラー)が返る」という
+// 仕様になっているため、404は「ハザード指定なし」として扱う(通信エラーとは区別する)。
+async function fetchHazardPixelState(url, px, py) {
+    try {
+        const res = await fetch(url);
+        if (res.status === 404) return 'no-data';
+        if (!res.ok) return 'error';
+        const blob = await res.blob();
+        const bitmap = await createImageBitmap(blob);
+        const canvas = document.createElement('canvas');
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(bitmap, 0, 0);
+        const pixel = ctx.getImageData(px, py, 1, 1).data;
+        return pixel[3] > 10 ? 'risk' : 'no-data';
+    } catch (err) {
+        return 'error';
+    }
+}
+
+// 1つのハザード種別(例: 土砂災害は複数タイルの重ね合わせ)について、指定座標が
+// 該当するかを調べる。複数タイルのうち1つでも「risk」ならriskを返す。
+async function checkHazardAtPoint(lat, lng, hazardKey) {
+    const cfg = HAZARD_LAYERS[hazardKey];
+    const { tileX, tileY, px, py } = lngLatToPixelInTile(lat, lng, HAZARD_PIXEL_CHECK_ZOOM);
+    let sawError = false;
+    for (const template of cfg.tileUrlTemplates) {
+        const url = template
+            .replace('{z}', HAZARD_PIXEL_CHECK_ZOOM)
+            .replace('{x}', tileX)
+            .replace('{y}', tileY);
+        const state = await fetchHazardPixelState(url, px, py);
+        if (state === 'risk') return 'risk';
+        if (state === 'error') sawError = true;
+    }
+    return sawError ? 'error' : 'no-data';
+}
+
+// 選択中物件の座標について、4種類のハザードすべてを判定し「ハザード情報」パネルに
+// 表示する。メリットだけでなくデメリットも見せることで、住んだ後の将来まで考えて
+// もらうための機能(ユーザーからの要望)。
+async function updateHazardInfo(lat, lng) {
+    const statusEl = document.getElementById('hazardStatus');
+    const listEl = document.getElementById('hazardInfoList');
+    const requestId = ++hazardRequestId;
+
+    if (statusEl) statusEl.textContent = '確認中...';
+    if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">確認中...</p>';
+
+    const keys = Object.keys(HAZARD_LAYERS);
+    const results = await Promise.all(keys.map(key => checkHazardAtPoint(lat, lng, key)));
+    if (requestId !== hazardRequestId) return;
+
+    const riskCount = results.filter(r => r === 'risk').length;
+    if (statusEl) {
+        statusEl.textContent = riskCount > 0 ? `⚠️ ${riskCount}件該当` : '指定区域なし';
+    }
+
+    if (listEl) {
+        listEl.innerHTML = keys.map((key, i) => {
+            const cfg = HAZARD_LAYERS[key];
+            const state = results[i];
+            let cls = 'hazard-item-unknown';
+            let text = `${cfg.label}: 確認できませんでした(通信エラー)`;
+            if (state === 'risk') {
+                cls = 'hazard-item-risk';
+                text = `⚠️ ${cfg.riskLabel}`;
+            } else if (state === 'no-data') {
+                cls = 'hazard-item-safe';
+                text = `${cfg.label}: 指定区域外の可能性があります`;
+            }
+            return `<div class="hazard-item ${cls}">${text}</div>`;
+        }).join('');
+    }
 }
 
 function clearDetail() {
+    currentHouse = null;
     document.getElementById('detailName').textContent = '物件を選択してください';
     document.getElementById('detailCost').textContent = '-';
     document.getElementById('detailUsage').textContent = '-';
     document.getElementById('detailAddress').textContent = '所在地: -';
+
+    const streetViewWrap = document.getElementById('houseStreetViewWrap');
+    if (streetViewWrap) streetViewWrap.style.display = 'none';
+    const streetViewPlaceholder = document.getElementById('houseStreetViewPlaceholder');
+    if (streetViewPlaceholder) streetViewPlaceholder.style.display = 'none';
+    const streetViewIdle = document.getElementById('houseStreetViewIdle');
+    if (streetViewIdle) streetViewIdle.style.display = 'block';
     
     const subsidyList = document.getElementById('subsidyList');
     if (subsidyList) subsidyList.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
     
     const statusEl = document.getElementById('amenityStatus');
     if (statusEl) statusEl.textContent = '物件を選択してください';
-    
+
+    const sightseeingStatusEl = document.getElementById('sightseeingStatus');
+    if (sightseeingStatusEl) sightseeingStatusEl.textContent = '物件を選択してください';
+    const sightseeingListEl = document.getElementById('sightseeingList');
+    if (sightseeingListEl) sightseeingListEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
+
+    hazardRequestId++;
+    const hazardStatusEl = document.getElementById('hazardStatus');
+    if (hazardStatusEl) hazardStatusEl.textContent = '物件を選択してください';
+    const hazardListEl = document.getElementById('hazardInfoList');
+    if (hazardListEl) hazardListEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>';
+
     document.querySelectorAll('.prop-card').forEach(card => card.classList.remove('active'));
 
     if (selectedMarker) {
@@ -352,7 +708,6 @@ function clearDetail() {
     }
     Object.values(amenityLayers).forEach(layer => layer.clearLayers());
     updateChart(null);
-    if (typeof window.onHouseCleared === 'function') window.onHouseCleared(); // appeal.js
 }
 
 function fitMapToVisibleProperties(filteredProperties) {
@@ -365,7 +720,6 @@ function fitMapToVisibleProperties(filteredProperties) {
     }
 }
 
-// 都道府県ごとの代表座標(県庁所在地付近)。実際の緯度経度データが無い物件のフォールバック用。
 const PREF_COORDS = {
     '北海道': [43.0642, 141.3469], '青森県': [40.8244, 140.7400], '岩手県': [39.7036, 141.1527],
     '宮城県': [38.2688, 140.8721], '秋田県': [39.7186, 140.1024], '山形県': [38.2404, 140.3633],
@@ -397,9 +751,13 @@ function getCoordinates(house) {
     let lng = parseFloat(house.lng || house.longitude);
     if (!isNaN(lat) && !isNaN(lng)) return [lat, lng];
 
-    // 同じ都道府県内の物件が完全に重ならないよう、id基準で少しずつ位置をずらす。
-    const latOffset = ((house.global_id || 1) % 10) * 0.03 - 0.15;
-    const lngOffset = ((house.global_id || 1) % 7) * 0.03 - 0.09;
+    const id = house.global_id || 1;
+    const hash1 = Math.abs(Math.sin(id * 12.9898) * 43758.5453) % 1;
+    const hash2 = Math.abs(Math.sin(id * 78.233) * 12543.163) % 1;
+    const angle = hash1 * Math.PI * 2;
+    const radius = 0.05 + hash2 * 0.3;
+    const latOffset = Math.cos(angle) * radius;
+    const lngOffset = Math.sin(angle) * radius;
 
     const address = house.address || house.location || '';
     if (address.includes('奥多摩')) return [35.809 + latOffset, 139.096 + lngOffset];
@@ -425,13 +783,19 @@ async function fetchSubsidies(municipality) {
             return;
         }
 
-        subsidyList.innerHTML = subsidies.map(subsidy => `
-            <div class="subsidy-card p-2.5 text-xs">
-                <p class="font-semibold text-[color:var(--ink)]">${subsidy.subsidy_name}</p>
-                <p class="mt-0.5 text-[11px] text-[color:var(--ink-soft)]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
-                <p class="text-[11px] text-[color:var(--ink-soft)]">補助率: ${subsidy.rate}</p>
-            </div>
-        `).join('');
+        subsidyList.innerHTML = subsidies.map(subsidy => {
+            const detailLink = subsidy.source_url
+                ? `<a href="${subsidy.source_url}" target="_blank" rel="noopener noreferrer" class="inline-block mt-1 text-[11px] text-[#B0862A] font-semibold underline underline-offset-2">公式ページで詳細を見る →</a>`
+                : '';
+            return `
+                <div class="subsidy-card p-2.5 text-xs">
+                    <p class="font-semibold text-[#22344B]">${subsidy.subsidy_name}</p>
+                    <p class="mt-0.5 text-[11px] text-[#5C7A99]">対象: ${subsidy.target_type} / 上限: ¥${Number(subsidy.max_amount).toLocaleString()}</p>
+                    <p class="text-[11px] text-[#5C7A99]">補助率: ${subsidy.rate}</p>
+                    ${detailLink}
+                </div>
+            `;
+        }).join('');
     } catch (err) {
         subsidyList.innerHTML = '<p class="text-rose-700 py-4 text-center text-xs">補助金情報を読み込めませんでした</p>';
     }
@@ -471,7 +835,7 @@ function updateChart(house) {
             responsive: true, 
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true, grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#EFE9DD' } },
+                y: { beginAtZero: true, grid: { color: '#EFE9DD' } },
                 x: { grid: { display: false } }
             }
         }
@@ -485,24 +849,78 @@ function initAmenityLayers() {
     });
 }
 
+// ハザードレイヤーをLeafletのレイヤーグループとして用意する(初期状態では地図に
+// 追加しない=OFF。凡例のチェックボックスでON/OFFを切り替える)。土砂災害のように
+// 複数のタイルを重ねて1つのハザード種別として扱うものもあるため、layerGroupにする。
+function initHazardLayers() {
+    Object.entries(HAZARD_LAYERS).forEach(([key, cfg]) => {
+        const sublayers = cfg.tileUrlTemplates.map(url => L.tileLayer(url, {
+            opacity: 0.55,
+            maxNativeZoom: 17,
+            maxZoom: 19,
+            attribution: HAZARD_ATTRIBUTION,
+        }));
+        hazardOverlayLayers[key] = L.layerGroup(sublayers);
+    });
+}
+
 function addAmenityLegendControl() {
     const legend = L.control({ position: 'topright' });
     legend.onAdd = function () {
         const container = L.DomUtil.create('div', 'amenity-legend');
-        container.innerHTML = Object.entries(AMENITY_CONFIG).map(([key, cfg]) => `
-            <label>
-                <input type="checkbox" data-amenity="${key}" checked>
-                <span>${cfg.symbol}</span>
-                <span>${cfg.label}</span>
-            </label>
-        `).join('');
+
+        // 物件ピンの価格帯(色の意味)。チェックボックスではなく常時表示の凡例。
+        const priceLegendHtml = `
+            <div class="legend-section-title">物件の価格帯</div>
+            ${PRICE_TIERS.map((tier) => `
+                <div class="legend-row">
+                    <span class="legend-swatch" style="background:${tier.color};"></span>
+                    <span>${tier.label}</span>
+                </div>
+            `).join('')}
+        `;
+
+        // 周辺施設・観光スポットのアイコンの意味(色のスワッチ付き。これまでは絵文字だけで
+        // ピンの色との対応がわかりにくかったため、同じ色のスワッチを添えるようにした)。
+        const amenityLegendHtml = `
+            <div class="legend-section-title">周辺施設(表示/非表示)</div>
+            ${Object.entries(AMENITY_CONFIG).map(([key, cfg]) => `
+                <label class="legend-row">
+                    <input type="checkbox" data-amenity="${key}" checked>
+                    <span class="legend-swatch" style="background:${cfg.color};"></span>
+                    <span>${cfg.symbol} ${cfg.label}</span>
+                </label>
+            `).join('')}
+        `;
+
+        // ハザード情報レイヤー。デメリット面の情報なので、最初から地図を埋めてしまわないよう
+        // 初期状態はすべて非表示(チェックなし)にしておき、見たい人が自分でONにする形にする。
+        const hazardLegendHtml = `
+            <div class="legend-section-title">ハザード情報(地図に重ねて表示)</div>
+            ${Object.entries(HAZARD_LAYERS).map(([key, cfg]) => `
+                <label class="legend-row">
+                    <input type="checkbox" data-hazard="${key}">
+                    <span class="legend-swatch" style="background:${cfg.color};"></span>
+                    <span>${cfg.label}</span>
+                </label>
+            `).join('')}
+        `;
+
+        container.innerHTML = priceLegendHtml + '<div class="legend-divider"></div>' + amenityLegendHtml
+            + '<div class="legend-divider"></div>' + hazardLegendHtml;
 
         L.DomEvent.disableClickPropagation(container);
         container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
-                const key = e.target.dataset.amenity;
-                if (e.target.checked) map.addLayer(amenityLayers[key]);
-                else map.removeLayer(amenityLayers[key]);
+                if (e.target.dataset.amenity) {
+                    const key = e.target.dataset.amenity;
+                    if (e.target.checked) map.addLayer(amenityLayers[key]);
+                    else map.removeLayer(amenityLayers[key]);
+                } else if (e.target.dataset.hazard) {
+                    const key = e.target.dataset.hazard;
+                    if (e.target.checked) map.addLayer(hazardOverlayLayers[key]);
+                    else map.removeLayer(hazardOverlayLayers[key]);
+                }
             });
         });
         return container;
@@ -534,19 +952,98 @@ async function updateNearbyAmenities(lat, lng) {
         });
 
         if (statusEl) statusEl.textContent = `半径1km: 学校${counts.school} / スーパー${counts.supermarket} / 駅${counts.station} / 病院${counts.hospital}`;
-        if (typeof window.onAmenityCounts === 'function') window.onAmenityCounts(counts, lat, lng); // appeal.js(レーダーチャート)
     } catch (err) {
         if (statusEl) statusEl.textContent = '周辺施設データなし';
-        if (requestId === amenityRequestId && typeof window.onAmenityCounts === 'function') window.onAmenityCounts(null, lat, lng);
     }
 }
 
 async function fetchNearbyAmenities(lat, lng) {
-    const clauses = Object.values(AMENITY_CONFIG).map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`).join('\n');
-    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out body;` });
+    // sightseeingはOverpass対象外(queryを持たない)なので除外する。
+    const clauses = Object.values(AMENITY_CONFIG)
+        .filter(cfg => cfg.query)
+        .map(cfg => `${cfg.query}(around:${AMENITY_RADIUS_M},${lat},${lng});`)
+        .join('\n');
+    const res = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: `[out:json][timeout:10];(${clauses});out center;` });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return data.elements || [];
+}
+
+// --- 観光・景観スポット(Google Places API。バックエンド/api/nearby-spots経由) ---
+
+const SIGHTSEEING_RADIUS_M = 3000;
+let sightseeingRequestId = 0;
+
+// 空き家からスポットまでの距離(m)を「650m」「1.6km」のような見やすい表記にする。
+function formatDistance(distanceM) {
+    if (distanceM === null || distanceM === undefined) return null;
+    if (distanceM < 1000) return `${Math.round(distanceM)}m`;
+    return `${(distanceM / 1000).toFixed(1)}km`;
+}
+
+async function updateNearbySightseeingSpots(lat, lng) {
+    const listEl = document.getElementById('sightseeingList');
+    const statusEl = document.getElementById('sightseeingStatus');
+    const requestId = ++sightseeingRequestId;
+
+    if (amenityLayers.sightseeing) amenityLayers.sightseeing.clearLayers();
+    if (statusEl) statusEl.textContent = '観光・景観スポットを検索中...';
+    if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">読み込み中...</p>';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/nearby-spots?lat=${lat}&lng=${lng}`);
+        if (requestId !== sightseeingRequestId) return;
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const spots = data.spots || [];
+
+        if (spots.length === 0) {
+            if (statusEl) statusEl.textContent = data.note || '観光・景観スポットは見つかりませんでした';
+            if (listEl) listEl.innerHTML = '<p class="text-slate-500 py-4 text-center text-xs">該当する観光・景観スポットはありません</p>';
+            return;
+        }
+
+        if (statusEl) statusEl.textContent = `半径${SIGHTSEEING_RADIUS_M / 1000}km: ${spots.length}件見つかりました`;
+
+        spots.forEach(spot => {
+            if (spot.lat == null || spot.lng == null) return;
+            const distanceLabel = formatDistance(spot.distance_m);
+            L.marker([spot.lat, spot.lng], { icon: AMENITY_CONFIG.sightseeing.icon })
+                .bindPopup(`
+                    <b>${spot.name || '観光スポット'}</b><br>
+                    ${spot.photo_url ? `<img src="${API_BASE_URL}${spot.photo_url}" style="width:160px;border-radius:4px;margin:4px 0;">` : ''}
+                    ${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? `(${spot.user_rating_count}件)` : ''}` : ''}
+                    ${distanceLabel ? `<br>📍 空き家から約${distanceLabel}` : ''}
+                `)
+                .addTo(amenityLayers.sightseeing);
+        });
+
+        if (listEl) {
+            listEl.innerHTML = spots.map(spot => {
+                const photoInner = spot.photo_url
+                    ? `<img src="${API_BASE_URL}${spot.photo_url}" class="sight-card-photo" loading="lazy" alt="${spot.name || ''}">`
+                    : `<div class="sight-card-photo sight-card-photo--placeholder">🏞️</div>`;
+                // 写真(カード全体)をクリックしたら、その場所のGoogleマップのページを新しいタブで開く。
+                const photoBlock = spot.maps_url
+                    ? `<a href="${spot.maps_url}" target="_blank" rel="noopener noreferrer" title="Googleマップで見る">${photoInner}</a>`
+                    : photoInner;
+                const distanceLabel = formatDistance(spot.distance_m);
+                return `
+                    <div class="sight-card flex-shrink-0">
+                        ${photoBlock}
+                        <div class="p-2">
+                            <p class="font-semibold text-[#22344B] text-xs truncate">${spot.name || '-'}</p>
+                            <p class="text-[11px] text-[#5C7A99] mt-0.5">${spot.rating ? `⭐ ${spot.rating}${spot.user_rating_count ? ` (${spot.user_rating_count})` : ''}` : '評価なし'}${distanceLabel ? ` ・ 📍${distanceLabel}` : ''}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    } catch (err) {
+        if (requestId !== sightseeingRequestId) return;
+        if (statusEl) statusEl.textContent = '観光・景観スポットを取得できませんでした';
+        if (listEl) listEl.innerHTML = '<p class="text-rose-700 py-4 text-center text-xs">観光・景観スポットを読み込めませんでした</p>';
+    }
 }
 
 function getElementLatLng(element) {
@@ -563,6 +1060,96 @@ function classifyAmenityElement(tags) {
     if (tags.railway === 'station') return 'station';
     if (tags.amenity === 'hospital') return 'hospital';
     return null;
+}
+
+// 空き家の「活用イメージ」生成モーダル(選んだ物件 x 用途 x 雰囲気で画像を生成する)。
+function initImageGenModal() {
+    const modal = document.getElementById('imageGenModal');
+    const openBtn = document.getElementById('generateImageBtn');
+    if (!modal || !openBtn) return;
+
+    const closeBtn = document.getElementById('imageGenCloseBtn');
+    const submitBtn = document.getElementById('imageGenSubmitBtn');
+    const retryBtn = document.getElementById('imageGenRetryBtn');
+    const errorRetryBtn = document.getElementById('imageGenErrorRetryBtn');
+    const formEl = document.getElementById('imageGenForm');
+    const loadingEl = document.getElementById('imageGenLoading');
+    const resultEl = document.getElementById('imageGenResult');
+    const errorEl = document.getElementById('imageGenError');
+    const houseNameEl = document.getElementById('imageGenHouseName');
+    const useTypeInput = document.getElementById('imageGenUseType');
+    const moodInput = document.getElementById('imageGenMood');
+
+    function showStep(step) {
+        formEl.style.display = step === 'form' ? 'block' : 'none';
+        loadingEl.style.display = step === 'loading' ? 'block' : 'none';
+        resultEl.style.display = step === 'result' ? 'block' : 'none';
+        errorEl.style.display = step === 'error' ? 'block' : 'none';
+    }
+
+    function openModal() {
+        if (!currentHouse) {
+            alert('物件を選択してください');
+            return;
+        }
+        houseNameEl.textContent = currentHouse.name || currentHouse.title || '選択中の物件';
+        useTypeInput.value = '';
+        moodInput.value = '';
+        showStep('form');
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    async function submitGenerate() {
+        const useType = (useTypeInput.value || '').trim();
+        if (!useType) {
+            alert('どんな用途で使いたいか入力してください');
+            return;
+        }
+        if (!currentHouse) {
+            closeModal();
+            return;
+        }
+        const mood = (moodInput.value || '').trim();
+        showStep('loading');
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/generate-house-image`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: currentHouse.global_id, use_type: useType, mood }),
+            });
+            const data = await res.json();
+            if (!res.ok || data.error || !data.image_base64) {
+                document.getElementById('imageGenErrorText').textContent =
+                    (data && data.error) || '画像を生成できませんでした。';
+                showStep('error');
+                return;
+            }
+            const dataUrl = `data:${data.mime_type || 'image/png'};base64,${data.image_base64}`;
+            document.getElementById('imageGenResultImg').src = dataUrl;
+            const downloadLink = document.getElementById('imageGenDownloadLink');
+            downloadLink.href = dataUrl;
+            downloadLink.download = `${currentHouse.name || currentHouse.title || 'akiya'}_${useType}.png`;
+            showStep('result');
+        } catch (err) {
+            document.getElementById('imageGenErrorText').textContent =
+                '通信エラーが発生しました。もう一度お試しください。';
+            showStep('error');
+        }
+    }
+
+    openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    if (submitBtn) submitBtn.addEventListener('click', submitGenerate);
+    if (retryBtn) retryBtn.addEventListener('click', () => showStep('form'));
+    if (errorRetryBtn) errorRetryBtn.addEventListener('click', () => showStep('form'));
 }
 
 function downloadPDF() {

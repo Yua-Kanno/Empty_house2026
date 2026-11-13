@@ -3,53 +3,39 @@
     --ink: #22344B;
     --ink-soft: #5C7A99;
     --gold: #B0862A;
-    --gold-dark: #957122;
     --line: #EFE9DD;
-    --sand: #F5F2EB;
-    --deco: #E9D9A8;
 }
-
-/* ===== 季節テーマ(body[data-season]で切り替え。season.jsが日付から自動設定) ===== */
-body[data-season="spring"] {
-    --paper: #FCF3F6; --ink: #3A2F3C; --ink-soft: #8A6A7C;
-    --gold: #B9557A; --gold-dark: #9A4263; --line: #F0DAE2; --sand: #F9E9EF; --deco: #F6C6D6;
-}
-body[data-season="summer"] {
-    --paper: #EFF8F7; --ink: #1F3A44; --ink-soft: #4F7F8B;
-    --gold: #1F7A8C; --gold-dark: #176373; --line: #D0E7E9; --sand: #E1F2F3; --deco: #A9DCE2;
-}
-body[data-season="autumn"] {
-    --paper: #F7F0E5; --ink: #3A2A1E; --ink-soft: #85644A;
-    --gold: #A4502A; --gold-dark: #863F1F; --line: #E8D7C1; --sand: #F3E6D2; --deco: #E9B98A;
-}
-body[data-season="winter"] {
-    --paper: #EFF3F8; --ink: #22344B; --ink-soft: #5C7A99;
-    --gold: #3F5F86; --gold-dark: #314C6D; --line: #D5DEE9; --sand: #E4EBF4; --deco: #BCD0E6;
-}
-body { transition: background-color 0.6s ease, color 0.6s ease; }
-header { position: relative; }
-header::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 4px;
-    background: linear-gradient(90deg, var(--gold), var(--deco), var(--gold));
-}
-/* 季節のアニメーション(花びら・蛍・落ち葉・雪)。クリックは素通しします */
-#season-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2000; }
 
 body {
     background-color: var(--paper);
     color: var(--ink);
 }
 
+/* ドロップダウンのグループヘッダー */
+optgroup {
+    font-weight: bold;
+    color: var(--gold);
+    background-color: #FFFFFF;
+}
+
+option {
+    font-weight: normal;
+    color: var(--ink);
+    padding-left: 10px;
+}
+
 /* スクロールバー */
 #propertyCardList::-webkit-scrollbar,
-#subsidyList::-webkit-scrollbar {
+#subsidyList::-webkit-scrollbar,
+#sightseeingList::-webkit-scrollbar {
     height: 6px;
     width: 6px;
 }
 
 #propertyCardList::-webkit-scrollbar-thumb,
-#subsidyList::-webkit-scrollbar-thumb {
-    background-color: var(--deco);
+#subsidyList::-webkit-scrollbar-thumb,
+#sightseeingList::-webkit-scrollbar-thumb {
+    background-color: #D1C9B8;
     border-radius: 3px;
 }
 
@@ -75,7 +61,7 @@ body {
 
 .prop-card.active {
     border-color: var(--gold);
-    background-color: var(--paper);
+    background-color: #FFFDF9;
     box-shadow: 0 0 0 2px var(--gold);
 }
 
@@ -85,26 +71,82 @@ body {
     border-radius: 6px;
 }
 
-/* クラスタアイコン */
+/* 観光・景観スポットカード */
+.sight-card {
+    width: 150px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sight-card-photo {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    display: block;
+    background-color: var(--paper);
+}
+
+.sight-card-photo--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.sight-card a {
+    display: block;
+    cursor: pointer;
+}
+
+/* クラスタアイコン(密集エリアでピンが重なる代わりに件数で丸く集約表示される部分)。
+   数字が見づらいとの声があったため、フォントサイズを上げて3段階とも色分けを明示的に
+   指定する(largeはライブラリのデフォルトCSSのみだと見た目がテーマと合わないオレンジ色
+   になっていたため、ここで専用の色を定義する)。 */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px !important;
+    font-weight: bold;
+}
+
 .marker-cluster-small {
-    background-color: color-mix(in srgb, var(--gold) 60%, transparent) !important;
+    background-color: rgba(217, 180, 106, 0.55) !important;
 }
 .marker-cluster-small div {
-    background-color: var(--gold) !important;
+    background-color: rgba(176, 134, 42, 0.92) !important;
     color: white !important;
-    font-weight: bold;
 }
 
 .marker-cluster-medium {
-    background-color: rgba(34, 52, 75, 0.6) !important;
+    background-color: rgba(122, 92, 40, 0.5) !important;
 }
 .marker-cluster-medium div {
-    background-color: rgba(34, 52, 75, 0.9) !important;
+    background-color: rgba(122, 92, 40, 0.92) !important;
     color: white !important;
-    font-weight: bold;
 }
 
-/* 周辺施設チェックボックス凡例 */
+.marker-cluster-large {
+    background-color: rgba(34, 52, 75, 0.5) !important;
+}
+.marker-cluster-large div {
+    background-color: rgba(34, 52, 75, 0.92) !important;
+    color: white !important;
+    font-size: 14px !important;
+}
+
+/* 周辺施設チェックボックス凡例・物件の価格帯凡例 */
 .amenity-legend {
     background: rgba(255, 255, 255, 0.92);
     padding: 8px 12px;
@@ -115,33 +157,104 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    max-width: 180px;
 }
 
-.amenity-legend label {
+.amenity-legend label,
+.amenity-legend .legend-row {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+.amenity-legend label.legend-row {
     cursor: pointer;
 }
 
-/* 地図: 読み込み中の背景を季節の色に */
-#map { background-color: var(--paper); }
+.legend-section-title {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--ink-soft);
+    margin-top: 2px;
+}
 
-/* 四季の暮らしプレビューの季節ボタン */
-.season-tab {
+.legend-divider {
+    border-top: 1px dashed var(--line);
+    margin: 4px 0;
+}
+
+/* ハザード情報パネルの各行。リスクあり/区域外/確認不可で色分けし、
+   デメリット面の情報であることが一目でわかるようにする。 */
+.hazard-item {
     font-size: 12px;
-    padding: 6px 4px;
+    line-height: 1.5;
+    padding: 8px 10px;
     border-radius: 8px;
-    border: 1.5px solid var(--line);
-    background: var(--paper);
-    color: var(--ink);
+    border: 1px solid var(--line);
+}
+
+.hazard-item-risk {
+    background: #FBEFEA;
+    border-color: #E8C7B8;
+    color: #954C36;
+    font-weight: 500;
+}
+
+.hazard-item-safe {
+    background: #EFF5EC;
+    border-color: #CFE3C9;
+    color: #5F7350;
+}
+
+.hazard-item-unknown {
+    background: #F5F2EB;
+    border-color: var(--line);
+    color: var(--ink-soft);
+}
+
+/* 凡例の色スワッチ(丸)。地図上のピンの色と対応させて、凡例だけ見ても
+   どのピンが何を表すかひと目でわかるようにする。 */
+.legend-swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+/* 活用イメージ生成モーダルのローディングスピナー */
+.image-gen-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--line);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: image-gen-spin 0.8s linear infinite;
+}
+
+@keyframes image-gen-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 使い方ガイドモーダルのステップドット */
+.usage-guide-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--line);
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
-.season-tab:hover { border-color: var(--gold); }
-.season-tab.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #fff;
-    font-weight: 700;
+
+.usage-guide-dot:hover {
+    background-color: #D1C9B8;
 }
+
+.usage-guide-dot--active {
+    background-color: var(--gold);
+    transform: scale(1.3);
+}
+

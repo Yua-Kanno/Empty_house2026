@@ -17,24 +17,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<script src="season-motion.js"></script>
-
-<body class="bg-[color:var(--paper)] text-[color:var(--ink)] min-h-screen flex flex-col font-sans">
+<body class="bg-[#FBF9F4] text-[#22344B] min-h-screen flex flex-col font-sans">
 
     <!-- ヘッダー -->
-    <header class="bg-white border-b border-[color:var(--line)] px-6 py-4 flex justify-between items-center shadow-sm">
+    <header class="bg-white border-b border-[#EFE9DD] px-4 sm:px-6 py-4 flex flex-wrap justify-center sm:justify-between items-center gap-3 shadow-sm">
         <div class="flex items-center gap-3">
-            <span class="text-2xl" id="season-icon">🏠</span>
-            <h1 class="text-xl font-bold font-serif-jp tracking-wide">空き家AIプランナー</h1>
+            <span class="text-2xl">🏠</span>
+            <h1 class="text-lg sm:text-xl font-bold font-serif-jp tracking-wide">空き家AIプランナー</h1>
         </div>
-        <div class="flex items-center gap-4">
-            <button id="season-fx-toggle" type="button" class="text-xs bg-[color:var(--paper)] hover:bg-[color:var(--line)] text-[color:var(--ink)] border border-[color:var(--line)] px-3 py-1.5 rounded-full font-medium transition" aria-pressed="true">
-                ✨ 季節の演出: ON
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+            <button id="usageGuideOpenBtn" type="button" class="text-xs bg-[#FBF9F4] hover:bg-[#EFE9DD] text-[#22344B] border border-[#EFE9DD] px-3 py-1.5 rounded-full font-medium transition whitespace-nowrap">
+                ❓ 使い方
             </button>
-            <a id="chat-link" href="#" target="_blank" class="text-xs bg-[color:var(--paper)] hover:bg-[color:var(--line)] text-[color:var(--ink)] border border-[color:var(--line)] px-3 py-1.5 rounded-full font-medium transition">
+            <a id="chat-link" href="#" target="_blank" class="text-xs bg-[#FBF9F4] hover:bg-[#EFE9DD] text-[#22344B] border border-[#EFE9DD] px-3 py-1.5 rounded-full font-medium transition whitespace-nowrap">
                 💬 AIに相談する
             </a>
-            <span class="text-xs text-[color:var(--ink-soft)] font-medium">VORN Challenge 2026</span>
+            <span class="text-xs text-[#5C7A99] font-medium whitespace-nowrap">VORN Challenge 2026</span>
         </div>
     </header>
 
@@ -44,39 +42,33 @@
         <!-- 左カラム：検索・マップ・物件カード -->
         <section class="space-y-4 flex flex-col">
             <!-- エリア選択フィルター -->
-            <div class="panel p-3 flex items-center gap-3 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
-                <label for="prefSelect" class="text-xs font-bold text-[color:var(--ink)] whitespace-nowrap flex items-center gap-1">
+            <div class="panel p-3 flex items-center gap-3 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <label for="prefSelect" class="text-xs font-bold text-[#22344B] whitespace-nowrap flex items-center gap-1">
                     <span>🔍</span> エリア絞り込み:
                 </label>
-                <select id="prefSelect" class="input-field w-full p-2 text-sm font-medium bg-[color:var(--paper)] border border-[color:var(--line)] rounded focus:outline-none">
+                <select id="prefSelect" class="input-field w-full p-2 text-sm font-medium bg-[#FBF9F4] border border-[#EFE9DD] rounded focus:outline-none">
                     <option value="none">エリアを選択してください</option>
                 </select>
             </div>
 
             <!-- 候補物件マップ -->
-            <div class="panel p-4 flex-1 flex flex-col relative bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+            <div class="panel p-4 flex-1 flex flex-col relative bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
                 <div class="mb-2 flex justify-between items-center flex-wrap gap-2">
-                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)]">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B]">
                         <span>📍</span> 候補物件マップ
                     </h2>
-                    <div id="amenityStatus" class="status-badge text-xs font-medium text-[color:var(--ink-soft)]">
+                    <div id="amenityStatus" class="status-badge text-xs font-medium text-[#5C7A99]">
                         物件を選択してください
                     </div>
                 </div>
-                <div id="map" class="w-full h-[360px] rounded border border-[color:var(--line)]"></div>
-                <p class="text-[10px] leading-relaxed text-[color:var(--ink-soft)] mt-2">
-                    🗺️ 地図右上のボタンで、洪水・高潮・津波の浸水想定区域を重ねて見られます。
-                    ※国の公開データによる参考情報です。色のついていない場所でも被害が出ることがあります。
-                    購入・移住の前に、必ず市区町村の公式ハザードマップをご確認ください。
-                    <a class="underline" href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener noreferrer">ハザードマップポータルサイト(国土交通省)</a>
-                </p>
+                <div id="map" class="w-full flex-1 min-h-[360px] rounded border border-[#EFE9DD]"></div>
             </div>
 
             <!-- 周辺環境バッジ付き物件カードリスト -->
-            <div class="panel p-3 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
+            <div class="panel p-3 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
                 <div class="flex justify-between items-center mb-2">
-                    <p class="text-xs font-bold text-[color:var(--ink)]">物件一覧（周辺環境バッジ付き）</p>
-                    <span class="text-[10px] text-[color:var(--ink-soft)]">カードクリックで地図移動</span>
+                    <p class="text-xs font-bold text-[#22344B]">物件一覧（周辺環境バッジ付き）</p>
+                    <span class="text-[10px] text-[#5C7A99]">カードクリックで地図移動</span>
                 </div>
                 <div id="propertyCardList" class="flex gap-3 overflow-x-auto pb-2 min-h-[95px]">
                     <!-- JSでカードが自動生成されます -->
@@ -84,47 +76,33 @@
             </div>
 
             <!-- 選択中物件の要約カード -->
-            <div id="houseDetailCard" class="panel p-4 bg-[color:var(--sand)] rounded-lg border border-[color:var(--line)]">
-                <div class="flex items-center justify-between border-b border-[color:var(--line)] pb-2 mb-2">
-                    <span class="text-xs font-bold text-[color:var(--gold)] uppercase tracking-wider">SELECTED PROPERTY</span>
-                    <span id="detailAddress" class="text-xs text-[color:var(--ink-soft)]">所在地: -</span>
+            <div id="houseDetailCard" class="panel p-4 bg-[#F5F2EB] rounded-lg border border-[#EFE9DD]">
+                <div class="flex items-center justify-between border-b border-[#EFE9DD] pb-2 mb-2">
+                    <span class="text-xs font-bold text-[#B0862A] uppercase tracking-wider">SELECTED PROPERTY</span>
+                    <span id="detailAddress" class="text-xs text-[#5C7A99]">所在地: -</span>
                 </div>
-                <h3 class="text-base font-serif-jp font-bold text-[color:var(--ink)] mb-2" id="detailName">物件を選択してください</h3>
+                <h3 class="text-base font-serif-jp font-bold text-[#22344B] mb-2" id="detailName">物件を選択してください</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs">
-                    <div class="p-2 bg-white rounded border border-[color:var(--line)]">
-                        <span class="text-[color:var(--ink-soft)] block text-[10px]">改修コスト目安</span>
-                        <span id="detailCost" class="font-bold text-[color:var(--ink)]">-</span>
+                    <div class="p-2 bg-white rounded border border-[#EFE9DD]">
+                        <span class="text-[#5C7A99] block text-[10px]">改修コスト目安</span>
+                        <span id="detailCost" class="font-bold text-[#22344B]">-</span>
                     </div>
-                    <div class="p-2 bg-white rounded border border-[color:var(--line)]">
-                        <span class="text-[color:var(--ink-soft)] block text-[10px]">想定用途</span>
-                        <span id="detailUsage" class="font-bold text-[color:var(--ink)]">-</span>
+                    <div class="p-2 bg-white rounded border border-[#EFE9DD]">
+                        <span class="text-[#5C7A99] block text-[10px]">想定用途</span>
+                        <span id="detailUsage" class="font-bold text-[#22344B]">-</span>
                     </div>
                 </div>
-            </div>
-
-            <!-- 四季の暮らしプレビュー -->
-            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
-                <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
-                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)]">
-                        <span>🌸</span> 四季の暮らしプレビュー
-                    </h2>
-                    <button id="seasonPreviewReset" type="button" class="text-[10px] text-[color:var(--ink-soft)] underline">今日の季節に戻す</button>
-                </div>
-                <div class="grid grid-cols-4 gap-2 mb-3">
-                    <button type="button" class="season-tab" data-season="spring">🌸 春</button>
-                    <button type="button" class="season-tab" data-season="summer">🌻 夏</button>
-                    <button type="button" class="season-tab" data-season="autumn">🍁 秋</button>
-                    <button type="button" class="season-tab" data-season="winter">⛄ 冬</button>
-                </div>
-                <div id="seasonPreviewBody" class="min-h-[88px]"></div>
+                <button id="generateImageBtn" type="button" class="w-full mt-3 pt-3 border-t border-[#EFE9DD] bg-transparent hover:bg-[#EFE9DD] text-[#22344B] font-bold py-2 px-3 rounded-lg transition flex items-center justify-center gap-2 text-xs">
+                    <span>🎨</span> この空き家の活用イメージを生成する
+                </button>
             </div>
         </section>
 
         <!-- 右カラム：収支・補助金・PDF出力 -->
         <section class="space-y-4 flex flex-col">
             <!-- 収支シミュレーション -->
-            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
-                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-3">
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B] mb-3">
                     <span>📊</span> 収支シミュレーション (5年)
                 </h2>
                 <div class="h-[220px] relative">
@@ -132,30 +110,72 @@
                 </div>
             </div>
 
-            <!-- 周辺の魅力レーダーチャート -->
-            <div class="panel p-4 bg-white rounded-lg border border-[color:var(--line)] shadow-sm">
-                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-2">
-                    <span>🌿</span> 周辺の魅力 (半径1km)
-                </h2>
-                <div id="appealRadarWrap" class="h-[240px] relative hidden">
-                    <canvas id="appealRadar"></canvas>
-                </div>
-                <p id="appealSummary" class="text-xs leading-relaxed text-[color:var(--ink)] mt-2">物件を選択してください</p>
-                <p class="text-[10px] text-[color:var(--ink-soft)] mt-1">※地図データ(OpenStreetMap)の施設数をもとにした目安です。5点=十分にそろっている目安。</p>
-            </div>
-
-            <!-- 利用できる補助金 -->
-            <div class="panel p-4 flex-1 bg-white rounded-lg border border-[color:var(--line)] shadow-sm flex flex-col">
-                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[color:var(--ink)] mb-3">
+            <!-- 利用できる補助金(件数が少ない時に枠だけ余って間延びしないよう、
+                 flex-1をやめて中身の高さに合わせる。最大高さも少し低くした) -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm flex flex-col">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B] mb-3">
                     <span>💰</span> 利用できる補助金
                 </h2>
-                <div id="subsidyList" class="space-y-2 overflow-y-auto max-h-[220px] flex-1 pr-1">
+                <div id="subsidyList" class="space-y-2 overflow-y-auto max-h-[160px] pr-1">
+                    <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
+                </div>
+            </div>
+
+            <!-- ハザード情報。メリットだけでなくデメリット(水害・土砂災害などのリスク)も
+                 見せることで、住んだ後の将来まで考えてもらうための枠(ユーザーからの要望)。
+                 国土交通省ハザードマップポータルサイトの公開タイルを使い、選択中物件の
+                 座標が各ハザードエリアに入っているかを簡易判定して表示する。 -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <div class="mb-2 flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B]">
+                        <span>⚠️</span> ハザード情報
+                    </h2>
+                    <div id="hazardStatus" class="status-badge text-xs font-medium text-[#5C7A99]">
+                        物件を選択してください
+                    </div>
+                </div>
+                <div id="hazardInfoList" class="space-y-2">
+                    <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
+                </div>
+                <p class="text-[10px] text-[#5C7A99] mt-2">
+                    出典: <a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>(国土交通省)。簡易判定による参考情報です。正式なハザードマップは自治体の発表をご確認ください。
+                </p>
+            </div>
+
+            <!-- 空き家の場所の様子(ストリートビュー)。実物件の写真データが無いため、
+                 場所の参考イメージとして表示する(選択中物件カードだと見つけにくかったため、
+                 補助金枠を縮めてできたスペースにここで表示するようにした) -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B] mb-3">
+                    <span>📷</span> 場所の様子(ストリートビュー)
+                </h2>
+                <div id="houseStreetViewWrap" style="display:none;">
+                    <img id="houseStreetViewImg" class="w-full h-[160px] object-cover rounded-lg border border-[#EFE9DD]" alt="物件周辺のストリートビュー">
+                    <p class="text-[10px] text-[#5C7A99] mt-1">周辺の様子です。建物そのものが写っているとは限りません</p>
+                </div>
+                <div id="houseStreetViewPlaceholder" class="p-3 bg-[#FBF9F4] rounded-lg border border-dashed border-[#EFE9DD] text-center text-[11px] text-[#5C7A99]" style="display:none;">
+                    🏞️ この場所のストリートビューは見つかりませんでした
+                </div>
+                <p id="houseStreetViewIdle" class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
+            </div>
+
+            <!-- 周辺の観光・景観スポット -->
+            <div class="panel p-4 bg-white rounded-lg border border-[#EFE9DD] shadow-sm">
+                <div class="mb-2 flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="text-lg font-serif-jp font-bold flex items-center gap-2 text-[#22344B]">
+                        <span>🏞️</span> 周辺の観光・景観スポット
+                    </h2>
+                    <div id="sightseeingStatus" class="status-badge text-xs font-medium text-[#5C7A99]">
+                        物件を選択してください
+                    </div>
+                </div>
+                <div id="sightseeingList" class="flex gap-3 overflow-x-auto pb-2 min-h-[95px]">
                     <p class="text-slate-500 py-4 text-center text-xs">物件を選択してください</p>
                 </div>
             </div>
 
             <!-- 提案書ダウンロードボタン -->
-            <button onclick="downloadPDF()" class="w-full bg-[color:var(--gold)] hover:bg-[color:var(--gold-dark)] text-white font-bold py-3.5 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2 text-sm">
+            <button onclick="downloadPDF()" class="w-full bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-3.5 px-4 rounded-lg shadow-md transition flex items-center justify-center gap-2 text-sm">
                 <span>📄</span> 提案書(PDF)を出力・ダウンロード
             </button>
         </section>
@@ -166,11 +186,102 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- MarkerCluster JS -->
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <!-- 使い方ガイドモーダル(1枚ずつめくるステップ形式) -->
+    <div id="usageGuideModal" style="display:none; z-index:999999;" class="fixed inset-0 bg-[#22344B]/50 backdrop-blur-sm items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-sm font-serif-jp font-bold text-[#22344B]">🏠 使い方ガイド</h3>
+          <div class="flex items-center gap-3">
+            <button id="usageGuideSkipBtn" type="button" class="text-xs text-[#5C7A99] hover:text-[#22344B] underline">スキップ</button>
+            <button id="usageGuideCloseBtn" type="button" class="text-[#5C7A99] hover:text-[#22344B] text-xl leading-none">&times;</button>
+          </div>
+        </div>
+
+        <div class="text-center py-3">
+          <div id="usageGuideStepIcon" class="w-16 h-16 mx-auto rounded-full bg-[#FBF9F4] border border-[#EFE9DD] flex items-center justify-center text-3xl mb-4">📍</div>
+          <p id="usageGuideStepTitle" class="text-sm font-bold text-[#22344B] mb-2">地図・物件の見方</p>
+          <p id="usageGuideStepDesc" class="text-xs text-[#5C7A99] leading-relaxed px-1">エリアを絞り込んで...</p>
+        </div>
+
+        <div id="usageGuideDots" class="flex justify-center gap-2 mt-4 mb-5"></div>
+
+        <div class="flex items-center gap-3">
+          <button id="usageGuideBackBtn" type="button" class="text-xs text-[#5C7A99] hover:text-[#22344B] border border-[#EFE9DD] px-3 py-2 rounded-lg transition" style="visibility:hidden;">
+            戻る
+          </button>
+          <button id="usageGuideNextBtn" type="button" class="flex-1 bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-2 rounded-lg shadow-sm transition text-sm">
+            次へ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 活用イメージ生成モーダル -->
+    <div id="imageGenModal" style="display:none; z-index:999999;" class="fixed inset-0 bg-[#22344B]/50 backdrop-blur-sm items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-base font-serif-jp font-bold text-[#22344B]">🎨 活用イメージを生成</h3>
+          <button id="imageGenCloseBtn" type="button" class="text-[#5C7A99] hover:text-[#22344B] text-xl leading-none">&times;</button>
+        </div>
+        <p id="imageGenHouseName" class="text-xs text-[#5C7A99] mb-3">-</p>
+
+        <div id="imageGenForm" class="space-y-3">
+          <div>
+            <label class="text-xs font-bold text-[#22344B] block mb-1">どんな用途で使いたいですか？</label>
+            <input id="imageGenUseType" list="imageGenUseTypeOptions" type="text" placeholder="例: カフェ、ゲストハウス、アトリエ、二拠点居住..." class="input-field w-full p-2 text-sm bg-[#FBF9F4] border border-[#EFE9DD] rounded focus:outline-none">
+            <datalist id="imageGenUseTypeOptions">
+              <option value="カフェ"></option>
+              <option value="ゲストハウス・民泊"></option>
+              <option value="シェアハウス"></option>
+              <option value="古民家カフェ"></option>
+              <option value="アトリエ・工房"></option>
+              <option value="ギャラリー"></option>
+              <option value="コワーキングスペース"></option>
+              <option value="二拠点居住用の別荘"></option>
+              <option value="セカンドハウス"></option>
+              <option value="民泊併用の自宅"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-[#22344B] block mb-1">雰囲気・テイスト（任意）</label>
+            <input id="imageGenMood" list="imageGenMoodOptions" type="text" placeholder="例: 北欧風ナチュラル、和モダン、レトロ可愛い..." class="input-field w-full p-2 text-sm bg-[#FBF9F4] border border-[#EFE9DD] rounded focus:outline-none">
+            <datalist id="imageGenMoodOptions">
+              <option value="北欧風ナチュラル"></option>
+              <option value="和モダン"></option>
+              <option value="レトロ可愛い"></option>
+              <option value="ミニマル・シンプル"></option>
+              <option value="古民家風・落ち着いた雰囲気"></option>
+              <option value="ポップでカラフル"></option>
+            </datalist>
+          </div>
+          <button id="imageGenSubmitBtn" type="button" class="w-full bg-[#B0862A] hover:bg-[#957122] text-white font-bold py-2.5 rounded-lg shadow-sm transition text-sm">
+            生成する
+          </button>
+        </div>
+
+        <div id="imageGenLoading" style="display:none;" class="py-10 text-center">
+          <div class="image-gen-spinner mx-auto mb-3"></div>
+          <p class="text-xs text-[#5C7A99]">画像を生成しています…（20〜30秒ほどかかります）</p>
+        </div>
+
+        <div id="imageGenResult" style="display:none;">
+          <img id="imageGenResultImg" class="w-full rounded-lg border border-[#EFE9DD] mb-3" alt="活用イメージ">
+          <div class="flex gap-2">
+            <a id="imageGenDownloadLink" download="akiya-image.png" class="flex-1 text-center bg-[#5F7350] hover:bg-[#4a5a3e] text-white text-xs font-bold py-2 rounded-lg transition">💾 画像を保存</a>
+            <button id="imageGenRetryBtn" type="button" class="flex-1 bg-[#FBF9F4] hover:bg-[#EFE9DD] text-[#22344B] text-xs font-bold py-2 rounded-lg border border-[#EFE9DD] transition">🔁 別パターンを試す</button>
+          </div>
+        </div>
+
+        <div id="imageGenError" style="display:none;" class="py-4 text-center">
+          <p class="text-xs text-rose-700" id="imageGenErrorText">画像を生成できませんでした。</p>
+          <button id="imageGenErrorRetryBtn" type="button" class="mt-2 text-xs text-[#5C7A99] underline">もう一度試す</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Main JS -->
     <script src="script.js"></script>
-    <!-- 周辺の魅力レーダー・四季の暮らしプレビュー -->
-    <script src="appeal.js"></script>
-    <!-- 季節テーマ(春夏秋冬) -->
-    <script src="season.js"></script>
+    <script src="season-motion.js"></script>
+    <script src="bousai-kit.js"></script>
 </body>
 </html>
