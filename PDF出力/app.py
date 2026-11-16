@@ -331,6 +331,14 @@ def get_street_view_image():
 # 空き家の「活用イメージ」画像生成API(Geminiの画像生成モデルをサーバー側で呼び出す)。
 # 選んだ物件の実データ(構造・築年・間取り等)と、ユーザーが指定した用途・雰囲気を
 # プロンプトに組み込むことで、物件ごと・用途ごとに異なる画像を生成する。
+#
+# 1回のHTTPリクエストが生成完了まで(数十秒〜170秒ほど)ブロックし続けると、
+# Render側やブラウザ側の中継がその間に接続を切ってしまい「タイムアウト/エラーになる」
+# ことが実機で頻発したため、開始(このエンドポイント)と状態確認(下の
+# /api/generate-house-image-status)の2段階に分け、どちらのリクエストも
+# すぐ(数秒以内)に返すようにしている。フロント側はこのエンドポイントで
+# interaction_id を受け取ったあと、状態確認エンドポイントを数秒おきに
+# ポーリングして完了を待つ。
 @app.route('/api/generate-house-image', methods=['POST'])
 def generate_house_image_api():
     try:
@@ -347,7 +355,7 @@ def generate_house_image_api():
         if target is None:
             return jsonify({"error": "指定された物件が見つかりませんでした。"}), 404
 
-        result = image_gen.generate_house_image(target, use_type, mood)
+        result = image_gen.start_house_image_generation(target, use_type, mood)
         if "error" in result:
             return jsonify(result), 502
         return jsonify(result)
@@ -356,6 +364,25 @@ def generate_house_image_api():
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
+# 上の/api/generate-house-imageで開始した画像生成の、今の状態を確認するAPI。
+# フロント側がこれを数秒おきに呼び出す(ポーリングする)ことで、完了を待つ長時間接続を
+# ブラウザ↔Render間に発生させずに済む。
+@app.route('/api/generate-house-image-status', methods=['GET'])
+def generate_house_image_status_api():
+    try:
+        interaction_id = (request.args.get('interaction_id') or '').strip()
+        if not interaction_id:
+            return jsonify({"status": "failed", "error": "interaction_id は必須です。"}), 400
+
+        result = image_gen.check_house_image_generation(interaction_id)
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"status": "failed", "error": str(e)}), 500
 
 
 # PDF生成API

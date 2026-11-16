@@ -1063,6 +1063,19 @@ function classifyAmenityElement(tags) {
 }
 
 // 空き家の「活用イメージ」生成モーダル(選んだ物件 x 用途 x 雰囲気で画像を生成する)。
+//
+// 画像生成は開始(POST /api/generate-house-image)と状態確認(GET
+// /api/generate-house-image-status)の2段階に分かれている。生成自体は数十秒〜
+// 長いと170秒近くかかることがあり、1回のHTTPリクエストでそれを待ち続けると
+// Render側やブラウザ側の中継が途中で接続を切ってしまい「タイムアウト/エラーになる」
+// ことが実機で頻発していたため、開始リクエストはすぐ(数秒以内)に返るようにし、
+// フロント側はIMAGE_GEN_POLL_INTERVAL_MSおきに状態確認を繰り返す(ポーリングする)
+// ことで完了を待つ。これなら個々のHTTPリクエストはどれも短時間で終わるので、
+// 途中の中継に切られる心配がない。
+const IMAGE_GEN_POLL_INTERVAL_MS = 3000;
+const IMAGE_GEN_MAX_WAIT_MS = 180000; // サーバー側の生成処理に余裕を持たせた全体の上限
+let imageGenRequestId = 0;
+
 function initImageGenModal() {
     const modal = document.getElementById('imageGenModal');
     const openBtn = document.getElementById('generateImageBtn');
@@ -1074,6 +1087,7 @@ function initImageGenModal() {
     const errorRetryBtn = document.getElementById('imageGenErrorRetryBtn');
     const formEl = document.getElementById('imageGenForm');
     const loadingEl = document.getElementById('imageGenLoading');
+    const loadingTextEl = document.getElementById('imageGenLoadingText');
     const resultEl = document.getElementById('imageGenResult');
     const errorEl = document.getElementById('imageGenError');
     const houseNameEl = document.getElementById('imageGenHouseName');
@@ -1087,11 +1101,17 @@ function initImageGenModal() {
         errorEl.style.display = step === 'error' ? 'block' : 'none';
     }
 
+    function showError(message) {
+        document.getElementById('imageGenErrorText').textContent = message || '画像を生成できませんでした。';
+        showStep('error');
+    }
+
     function openModal() {
         if (!currentHouse) {
             alert('物件を選択してください');
             return;
         }
+        imageGenRequestId++; // 前回分の生成が裏でポーリング中でも、結果を今回のモーダルに反映させない
         houseNameEl.textContent = currentHouse.name || currentHouse.title || '選択中の物件';
         useTypeInput.value = '';
         moodInput.value = '';
@@ -1100,7 +1120,51 @@ function initImageGenModal() {
     }
 
     function closeModal() {
+        imageGenRequestId++; // ポーリングを止める
         modal.style.display = 'none';
+    }
+
+    // 生成中のinteractionの状態を数秒おきに確認し、完了/失敗するまで繰り返す。
+    async function pollStatus(interactionId, requestId, startedAt, houseLabel) {
+        if (requestId !== imageGenRequestId) return; // モーダルが閉じられた/別の生成が始まった
+
+        const elapsedMs = Date.now() - startedAt;
+        if (loadingTextEl) {
+            loadingTextEl.textContent = `画像を生成しています…(${Math.round(elapsedMs / 1000)}秒経過、20〜90秒ほどかかります)`;
+        }
+        if (elapsedMs >= IMAGE_GEN_MAX_WAIT_MS) {
+            showError('画像生成が時間内に完了しませんでした(タイムアウト)。しばらく待ってからもう一度お試しください。');
+            return;
+        }
+
+        let data = null;
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/generate-house-image-status?interaction_id=${encodeURIComponent(interactionId)}`);
+            data = await res.json();
+        } catch (err) {
+            // 1回の通信エラーでは諦めず、全体タイムアウトに達するまで次のポーリングでリトライする。
+            setTimeout(() => pollStatus(interactionId, requestId, startedAt, houseLabel), IMAGE_GEN_POLL_INTERVAL_MS);
+            return;
+        }
+        if (requestId !== imageGenRequestId) return;
+
+        if (data && data.status === 'completed' && data.image_base64) {
+            const dataUrl = `data:${data.mime_type || 'image/png'};base64,${data.image_base64}`;
+            document.getElementById('imageGenResultImg').src = dataUrl;
+            const downloadLink = document.getElementById('imageGenDownloadLink');
+            downloadLink.href = dataUrl;
+            downloadLink.download = `${houseLabel}.png`;
+            showStep('result');
+            return;
+        }
+
+        if (data && data.status === 'failed') {
+            showError(data.error);
+            return;
+        }
+
+        // in_progress、またはポーリング1回の一時的な失敗 -> 次のポーリングへ
+        setTimeout(() => pollStatus(interactionId, requestId, startedAt, houseLabel), IMAGE_GEN_POLL_INTERVAL_MS);
     }
 
     async function submitGenerate() {
@@ -1114,31 +1178,28 @@ function initImageGenModal() {
             return;
         }
         const mood = (moodInput.value || '').trim();
+        const houseForThisGen = currentHouse;
+        const houseLabel = `${houseForThisGen.name || houseForThisGen.title || 'akiya'}_${useType}`;
+        const requestId = ++imageGenRequestId;
         showStep('loading');
+        if (loadingTextEl) loadingTextEl.textContent = '画像を生成しています…(20〜90秒ほどかかります)';
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/generate-house-image`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: currentHouse.global_id, use_type: useType, mood }),
+                body: JSON.stringify({ id: houseForThisGen.global_id, use_type: useType, mood }),
             });
             const data = await res.json();
-            if (!res.ok || data.error || !data.image_base64) {
-                document.getElementById('imageGenErrorText').textContent =
-                    (data && data.error) || '画像を生成できませんでした。';
-                showStep('error');
+            if (requestId !== imageGenRequestId) return;
+            if (!res.ok || data.error || !data.interaction_id) {
+                showError(data && data.error);
                 return;
             }
-            const dataUrl = `data:${data.mime_type || 'image/png'};base64,${data.image_base64}`;
-            document.getElementById('imageGenResultImg').src = dataUrl;
-            const downloadLink = document.getElementById('imageGenDownloadLink');
-            downloadLink.href = dataUrl;
-            downloadLink.download = `${currentHouse.name || currentHouse.title || 'akiya'}_${useType}.png`;
-            showStep('result');
+            pollStatus(data.interaction_id, requestId, Date.now(), houseLabel);
         } catch (err) {
-            document.getElementById('imageGenErrorText').textContent =
-                '通信エラーが発生しました。もう一度お試しください。';
-            showStep('error');
+            if (requestId !== imageGenRequestId) return;
+            showError('通信エラーが発生しました。もう一度お試しください。');
         }
     }
 
