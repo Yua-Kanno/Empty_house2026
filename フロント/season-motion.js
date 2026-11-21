@@ -139,7 +139,10 @@
   var btn = null;
   function label() {
     if (!btn) return;
-    btn.textContent = fxOn ? "✨ 季節の演出: ON" : "✨ 季節の演出: OFF";
+    // 画面が狭いときは、ボタンを1行に収めるため短い名前にする
+    var narrow = window.matchMedia && window.matchMedia("(max-width:600px)").matches;
+    var name = narrow ? "✨ 演出: " : "✨ 季節の演出: ";
+    btn.textContent = name + (fxOn ? "ON" : "OFF");
     btn.setAttribute("aria-pressed", String(fxOn));
     btn.style.opacity = fxOn ? "1" : "0.65";
   }
@@ -149,54 +152,32 @@
     if (on) start(); else stop();
     label();
   }
-  // 「使い方」ボタンを探す(画面の上のほうにある、文字が「使い方」のボタン/リンク)
-  function findHelpButton() {
-    var els = document.querySelectorAll("button, a");
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      if (el === btn) continue;
-      var text = el.textContent.replace(/\s+/g, "");
-      if (text.indexOf("使い方") === -1 || text.length > 12) continue;
-      var r = el.getBoundingClientRect();
-      if (r.width > 0 && r.top < 250) return el;   // 見えていて、画面の上のほうにあるもの
-    }
-    return null;
-  }
-
   function addToggle() {
     btn = document.createElement("button");
     btn.type = "button";
     var nav = document.querySelector(".header-nav");
-    var help = nav ? null : findHelpButton();
     if (nav) {
-      // チャット画面: ヘッダーのナビの中に入れる
       // このページ全体の button 用スタイル(緑・高さ46px)を打ち消して、隣の nav-link と同じ見た目にする
       var st = document.createElement("style");
       st.textContent =
         ".akiya-fx-btn.nav-link{height:auto;line-height:normal;cursor:pointer;font-family:inherit;}" +
-        ".akiya-fx-btn.nav-link:hover:not(:disabled){background:var(--accent-soft);color:var(--accent-deep);border-color:var(--accent);}";
+        ".akiya-fx-btn.nav-link:hover:not(:disabled){background:var(--accent-soft);color:var(--accent-deep);border-color:var(--accent);}" +
+        // スマホ: ナビのボタン3つ(トップ・マップ・季節の演出)が1行に並ぶよう、余白と文字を小さくする
+        "@media (max-width:600px){" +
+        ".header-nav{gap:6px;}" +
+        ".header-nav .akiya-status-bar:empty{display:none;}" +
+        ".header-nav .nav-link{font-size:11px;padding:5px 8px;}" +
+        "}";
       document.head.appendChild(st);
       btn.className = "nav-link akiya-fx-btn";
-      nav.insertBefore(btn, nav.firstChild && nav.firstChild.nextSibling ? nav.firstChild.nextSibling : null);
-    } else if (help) {
-      // 地図の画面: 「使い方」ボタンの左隣に、同じ見た目(同じclass)で置く
-      btn.className = help.className;
-      help.parentNode.insertBefore(btn, help);
+      // マップ・PDF出力のボタンの隣(右)に置く
+      var mapLink = document.getElementById("frontend-link");
+      if (mapLink && mapLink.parentNode === nav) mapLink.insertAdjacentElement("afterend", btn);
+      else nav.appendChild(btn);
     } else {
       btn.style.cssText = "position:fixed;left:10px;bottom:10px;z-index:" + (Z_INDEX + 1) +
         ";font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.9);cursor:pointer;";
       document.body.appendChild(btn);
-      // 画面の組み立てが遅れている場合に備えて、「使い方」が見つかったら上へ移す(最大約5秒)
-      var tries = 0;
-      var retry = setInterval(function () {
-        var h = findHelpButton();
-        if (h) {
-          clearInterval(retry);
-          btn.removeAttribute("style");
-          btn.className = h.className;
-          h.parentNode.insertBefore(btn, h);
-        } else if (++tries > 20) clearInterval(retry);
-      }, 250);
     }
     btn.addEventListener("click", function () { setFx(!fxOn); });
     label();
@@ -204,7 +185,7 @@
 
   function init() {
     document.body.appendChild(canvas);
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", function () { resize(); label(); });
     document.addEventListener("visibilitychange", function () { if (!document.hidden && fxOn) start(); });
     resize();
     if (showToggle) addToggle();

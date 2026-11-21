@@ -288,10 +288,11 @@ function initMap() {
         disableClusteringAtZoom: 15
     });
 
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    // 右側の凡例(ハザード情報まで)が下まで見えるよう、ズームとリセットのボタンは左下に置く
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
     const ResetControl = L.Control.extend({
-        options: { position: 'bottomright' },
+        options: { position: 'bottomleft' },
         onAdd: function() {
             const btn = L.DomUtil.create('button', 'leaflet-bar leaflet-control');
             btn.innerHTML = '⟲';
@@ -906,10 +907,51 @@ function addAmenityLegendControl() {
             `).join('')}
         `;
 
-        container.innerHTML = priceLegendHtml + '<div class="legend-divider"></div>' + amenityLegendHtml
-            + '<div class="legend-divider"></div>' + hazardLegendHtml;
+        // 「詳細」(価格帯・周辺施設)と「ハザード」を、別々のボタンで出し入れできるようにする。
+        // 最初は閉じておき、地図を広く使えるようにする。
+        container.innerHTML = `
+            <div class="legend-tabs">
+                <button type="button" class="legend-tab" data-panel="detail" aria-expanded="false">詳細 ▾</button>
+                <button type="button" class="legend-tab" data-panel="hazard" aria-expanded="false">⚠️ ハザード ▾</button>
+            </div>
+            <div class="legend-panel" data-panel="detail" hidden>
+                ${priceLegendHtml}
+                <div class="legend-divider"></div>
+                ${amenityLegendHtml}
+            </div>
+            <div class="legend-panel" data-panel="hazard" hidden>
+                ${hazardLegendHtml}
+            </div>
+        `;
+        container.querySelectorAll('.legend-tab').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const panel = container.querySelector(`.legend-panel[data-panel="${tab.dataset.panel}"]`);
+                const willOpen = panel.hidden;
+                panel.hidden = !willOpen;
+                tab.setAttribute('aria-expanded', String(willOpen));
+                tab.classList.toggle('is-open', willOpen);
+                tab.textContent = tab.textContent.replace(/[▾▴]/, willOpen ? '▴' : '▾');
+            });
+        });
 
         L.DomEvent.disableClickPropagation(container);
+        // 凡例が地図より長いと、一番下のハザード情報が見えなくなる。
+        // 地図の高さに合わせて、凡例の中だけスクロールできるようにする(地図の拡大縮小は邪魔しない)。
+        L.DomEvent.disableScrollPropagation(container);
+        // 凡例の上でのホイール・指・マウスの操作が、地図の移動や拡大縮小に伝わらないようにする
+        ['wheel', 'touchstart', 'touchmove', 'pointerdown', 'mousedown', 'dblclick'].forEach((type) => {
+            container.addEventListener(type, (ev) => ev.stopPropagation(), { passive: true });
+        });
+        // 地図の高さいっぱいまで使い、それでも足りないときだけ凡例の中でスクロールする
+        const fitLegendHeight = () => {
+            const mapHeight = map.getSize().y;
+            const room = mapHeight > 0 ? mapHeight - 24 : window.innerHeight * 0.5;
+            container.style.maxHeight = Math.max(160, room) + 'px';
+        };
+        fitLegendHeight();
+        map.on('resize', fitLegendHeight);
+        setTimeout(fitLegendHeight, 300);
+        window.addEventListener('resize', fitLegendHeight);
         container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
                 if (e.target.dataset.amenity) {
