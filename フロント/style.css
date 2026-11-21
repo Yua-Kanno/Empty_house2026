@@ -158,6 +158,57 @@ option {
     flex-direction: column;
     gap: 4px;
     max-width: 180px;
+    /* 地図より長いときは、凡例の中だけスクロールする(高さは script.js が地図に合わせて決める) */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold, #B0862A) rgba(0, 0, 0, 0.08);
+}
+
+/* 「詳細」「ハザード」の出し入れボタン */
+.legend-tabs {
+    display: flex;
+    gap: 6px;
+}
+.legend-tab {
+    flex: 1;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.legend-tab.is-open {
+    background: var(--gold, #B0862A);
+    border-color: var(--gold, #B0862A);
+    color: #fff;
+}
+.legend-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.legend-panel[hidden] {
+    display: none;
+}
+
+/* スクロールバーを常に見える形にする(Macでは何もしないと、動かすまで隠れてしまうため) */
+.amenity-legend::-webkit-scrollbar {
+    width: 8px;
+}
+.amenity-legend::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+}
+.amenity-legend::-webkit-scrollbar-thumb {
+    background: var(--gold, #B0862A);
+    border-radius: 4px;
 }
 
 .amenity-legend label,
@@ -257,4 +308,3 @@ option {
     background-color: var(--gold);
     transform: scale(1.3);
 }
-
