@@ -158,6 +158,10 @@ option {
     flex-direction: column;
     gap: 4px;
     max-width: 180px;
+    /* 地図より長いときは、凡例の中だけスクロールする(高さは script.js が地図に合わせて決める) */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .amenity-legend label,
@@ -257,4 +261,3 @@ option {
     background-color: var(--gold);
     transform: scale(1.3);
 }
-
